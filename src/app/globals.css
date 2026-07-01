@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-nero: #14110c;
+  --color-carbon: #1a1611;
+  --color-granito: #221d17;
+  --color-granito-2: #2c261e;
+  --color-avorio: #f3efe6;
+  --color-avorio-dim: #b3ac9c;
+  --color-oro: #c9a86a;
+  --color-oro-chiaro: #e6cd97;
+  --color-oro-scuro: #8a6f3e;
+
+  --font-display: var(--font-cormorant);
+  --font-body: var(--font-manrope);
+  --font-mono: var(--font-space-mono);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+* { border-color: var(--color-granito-2); }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-nero);
+  color: var(--color-avorio);
+  font-family: var(--font-body), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+::selection { background: var(--color-oro); color: var(--color-nero); }
+
+h1, h2, h3 {
+  font-family: var(--font-display), Georgia, serif;
+  font-weight: 500;
+  line-height: 1.05;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-oro);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-oro);
+}
+.eyebrow::before {
+  content: "";
+  width: 1.75rem;
+  height: 1px;
+  background: var(--color-oro);
+  opacity: 0.8;
 }
