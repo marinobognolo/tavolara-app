@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope, Space_Mono } from "next/font/google";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
+import AppShell from "@/components/AppShell";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -35,10 +36,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="it" className={`${cormorant.variable} ${manrope.variable} ${spaceMono.variable} h-full`}>
       <body className="min-h-full bg-nero text-avorio">
-        <main className="pb-16" style={{ paddingBottom: "calc(4rem + env(safe-area-inset-bottom))" }}>
-          {children}
-        </main>
-        <BottomNav />
+        <AppShell>
+          <main className="pb-16" style={{ paddingBottom: "calc(4rem + env(safe-area-inset-bottom))" }}>
+            {children}
+          </main>
+          <BottomNav />
+        </AppShell>
       </body>
     </html>
   );
