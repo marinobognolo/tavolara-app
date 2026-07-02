@@ -59,6 +59,7 @@ export type NewsItem = {
   slug: string;
   title: string;
   excerpt: string;
+  category?: string;
   date: string;
   image?: string;
   body?: string[];
@@ -69,6 +70,7 @@ export const NEWS: NewsItem[] = [
     slug: "guido-tamponi-preparatore-atletico",
     title: "Guido Tamponi è il nuovo preparatore atletico",
     excerpt: "La società è lieta di comunicare che Guido Tamponi ricoprirà il ruolo di preparatore atletico per la stagione 2026/2027.",
+    category: "Prima Squadra",
     date: "2026-07-01",
     image: "/GUIDO TAMPONI.png",
     body: [
@@ -82,6 +84,7 @@ export const NEWS: NewsItem[] = [
     slug: "one-more-year",
     title: "Tavolara: «One More Year»",
     excerpt: "Pronti a vivere una nuova stagione in Prima Categoria.",
+    category: "Ufficiale",
     date: "2026-06-22",
     image: "/one-more-year.jpg",
     body: [
@@ -93,6 +96,7 @@ export const NEWS: NewsItem[] = [
     slug: "giovanni-ciaddu-massaggiatore",
     title: "Giovanni Ciaddu è il nuovo massaggiatore",
     excerpt: "Un ritorno in biancoverde: l'ex giocatore Giovanni Ciaddu entra nello staff per la stagione 2026/27.",
+    category: "Prima Squadra",
     date: "2026-06-24",
     image: "/ciaddu.jpg",
   },
@@ -100,6 +104,7 @@ export const NEWS: NewsItem[] = [
     slug: "mister-tamponi-confermato",
     title: "Mister Tamponi confermato per la stagione 2026/27",
     excerpt: "La società riparte dalla guida tecnica che ha vinto il campionato.",
+    category: "Ufficiale",
     date: "2026-06-22",
     image: "/tamponi.png",
   },

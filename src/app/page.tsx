@@ -1,108 +1,99 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { NEXT_MATCH, NEWS, countdown, fmtDate } from "@/lib/data";
+import { NEWS } from "@/lib/data";
 
-function Countdown({ datetime }: { datetime: string }) {
-  const [cd, setCd] = useState(countdown(datetime));
-  useEffect(() => {
-    const t = setInterval(() => setCd(countdown(datetime)), 60000);
-    return () => clearInterval(t);
-  }, [datetime]);
-  if (!cd) return null;
-  return (
-    <div className="flex gap-4">
-      {[{ v: cd.d, l: "giorni" }, { v: cd.h, l: "ore" }, { v: cd.m, l: "min" }].map(({ v, l }) => (
-        <div key={l} className="flex flex-col items-center">
-          <span className="font-mono text-3xl font-bold text-oro leading-none">{String(v).padStart(2, "0")}</span>
-          <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-avorio-dim mt-1">{l}</span>
-        </div>
-      ))}
-    </div>
-  );
-}
+const FEATURED = NEWS.slice(0, 4);
 
 export default function Home() {
-  const nm = NEXT_MATCH;
-  const latestNews = NEWS.slice(0, 3);
+  const [active, setActive] = useState(0);
+  const news = FEATURED[active];
 
   return (
-    <div className="min-h-[100svh] bg-nero">
-      {/* Header */}
-      <div className="flex items-center justify-between px-5 pt-12 pb-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-tavolara-gold.png" alt="Tavolara Calcio" className="h-12 w-auto" />
-        <div className="text-right">
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-oro">Prima Categoria</p>
-          <p className="font-mono text-[9px] uppercase tracking-[0.15em] text-avorio-dim">Sardegna · 2026/27</p>
-        </div>
-      </div>
-
-      {/* Prossima partita */}
-      {nm && (
-        <div className="mx-5 mb-6 border border-granito-2 bg-carbon p-5">
-          <p className="eyebrow mb-4">Prossima partita</p>
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-avorio-dim">{nm.competition}</p>
-              {nm.round && <p className="font-mono text-[10px] text-avorio-dim/60">{nm.round}</p>}
-            </div>
-            <div className="text-right">
-              <p className="font-mono text-[10px] uppercase tracking-[0.1em] text-avorio-dim">{nm.venue}</p>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <p className="font-display text-2xl uppercase text-oro">TAV</p>
-            <p className="font-mono text-xs text-avorio-dim/50">vs</p>
-            <p className="font-display text-2xl uppercase text-avorio">{nm.opponent}</p>
-          </div>
-
-          {nm.datetime && <Countdown datetime={nm.datetime} />}
-          {nm.datetime && (
-            <p className="mt-3 font-mono text-[10px] text-avorio-dim/60">
-              {new Date(nm.datetime).toLocaleDateString("it-IT", { weekday: "long", day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" })}
-            </p>
+    <div className="fixed inset-0 z-10 overflow-hidden bg-nero">
+      {/* Foto di sfondo - crossfade */}
+      {FEATURED.map((n, i) => (
+        <div
+          key={n.slug}
+          className="absolute inset-0 transition-opacity duration-700"
+          style={{ opacity: i === active ? 1 : 0 }}
+        >
+          {n.image ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={n.image}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover object-top"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-granito" />
           )}
         </div>
-      )}
+      ))}
 
-      {/* Accessi rapidi */}
-      <div className="mx-5 mb-6 grid grid-cols-2 gap-3">
-        {[
-          { href: "/rosa", label: "La Rosa", sub: "Giocatori" },
-          { href: "/partite", label: "Partite", sub: "Calendario & risultati" },
-        ].map((c) => (
-          <Link key={c.href} href={c.href}
-            className="border border-granito-2 bg-carbon p-4 transition-colors active:bg-granito">
-            <p className="font-display text-xl uppercase text-avorio">{c.label}</p>
-            <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.15em] text-avorio-dim/60">{c.sub}</p>
-          </Link>
-        ))}
-      </div>
+      {/* Gradiente top - leggibilità TopNav */}
+      <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent pointer-events-none" />
 
-      {/* Ultime news */}
-      <div className="px-5 pb-6">
-        <div className="flex items-center justify-between mb-4">
-          <p className="eyebrow">Ultime news</p>
-          <Link href="/news" className="font-mono text-[9px] uppercase tracking-[0.2em] text-oro">Tutte →</Link>
+      {/* Gradiente bottom - leggibilità testo */}
+      <div className="absolute inset-x-0 bottom-0 h-3/4 bg-gradient-to-t from-nero via-nero/85 to-transparent pointer-events-none" />
+
+      {/* Contenuto in basso */}
+      <div
+        className="absolute bottom-0 inset-x-0 px-5"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 2rem)" }}
+      >
+        {/* Categoria */}
+        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60 mb-3">
+          {news.category}
+        </p>
+
+        {/* Titolo */}
+        <Link href={`/news/${news.slug}`}>
+          <h2 className="font-body font-extrabold text-[1.85rem] uppercase text-white leading-[1.05] mb-5">
+            {news.title}
+          </h2>
+        </Link>
+
+        {/* Like + Share */}
+        <div className="flex items-center gap-5 mb-5">
+          <button className="text-white/40" aria-label="Like">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </button>
+          <button className="text-white/40" aria-label="Condividi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+              <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" />
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+            </svg>
+          </button>
         </div>
-        <div className="space-y-3">
-          {latestNews.map((n) => (
-            <Link key={n.slug} href={`/news/${n.slug}`}
-              className="flex gap-3 border border-granito-2 bg-carbon p-4 transition-colors active:bg-granito">
-              {n.image && (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={n.image} alt="" className="h-16 w-16 shrink-0 object-cover" />
-              )}
-              <div className="min-w-0">
-                <p className="font-mono text-[9px] uppercase tracking-[0.15em] text-oro mb-1">{fmtDate(n.date)}</p>
-                <p className="font-display text-base uppercase text-avorio leading-tight line-clamp-2">{n.title}</p>
-              </div>
-            </Link>
+
+        {/* Dots carousel */}
+        <div className="flex items-center gap-2 mb-8">
+          {FEATURED.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setActive(i)}
+              className="h-[2px] rounded-full transition-all duration-300"
+              style={{
+                width: i === active ? "26px" : "14px",
+                backgroundColor: i === active ? "white" : "rgba(255,255,255,0.25)",
+              }}
+            />
           ))}
         </div>
+
+        {/* TUTTE LE NEWS */}
+        <Link href="/news" className="flex flex-col items-center gap-1.5">
+          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">
+            Tutte le news
+          </span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white/30">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </Link>
       </div>
     </div>
   );

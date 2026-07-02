@@ -28,6 +28,7 @@ const TABS = [
 
 export default function BottomNav() {
   const pathname = usePathname();
+  if (pathname === "/") return null;
 
   return (
     <nav

@@ -22,7 +22,7 @@ function fmtDate(iso: string) {
 export default function PartitePage() {
   return (
     <div className="min-h-[100svh] bg-nero">
-      <div className="px-5 pt-12 pb-6">
+      <div className="px-5 pt-24 pb-6">
         <p className="eyebrow mb-2">Stagione 2025/26</p>
         <h1 className="font-display text-4xl uppercase text-avorio">Partite</h1>
       </div>

@@ -12,7 +12,7 @@ const roleLabel: Record<string, string> = {
 export default function RosaPage() {
   return (
     <div className="min-h-[100svh] bg-nero">
-      <div className="px-5 pt-12 pb-6">
+      <div className="px-5 pt-24 pb-6">
         <p className="eyebrow mb-2">Prima Squadra</p>
         <h1 className="font-display text-4xl uppercase text-avorio">Rosa 2026/27</h1>
       </div>
