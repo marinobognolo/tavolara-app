@@ -28,7 +28,7 @@ export default function RosaPage() {
                 <div key={p.slug} className="flex items-center gap-4 border border-granito-2 bg-carbon p-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={`/giocatori/${p.slug}/card.jpg`}
+                    src={`/giocatori/${p.slug}/01.jpg`}
                     alt={`${p.first} ${p.last}`}
                     className="h-14 w-10 object-cover object-top bg-granito shrink-0"
                     onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
