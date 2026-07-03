@@ -85,14 +85,14 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
           <Link href="/" onClick={close} className={itemCls}>HOME</Link>
           <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
 
-          <button onClick={() => setLevel("squadre")} className="w-full flex items-center justify-between py-2">
+          <button onClick={() => setLevel("squadre")} className="w-full flex items-center justify-between">
             <span className={itemCls.replace("block ", "")}>SQUADRE</span>
             {chevronRight}
           </button>
 
           <Link href="/partite" onClick={close} className={itemCls}>PARTITE</Link>
 
-          <button onClick={() => setLevel("club")} className="w-full flex items-center justify-between py-2">
+          <button onClick={() => setLevel("club")} className="w-full flex items-center justify-between">
             <span className={itemCls.replace("block ", "")}>CLUB</span>
             {chevronRight}
           </button>
