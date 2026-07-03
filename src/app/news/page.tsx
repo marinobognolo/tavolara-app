@@ -53,7 +53,7 @@ export default function NewsPage() {
               {first.category && (
                 <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-oro mb-1.5">{first.category}</p>
               )}
-              <h2 className="font-body font-bold text-[1.1rem] text-white leading-snug">{first.title}</h2>
+              <h2 className="font-body font-bold text-[1.1rem] uppercase text-white leading-snug">{first.title}</h2>
               <p className="font-mono text-[10px] text-white/40 mt-2">{fmtDate(first.date)}</p>
             </div>
             <div className="flex flex-col gap-3 shrink-0 text-white/40 pt-1">
@@ -76,7 +76,7 @@ export default function NewsPage() {
               {second.category && (
                 <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-oro mb-1">{second.category}</p>
               )}
-              <h2 className="font-body font-semibold text-base text-white leading-snug">{second.title}</h2>
+              <h2 className="font-body font-semibold text-base uppercase text-white leading-snug">{second.title}</h2>
               <p className="font-mono text-[10px] text-white/40 mt-1">{fmtDate(second.date)}</p>
               <div className="flex gap-4 mt-2 text-white/40">
                 <button aria-label="Like"><Heart /></button>
@@ -99,7 +99,7 @@ export default function NewsPage() {
               {n.category && (
                 <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-oro mb-1">{n.category}</p>
               )}
-              <h2 className="font-body font-semibold text-sm text-white leading-snug line-clamp-2">{n.title}</h2>
+              <h2 className="font-body font-semibold text-sm uppercase text-white leading-snug line-clamp-2">{n.title}</h2>
               <p className="font-mono text-[10px] text-white/40 mt-1">{fmtDate(n.date)}</p>
             </div>
             {n.image && (
