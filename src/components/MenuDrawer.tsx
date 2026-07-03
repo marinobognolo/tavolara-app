@@ -106,7 +106,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
 
       {/* Sponsor logos — fissi in basso a sinistra */}
       <div
-        className="absolute bottom-0 left-0 px-8 flex items-end gap-8"
+        className="absolute bottom-0 left-0 px-8 flex items-center gap-8"
         style={{
           paddingBottom: "calc(env(safe-area-inset-bottom) + 1.5rem)",
           paddingTop: "1rem",
