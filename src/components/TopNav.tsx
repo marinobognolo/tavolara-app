@@ -31,7 +31,7 @@ export default function TopNav() {
         <img
           src="/logo-tavolara-gold.png"
           alt="Tavolara Calcio"
-          className="h-8 object-contain"
+          className="h-10 object-contain"
           style={{ filter: "brightness(0) invert(1)" }}
         />
       </Link>
