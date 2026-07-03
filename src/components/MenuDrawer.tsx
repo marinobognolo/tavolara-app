@@ -4,20 +4,28 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-type Level = "main" | "squadre";
-
-const MAIN_ITEMS = [
-  { label: "HOME", href: "/" },
-  { label: "NEWS", href: "/news" },
-  { label: "PARTITE", href: "/partite" },
-  { label: "SHOP", href: "/shop" },
-  { label: "TAV COLLECTION", href: "/collection" },
-];
+type Level = "main" | "squadre" | "club";
 
 const SQUADRE_ITEMS = [
   { label: "PRIMA SQUADRA", href: "/rosa" },
   { label: "JUNIORES", href: "/juniores" },
 ];
+
+const CLUB_ITEMS = [
+  { label: "CHI SIAMO", href: "/club" },
+  { label: "ORGANIGRAMMA", href: "/organigramma" },
+  { label: "PALMARES", href: "/palmares" },
+  { label: "CONTATTI", href: "/contatti" },
+];
+
+const chevronRight = (
+  <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+    className="w-6 h-6 opacity-80 shrink-0 ml-3">
+    <path d="M9 18l6-6-6-6" />
+  </svg>
+);
+
+const itemCls = "block py-2 font-body font-extrabold text-4xl uppercase text-white leading-none";
 
 export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [level, setLevel] = useState<Level>("main");
@@ -28,6 +36,21 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
   }, [open]);
 
   const close = () => onClose();
+
+  const SubBack = ({ to, label }: { to: Level; label: string }) => (
+    <button onClick={() => setLevel(to)} className="flex items-center gap-2 mb-8">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
+        className="w-6 h-6 text-oro shrink-0">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+      <span className="font-body font-extrabold text-4xl uppercase text-oro leading-none">{label}</span>
+    </button>
+  );
+
+  const slide = (target: Level) => ({
+    transform: level === target ? "translateX(0)" : level === "main" ? "translateX(100%)" : "translateX(-100%)",
+    transition: "transform 0.28s ease",
+  });
 
   return (
     <div
@@ -56,74 +79,60 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* ── MENU PRINCIPALE ── */}
-      <div
-        className="absolute inset-x-0 bottom-0"
-        style={{
-          top: "72px",
-          transform: level === "main" ? "translateX(0)" : "translateX(-100%)",
-          transition: "transform 0.28s ease",
-        }}
-      >
-        <nav className="px-8 pt-10">
-          {MAIN_ITEMS.slice(0, 2).map((item) => (
-            <Link key={item.label} href={item.href} onClick={close}
-              className="block py-2 font-body font-extrabold text-4xl uppercase text-white leading-none">
-              {item.label}
-            </Link>
-          ))}
+      <div className="absolute inset-x-0 bottom-0 overflow-y-auto" style={{ top: "72px", ...slide("main") }}>
+        <nav className="px-8 pt-8 pb-12">
+          <Link href="/" onClick={close} className={itemCls}>HOME</Link>
+          <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
 
-          {/* SQUADRE — con freccia */}
-          <button
-            onClick={() => setLevel("squadre")}
-            className="w-full flex items-center justify-between py-2"
-          >
-            <span className="font-body font-extrabold text-4xl uppercase text-white leading-none">SQUADRE</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-              className="w-7 h-7 opacity-80 shrink-0 ml-3">
-              <path d="M9 18l6-6-6-6" />
-            </svg>
+          <button onClick={() => setLevel("squadre")} className="w-full flex items-center justify-between py-2">
+            <span className={itemCls.replace("block ", "")}>SQUADRE</span>
+            {chevronRight}
           </button>
 
-          {MAIN_ITEMS.slice(2).map((item) => (
-            <Link key={item.label} href={item.href} onClick={close}
-              className="block py-2 font-body font-extrabold text-4xl uppercase text-white leading-none">
-              {item.label}
-            </Link>
-          ))}
+          <Link href="/partite" onClick={close} className={itemCls}>PARTITE</Link>
+
+          <button onClick={() => setLevel("club")} className="w-full flex items-center justify-between py-2">
+            <span className={itemCls.replace("block ", "")}>CLUB</span>
+            {chevronRight}
+          </button>
+
+          <Link href="/shop" onClick={close} className={itemCls}>SHOP</Link>
+          <Link href="/sponsor" onClick={close} className={itemCls}>SPONSOR</Link>
+          <Link href="/collection" onClick={close} className={itemCls}>TAV COLLECTION</Link>
+          <Link href="/game" onClick={close} className={itemCls}>TAV GAME</Link>
         </nav>
       </div>
 
       {/* ── SUBMENU SQUADRE ── */}
-      <div
-        className="absolute inset-x-0 bottom-0"
-        style={{
-          top: "72px",
-          transform: level === "squadre" ? "translateX(0)" : "translateX(100%)",
-          transition: "transform 0.28s ease",
-        }}
-      >
-        <div className="px-8 pt-10">
-          {/* Back + titolo sezione in oro */}
-          <button onClick={() => setLevel("main")} className="flex items-center gap-2 mb-8">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-              className="w-6 h-6 text-oro shrink-0">
-              <path d="M15 18l-6-6 6-6" />
-            </svg>
-            <span className="font-body font-extrabold text-4xl uppercase text-oro leading-none">SQUADRE</span>
-          </button>
-
+      <div className="absolute inset-x-0 bottom-0" style={{ top: "72px", ...slide("squadre") }}>
+        <div className="px-8 pt-8">
+          <SubBack to="main" label="SQUADRE" />
           <nav>
-            {SQUADRE_ITEMS.map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link key={item.label} href={item.href} onClick={close}
-                  className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
-                    isActive ? "text-oro" : "text-white"
-                  }`}>
-                  {item.label}
-                </Link>
-              );
-            })}
+            {SQUADRE_ITEMS.map((item) => (
+              <Link key={item.label} href={item.href} onClick={close}
+                className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
+                  pathname === item.href ? "text-oro" : "text-white"
+                }`}>
+                {item.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      </div>
+
+      {/* ── SUBMENU CLUB ── */}
+      <div className="absolute inset-x-0 bottom-0" style={{ top: "72px", ...slide("club") }}>
+        <div className="px-8 pt-8">
+          <SubBack to="main" label="CLUB" />
+          <nav>
+            {CLUB_ITEMS.map((item) => (
+              <Link key={item.label} href={item.href} onClick={close}
+                className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
+                  pathname === item.href ? "text-oro" : "text-white"
+                }`}>
+                {item.label}
+              </Link>
+            ))}
           </nav>
         </div>
       </div>
