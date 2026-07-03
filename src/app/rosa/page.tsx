@@ -205,11 +205,11 @@ export default function RosaPage() {
       )}
 
       {/* Sponsor */}
-      <div className="flex items-center gap-6 px-4 pt-10">
+      <div className="flex flex-col gap-3 px-4 pt-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares-gold.png" alt="Sardares" className="h-20 w-auto object-contain" />
+        <img src="/logo-sardares-gold.png" alt="Sardares" className="w-full h-auto object-contain" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="h-20 w-auto object-contain" />
+        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="w-full h-auto object-contain" />
       </div>
     </div>
   );

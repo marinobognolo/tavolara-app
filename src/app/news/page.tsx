@@ -50,7 +50,7 @@ export default function NewsPage() {
         <Link href={`/news/${first.slug}`} className="block mx-4 mb-4 bg-carbon rounded-2xl overflow-hidden">
           <div className="p-4 flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              <p className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug">
+              <p className="font-body font-extrabold text-[1.5rem] uppercase text-white leading-snug">
                 {first.category && <span className="text-oro">{first.category.toUpperCase()} | </span>}{first.title.toUpperCase()}
               </p>
               <p className="font-mono text-[11px] text-white/40 mt-2">{fmtDate(first.date)}</p>
@@ -72,7 +72,7 @@ export default function NewsPage() {
         <Link href={`/news/${second.slug}`} className="block mx-4 mb-3 bg-carbon rounded-2xl overflow-hidden">
           <div className="flex gap-3 p-4">
             <div className="flex-1 min-w-0">
-              <p className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug">
+              <p className="font-body font-bold text-[1.1rem] uppercase text-white leading-snug">
                 {second.category && <span className="text-oro">{second.category.toUpperCase()} | </span>}{second.title.toUpperCase()}
               </p>
               <p className="font-mono text-[11px] text-white/40 mt-1">{fmtDate(second.date)}</p>
@@ -94,7 +94,7 @@ export default function NewsPage() {
         <Link key={n.slug} href={`/news/${n.slug}`} className="block mx-4 mb-3 bg-carbon rounded-2xl overflow-hidden">
           <div className="flex gap-3 p-4">
             <div className="flex-1 min-w-0">
-              <p className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug line-clamp-2">
+              <p className="font-body font-bold text-[1rem] uppercase text-white leading-snug line-clamp-2">
                 {n.category && <span className="text-oro">{n.category.toUpperCase()} | </span>}{n.title.toUpperCase()}
               </p>
               <p className="font-mono text-[11px] text-white/40 mt-1">{fmtDate(n.date)}</p>
@@ -109,7 +109,7 @@ export default function NewsPage() {
 
       {/* Gallery ultimi 5 match */}
       <div className="px-4 mt-6">
-        <h2 className="font-body font-extrabold text-xl text-white mb-4">Photo Gallery</h2>
+        <h2 className="font-display text-2xl text-white mb-4">Photo Gallery</h2>
         <div className="space-y-3">
           {GALLERIES.map((g, i) => (
             <div key={i} className="relative rounded-2xl overflow-hidden" style={{ aspectRatio: "16/9" }}>
