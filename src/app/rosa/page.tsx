@@ -207,11 +207,9 @@ export default function RosaPage() {
       {/* Sponsor */}
       <div className="flex items-center gap-6 px-4 pt-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-20 w-auto object-contain"
-          style={{ filter: GOLD_FILTER }} />
+        <img src="/logo-sardares-gold.png" alt="Sardares" className="h-20 w-auto object-contain" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-20 w-auto object-contain"
-          style={{ filter: GOLD_FILTER }} />
+        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="h-20 w-auto object-contain" />
       </div>
     </div>
   );

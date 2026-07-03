@@ -80,7 +80,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* ── MENU PRINCIPALE ── */}
-      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "260px", ...slide("main") }}>
+      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "185px", ...slide("main") }}>
         <nav className="px-8 pt-8 pb-6">
           <Link href="/" onClick={close} className={itemCls}>HOME</Link>
           <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
@@ -106,19 +106,17 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
 
       {/* Sponsor logos — fissi in basso a sinistra */}
       <div
-        className="absolute bottom-0 left-0 px-8 flex items-center gap-8"
+        className="absolute bottom-0 left-0 right-0 px-8 flex flex-col gap-3"
         style={{
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.5rem)",
-          paddingTop: "1rem",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)",
+          paddingTop: "0.75rem",
           pointerEvents: "none",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-48 w-auto object-contain"
-          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.88)" }} />
+        <img src="/logo-sardares-gold.png" alt="Sardares" className="w-full h-auto object-contain" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-48 w-auto object-contain"
-          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.88)" }} />
+        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="w-full h-auto object-contain" />
       </div>
 
       {/* ── SUBMENU SQUADRE ── */}
