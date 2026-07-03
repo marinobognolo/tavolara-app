@@ -106,18 +106,18 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
 
       {/* Sponsor logos — fissi in basso a sinistra */}
       <div
-        className="absolute bottom-0 left-0 px-8 flex items-center gap-6"
+        className="absolute bottom-0 left-0 px-8 flex items-end gap-8"
         style={{
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.5rem)",
           paddingTop: "1rem",
           pointerEvents: "none",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-14 object-contain"
+        <img src="/logo-sardares.png" alt="Sardares" className="h-28 w-auto object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-14 object-contain"
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-28 w-auto object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
       </div>
 
