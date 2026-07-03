@@ -72,7 +72,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         </button>
         <Link href="/" onClick={close}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-tavolara-gold.png" alt="Tavolara" className="h-8 object-contain"
+          <img src="/logo-tavolara-gold.png" alt="Tavolara" className="h-10 object-contain"
             style={{ filter: "brightness(0) invert(1)" }} />
         </Link>
         <div className="w-8" />
