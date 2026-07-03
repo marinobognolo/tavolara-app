@@ -55,7 +55,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
 
   return (
     <div
-      className="fixed inset-0 z-40 bg-nero overflow-hidden"
+      className="fixed inset-0 z-[60] bg-nero overflow-hidden"
       style={{
         transform: open ? "translateX(0)" : "translateX(-100%)",
         transition: "transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)",
@@ -80,8 +80,8 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* ── MENU PRINCIPALE ── */}
-      <div className="absolute inset-x-0 bottom-0 overflow-y-auto" style={{ top: "72px", ...slide("main") }}>
-        <nav className="px-8 pt-8 pb-12">
+      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "80px", ...slide("main") }}>
+        <nav className="px-8 pt-8 pb-6">
           <Link href="/" onClick={close} className={itemCls}>HOME</Link>
           <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
 
@@ -102,6 +102,23 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
           <Link href="/collection" onClick={close} className={itemCls}>TAV COLLECTION</Link>
           <Link href="/game" onClick={close} className={itemCls}>TAV GAME</Link>
         </nav>
+      </div>
+
+      {/* Sponsor logos — fissi in basso a sinistra */}
+      <div
+        className="absolute bottom-0 left-0 px-8 flex items-center gap-6"
+        style={{
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)",
+          paddingTop: "1rem",
+          pointerEvents: "none",
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-sardares.png" alt="Sardares" className="h-7 object-contain"
+          style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-7 object-contain"
+          style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
       </div>
 
       {/* ── SUBMENU SQUADRE ── */}
