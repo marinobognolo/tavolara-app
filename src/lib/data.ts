@@ -81,18 +81,6 @@ export const NEWS: NewsItem[] = [
     ],
   },
   {
-    slug: "one-more-year",
-    title: "Tavolara: «One More Year»",
-    excerpt: "Pronti a vivere una nuova stagione in Prima Categoria.",
-    category: "Ufficiale",
-    date: "2026-06-22",
-    image: "/one-more-year.jpg",
-    body: [
-      "La Società Sportiva Tavolara comunica ufficialmente, attraverso l'immagine simbolo «One More Year», la propria volontà di proseguire con entusiasmo, determinazione e senso di appartenenza il percorso sportivo in vista della stagione 2026/2027.",
-      "«One More Year» non è soltanto un messaggio, ma una dichiarazione d'intenti: un altro anno da vivere insieme, con la stessa passione di sempre.",
-    ],
-  },
-  {
     slug: "giovanni-ciaddu-massaggiatore",
     title: "Giovanni Ciaddu è il nuovo massaggiatore",
     excerpt: "Un ritorno in biancoverde: l'ex giocatore Giovanni Ciaddu entra nello staff per la stagione 2026/27.",
