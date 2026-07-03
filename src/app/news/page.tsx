@@ -39,7 +39,7 @@ export default function NewsPage() {
 
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-center justify-between">
-        <h1 className="font-body font-extrabold text-2xl text-white">Ultime News</h1>
+        <h1 className="font-body font-extrabold text-2xl uppercase text-white">Ultime News</h1>
         <button className="px-4 py-1.5 rounded-full border border-white/20 font-mono text-[10px] uppercase tracking-wide text-white/60">
           Di più
         </button>
