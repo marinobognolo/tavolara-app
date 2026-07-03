@@ -1,27 +1,48 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [zooming, setZooming] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const doneRef = useRef(false);
 
   function skip() {
+    if (doneRef.current) return;
+    doneRef.current = true;
     setZooming(true);
     setTimeout(onComplete, 400);
   }
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const play = video.play();
+    if (play !== undefined) {
+      play.catch(() => skip()); // autoplay bloccato → vai subito alla home
+    }
+
+    // fallback: se il video non finisce entro 60s salta comunque
+    const timeout = setTimeout(skip, 60000);
+    return () => clearTimeout(timeout);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div className="fixed inset-0 z-50 bg-nero overflow-hidden">
       <video
+        ref={videoRef}
         src="/splash.mp4"
         autoPlay
         muted
         playsInline
         onEnded={skip}
+        onError={skip}
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Logo centrato — click per saltare */}
+      {/* Logo — click per saltare */}
       <div className="absolute inset-0 flex items-center justify-center" onClick={skip}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
