@@ -120,7 +120,7 @@ export default function NewsPage() {
               <img src={g.cover} alt={g.match} className="absolute inset-0 w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-nero/80 to-transparent" />
               <div className="absolute bottom-0 left-0 p-4">
-                <p className="font-body font-bold text-sm text-white">{g.match}</p>
+                <p className="font-body font-bold text-sm uppercase text-white">{g.match}</p>
                 <p className="font-mono text-[10px] text-white/50 mt-0.5">{g.date}</p>
               </div>
             </div>
