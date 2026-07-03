@@ -1,49 +1,58 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {
-  const [zooming, setZooming] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "playing" | "zoom">("idle");
   const videoRef = useRef<HTMLVideoElement>(null);
   const doneRef = useRef(false);
 
-  function skip() {
+  const skip = useCallback(() => {
     if (doneRef.current) return;
     doneRef.current = true;
-    setZooming(true);
-    setTimeout(onComplete, 400);
-  }
+    setPhase("zoom");
+    setTimeout(onComplete, 450);
+  }, [onComplete]);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
 
-    const play = video.play();
-    if (play !== undefined) {
-      play.catch(() => skip()); // autoplay bloccato → vai subito alla home
-    }
+    const tryPlay = () => {
+      if (!video) { setTimeout(skip, 3000); return; }
+      video.play()
+        .then(() => setPhase("playing"))
+        .catch(() => {
+          // video non supportato o bloccato → splash statico 3 secondi
+          setTimeout(skip, 3000);
+        });
+    };
 
-    // fallback: se il video non finisce entro 60s salta comunque
-    const timeout = setTimeout(skip, 60000);
-    return () => clearTimeout(timeout);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    // piccolo delay per evitare race condition con hydration
+    const t = setTimeout(tryPlay, 150);
+
+    // fallback duro: se dopo 20s il video non è finito, salta
+    const hard = setTimeout(skip, 20000);
+
+    return () => { clearTimeout(t); clearTimeout(hard); };
+  }, [skip]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-nero overflow-hidden">
+    <div className="fixed inset-0 z-50 bg-nero overflow-hidden" onClick={skip}>
+      {/* Video — nascosto finché non parte */}
       <video
         ref={videoRef}
         src="/splash.mp4"
-        autoPlay
         muted
         playsInline
+        preload="auto"
         onEnded={skip}
-        onError={skip}
+        onError={() => setTimeout(skip, 3000)}
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: phase === "playing" ? 1 : 0, transition: "opacity 0.3s" }}
       />
 
-      {/* Logo — click per saltare */}
-      <div className="absolute inset-0 flex items-center justify-center" onClick={skip}>
+      {/* Logo centrato */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo-tavolara-gold.png"
@@ -51,10 +60,10 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
           className="w-28 object-contain"
           style={{
             filter: "brightness(0) invert(1)",
-            transform: zooming ? "scale(8)" : "scale(1)",
-            opacity: zooming ? 0 : 1,
-            transition: zooming
-              ? "transform 0.35s cubic-bezier(0.4,0,1,1), opacity 0.2s ease 0.1s"
+            transform: phase === "zoom" ? "scale(8)" : "scale(1)",
+            opacity: phase === "zoom" ? 0 : 1,
+            transition: phase === "zoom"
+              ? "transform 0.4s cubic-bezier(0.4,0,1,1), opacity 0.25s ease 0.1s"
               : "none",
           }}
         />
