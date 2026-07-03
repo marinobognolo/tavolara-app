@@ -35,10 +35,12 @@ body {
 
 ::selection { background: var(--color-oro); color: var(--color-nero); }
 
-h1, h2, h3 {
-  font-family: var(--font-display), Georgia, serif;
-  font-weight: 500;
-  line-height: 1.05;
+@layer base {
+  h1, h2, h3 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 500;
+    line-height: 1.05;
+  }
 }
 
 :focus-visible {

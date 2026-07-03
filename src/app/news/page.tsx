@@ -50,10 +50,9 @@ export default function NewsPage() {
         <Link href={`/news/${first.slug}`} className="block mx-4 mb-4 bg-carbon rounded-2xl overflow-hidden">
           <div className="p-4 flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
-              {first.category && (
-                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-oro mb-1.5">{first.category}</p>
-              )}
-              <h2 className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug">{first.title}</h2>
+              <p className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug">
+                {first.category && <span className="text-oro">{first.category.toUpperCase()} | </span>}{first.title.toUpperCase()}
+              </p>
               <p className="font-mono text-[11px] text-white/40 mt-2">{fmtDate(first.date)}</p>
             </div>
             <div className="flex flex-col gap-3 shrink-0 text-white/40 pt-1">
@@ -73,10 +72,9 @@ export default function NewsPage() {
         <Link href={`/news/${second.slug}`} className="block mx-4 mb-3 bg-carbon rounded-2xl overflow-hidden">
           <div className="flex gap-3 p-4">
             <div className="flex-1 min-w-0">
-              {second.category && (
-                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-oro mb-1">{second.category}</p>
-              )}
-              <h2 className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug">{second.title}</h2>
+              <p className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug">
+                {second.category && <span className="text-oro">{second.category.toUpperCase()} | </span>}{second.title.toUpperCase()}
+              </p>
               <p className="font-mono text-[11px] text-white/40 mt-1">{fmtDate(second.date)}</p>
               <div className="flex gap-4 mt-2 text-white/40">
                 <button aria-label="Like"><Heart /></button>
@@ -96,10 +94,9 @@ export default function NewsPage() {
         <Link key={n.slug} href={`/news/${n.slug}`} className="block mx-4 mb-3 bg-carbon rounded-2xl overflow-hidden">
           <div className="flex gap-3 p-4">
             <div className="flex-1 min-w-0">
-              {n.category && (
-                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-oro mb-1">{n.category}</p>
-              )}
-              <h2 className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug line-clamp-2">{n.title}</h2>
+              <p className="font-body font-bold text-[1.25rem] uppercase text-white leading-snug line-clamp-2">
+                {n.category && <span className="text-oro">{n.category.toUpperCase()} | </span>}{n.title.toUpperCase()}
+              </p>
               <p className="font-mono text-[11px] text-white/40 mt-1">{fmtDate(n.date)}</p>
             </div>
             {n.image && (

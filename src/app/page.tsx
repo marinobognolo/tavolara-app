@@ -44,8 +44,8 @@ export default function Home() {
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 2rem)" }}
       >
         {/* Categoria */}
-        <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/60 mb-3">
-          {news.category}
+        <p className="font-body font-bold text-sm uppercase tracking-widest text-white/60 mb-3">
+          NEWS
         </p>
 
         {/* Titolo */}
@@ -92,7 +92,7 @@ export default function Home() {
 
         {/* TUTTE LE NEWS */}
         <Link href="/news" className="flex flex-col items-center gap-1.5">
-          <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">
+          <span className="font-body font-bold text-sm uppercase tracking-widest text-white/50">
             Tutte le news
           </span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4 text-white/30">

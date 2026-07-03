@@ -70,7 +70,7 @@ export const NEWS: NewsItem[] = [
     slug: "guido-tamponi-preparatore-atletico",
     title: "Guido Tamponi è il nuovo preparatore atletico",
     excerpt: "La società è lieta di comunicare che Guido Tamponi ricoprirà il ruolo di preparatore atletico per la stagione 2026/2027.",
-    category: "Prima Squadra",
+    category: "Ufficiale",
     date: "2026-07-01",
     image: "/GUIDO TAMPONI.png",
     body: [
