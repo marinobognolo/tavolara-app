@@ -73,7 +73,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         </button>
         <Link href="/" onClick={close}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-tavolara-gold.png" alt="Tavolara" className="h-10 object-contain"
+          <img src="/logo-tavolara-gold.png" alt="Tavolara" className="h-12 object-contain"
             style={{ filter: "brightness(0) invert(1)" }} />
         </Link>
         <div className="w-8" />
@@ -114,10 +114,10 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-7 object-contain"
+        <img src="/logo-sardares.png" alt="Sardares" className="h-10 object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-7 object-contain"
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-10 object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
       </div>
 

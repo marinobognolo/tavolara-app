@@ -1,53 +1,192 @@
 "use client";
 
-import { PLAYERS, ROLE_ORDER } from "@/lib/data";
+import { useState, useRef, useCallback } from "react";
+import { PLAYERS, Player } from "@/lib/data";
 
-const roleLabel: Record<string, string> = {
-  Portiere: "Portieri",
-  Difensore: "Difensori",
-  Centrocampista: "Centrocampisti",
-  Attaccante: "Attaccanti",
+type RoleTab = "Portieri" | "Difensori" | "Centrocampisti" | "Attaccanti";
+
+const TABS: RoleTab[] = ["Portieri", "Difensori", "Centrocampisti", "Attaccanti"];
+
+const ROLE_MAP: Record<RoleTab, Player["role"]> = {
+  Portieri: "Portiere",
+  Difensori: "Difensore",
+  Centrocampisti: "Centrocampista",
+  Attaccanti: "Attaccante",
 };
 
-export default function RosaPage() {
-  return (
-    <div className="min-h-[100svh] bg-nero">
-      <div className="px-5 pt-24 pb-6">
-        <p className="eyebrow mb-2">Prima Squadra</p>
-        <h1 className="font-display text-4xl uppercase text-avorio">Rosa 2026/27</h1>
-      </div>
+const GOLD_FILTER = "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)";
 
-      {ROLE_ORDER.map((group) => {
-        const players = PLAYERS.filter((p) => roleLabel[p.role] === group);
-        if (!players.length) return null;
-        return (
-          <div key={group} className="px-5 mb-8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-oro mb-3">{group}</p>
-            <div className="space-y-2">
-              {players.map((p) => (
-                <div key={p.slug} className="flex items-center gap-4 border border-granito-2 bg-carbon p-4">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/giocatori/${p.slug}/01.jpg`}
-                    alt={`${p.first} ${p.last}`}
-                    className="h-14 w-10 object-cover object-top bg-granito shrink-0"
-                    onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="font-display text-lg uppercase text-avorio leading-tight">
-                      {p.first} {p.last}
-                      {p.captain && <span className="ml-2 font-mono text-[8px] text-oro">(C)</span>}
-                      {p.viceCaptain && <span className="ml-2 font-mono text-[8px] text-oro">(VC)</span>}
-                    </p>
-                    <p className="font-mono text-[9px] text-avorio-dim/60 mt-0.5">{p.role}</p>
-                  </div>
-                  <span className="font-mono text-xl font-bold text-granito-2 shrink-0">#{p.number}</span>
-                </div>
-              ))}
+function PlayerCard({ player }: { player: Player }) {
+  return (
+    <div className="bg-carbon rounded-2xl overflow-hidden">
+      <div className="flex gap-3 p-4" style={{ minHeight: "116px" }}>
+        {/* Foto giocatore */}
+        <div className="w-[68px] shrink-0 rounded-xl overflow-hidden bg-white/5 self-stretch">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={`/giocatori/${player.slug}/01.jpg`}
+            alt={`${player.first} ${player.last}`}
+            className="w-full h-full object-cover object-top"
+            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+          />
+        </div>
+
+        {/* Info */}
+        <div className="flex-1 flex flex-col justify-between">
+          {/* Nome + Instagram */}
+          <div className="flex items-start justify-between gap-2">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-white/50 leading-none mb-0.5">
+                {player.first}
+                {player.captain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(C)</span>}
+                {player.viceCaptain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(VC)</span>}
+              </p>
+              <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-tight">
+                {player.last}
+              </p>
             </div>
+            <button className="text-white/25 shrink-0 mt-0.5" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
+                <rect x="2" y="2" width="20" height="20" rx="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Numero + Maglia */}
+          <div className="flex items-end justify-between">
+            <p className="font-body font-extrabold text-[2.5rem] text-white leading-none">
+              {player.number}
+            </p>
+            <button
+              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+              style={{ backgroundColor: "var(--color-oro)" }}
+              aria-label="Maglia"
+            >
+              <svg viewBox="0 0 24 24" fill="var(--color-nero)" className="w-4 h-4">
+                <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 001.23.77L6 9.5V19a2 2 0 002 2h8a2 2 0 002-2V9.5l1.91.53a1 1 0 001.23-.77l.58-3.57a2 2 0 00-1.34-2.23z" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CarouselList({ players }: { players: Player[] }) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activePage, setActivePage] = useState(0);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const firstChild = el.children[0] as HTMLElement | null;
+    if (!firstChild) return;
+    const pageW = firstChild.offsetWidth + 12;
+    setActivePage(Math.round(el.scrollLeft / pageW));
+  }, []);
+
+  const pages: Player[][] = [];
+  for (let i = 0; i < players.length; i += 3) {
+    pages.push(players.slice(i, i + 3));
+  }
+
+  return (
+    <div
+      ref={scrollRef}
+      onScroll={handleScroll}
+      className="flex gap-3 pl-4 overflow-x-auto"
+      style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+    >
+      {pages.map((group, gi) => {
+        const dist = Math.abs(gi - activePage);
+        return (
+          <div
+            key={gi}
+            className="flex flex-col gap-3 shrink-0 transition-opacity duration-300"
+            style={{
+              width: "calc(84vw - 8px)",
+              scrollSnapAlign: "start",
+              opacity: dist === 0 ? 1 : dist === 1 ? 0.35 : 0.15,
+              paddingRight: gi === pages.length - 1 ? "16px" : "0",
+            } as React.CSSProperties}
+          >
+            {group.map(p => <PlayerCard key={p.slug} player={p} />)}
           </div>
         );
       })}
+    </div>
+  );
+}
+
+export default function RosaPage() {
+  const [activeTab, setActiveTab] = useState<RoleTab>("Portieri");
+
+  const players = PLAYERS.filter(p => p.role === ROLE_MAP[activeTab]);
+
+  return (
+    <div className="min-h-[100svh] bg-nero pb-32">
+      {/* Header */}
+      <div className="px-4 pt-24 pb-5 flex items-end justify-between">
+        <h1 className="font-body font-extrabold text-[2.75rem] uppercase text-white leading-none">
+          SQUADRE
+        </h1>
+        <div
+          className="flex items-center gap-1 rounded-full px-3 py-1.5"
+          style={{ border: "1px solid rgba(201,168,106,0.4)" }}
+        >
+          <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "var(--color-oro)" }}>
+            PRIMA SQUADRA
+          </span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 shrink-0" style={{ color: "var(--color-oro)" }}>
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Tab bar */}
+      <div
+        className="flex overflow-x-auto mb-5"
+        style={{ scrollbarWidth: "none", borderBottom: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        {TABS.map(tab => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className="shrink-0 px-4 pt-1 pb-3 relative font-mono text-[11px] uppercase tracking-widest transition-colors"
+            style={{ color: activeTab === tab ? "white" : "rgba(255,255,255,0.3)" }}
+          >
+            {tab}
+            {activeTab === tab && (
+              <span
+                className="absolute bottom-0 left-0 right-0 h-[2px] rounded-t-full"
+                style={{ backgroundColor: "var(--color-oro)" }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
+
+      {/* Lista portieri (verticale) o carousel (altri ruoli) */}
+      {activeTab === "Portieri" ? (
+        <div className="flex flex-col gap-3 px-4">
+          {players.map(p => <PlayerCard key={p.slug} player={p} />)}
+        </div>
+      ) : (
+        <CarouselList players={players} />
+      )}
+
+      {/* Sponsor footer */}
+      <div className="flex items-center gap-6 px-4 pt-10">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-sardares.png" alt="Sardares" className="h-7 object-contain"
+          style={{ filter: GOLD_FILTER }} />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-7 object-contain"
+          style={{ filter: GOLD_FILTER }} />
+      </div>
     </div>
   );
 }
