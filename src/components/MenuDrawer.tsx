@@ -80,7 +80,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* ── MENU PRINCIPALE ── */}
-      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "185px", ...slide("main") }}>
+      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "72px", ...slide("main") }}>
         <nav className="px-8 pt-8 pb-6">
           <Link href="/" onClick={close} className={itemCls}>HOME</Link>
           <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
@@ -104,19 +104,20 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         </nav>
       </div>
 
-      {/* Sponsor logos — fissi in basso a sinistra */}
+      {/* Sponsor logos — fissi in basso, affiancati */}
       <div
-        className="absolute bottom-0 left-0 right-0 px-8 flex flex-col gap-3"
+        className="absolute bottom-0 left-0 right-0 px-8 flex flex-row items-center justify-between"
         style={{
-          paddingBottom: "calc(env(safe-area-inset-bottom) + 1.25rem)",
+          paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)",
           paddingTop: "0.75rem",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
           pointerEvents: "none",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares-gold.png" alt="Sardares" className="w-full h-auto object-contain" />
+        <img src="/logo-sardares-gold.png" alt="Sardares" className="h-7 w-auto object-contain" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="w-full h-auto object-contain" />
+        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="h-7 w-auto object-contain" />
       </div>
 
       {/* ── SUBMENU SQUADRE ── */}
