@@ -1,19 +1,29 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import MenuDrawer from "./MenuDrawer";
 
 export default function TopNav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
-    <nav
-      className="fixed top-0 inset-x-0 z-30 flex items-center justify-between px-5"
-      style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "14px" }}
-    >
-      {/* Hamburger */}
-      <button className="flex flex-col gap-[5px] p-1" aria-label="Menu">
-        <span className="block w-6 h-[1.5px] bg-white" />
-        <span className="block w-6 h-[1.5px] bg-white" />
-        <span className="block w-4 h-[1.5px] bg-white" />
-      </button>
+    <>
+      <MenuDrawer open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <nav
+        className="fixed top-0 inset-x-0 z-30 flex items-center justify-between px-5"
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "14px" }}
+      >
+        {/* Hamburger */}
+        <button
+          onClick={() => setMenuOpen(true)}
+          className="flex flex-col gap-[5px] p-1"
+          aria-label="Menu"
+        >
+          <span className="block w-6 h-[1.5px] bg-white" />
+          <span className="block w-6 h-[1.5px] bg-white" />
+          <span className="block w-4 h-[1.5px] bg-white" />
+        </button>
 
       {/* Logo → home */}
       <Link href="/" aria-label="Home">
@@ -35,6 +45,7 @@ export default function TopNav() {
           </svg>
         </div>
       </Link>
-    </nav>
+      </nav>
+    </>
   );
 }
