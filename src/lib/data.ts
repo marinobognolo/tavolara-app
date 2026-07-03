@@ -96,17 +96,24 @@ export const NEWS: NewsItem[] = [
     slug: "giovanni-ciaddu-massaggiatore",
     title: "Giovanni Ciaddu è il nuovo massaggiatore",
     excerpt: "Un ritorno in biancoverde: l'ex giocatore Giovanni Ciaddu entra nello staff per la stagione 2026/27.",
-    category: "Prima Squadra",
+    category: "Ufficiale",
     date: "2026-06-24",
     image: "/ciaddu.jpg",
   },
   {
     slug: "mister-tamponi-confermato",
-    title: "Mister Tamponi confermato per la stagione 2026/27",
+    title: "Mister Tamponi confermato per la stagione 2026/2027",
     excerpt: "La società riparte dalla guida tecnica che ha vinto il campionato.",
     category: "Ufficiale",
     date: "2026-06-22",
     image: "/tamponi.png",
+  },
+  {
+    slug: "checco-fera-vice-allenatore",
+    title: "Checco Fera confermato vice allenatore per la stagione 2026/2027",
+    excerpt: "La società conferma Checco Fera nel ruolo di vice allenatore per la stagione 2026/2027.",
+    category: "Ufficiale",
+    date: "2026-06-22",
   },
 ];
 
