@@ -15,7 +15,7 @@ const ROLE_MAP: Record<RoleTab, Player["role"]> = {
   Attaccanti: "Attaccante",
 };
 
-const GOLD_FILTER = "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)";
+const GOLD_FILTER = "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.88)";
 
 function PlayerCard({ player }: { player: Player }) {
   return (

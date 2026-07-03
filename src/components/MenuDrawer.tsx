@@ -80,7 +80,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* ── MENU PRINCIPALE ── */}
-      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "220px", ...slide("main") }}>
+      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "260px", ...slide("main") }}>
         <nav className="px-8 pt-8 pb-6">
           <Link href="/" onClick={close} className={itemCls}>HOME</Link>
           <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
@@ -114,11 +114,11 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-40 w-auto object-contain"
-          style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
+        <img src="/logo-sardares.png" alt="Sardares" className="h-48 w-auto object-contain"
+          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.88)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-40 w-auto object-contain"
-          style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-48 w-auto object-contain"
+          style={{ filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.88)" }} />
       </div>
 
       {/* ── SUBMENU SQUADRE ── */}
