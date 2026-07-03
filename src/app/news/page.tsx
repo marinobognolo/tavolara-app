@@ -39,8 +39,8 @@ export default function NewsPage() {
 
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-center justify-between">
-        <h1 className="font-body font-extrabold text-2xl uppercase text-white">Ultime News</h1>
-        <button className="px-4 py-1.5 rounded-full border border-white/20 font-mono text-[10px] uppercase tracking-wide text-white/60">
+        <h1 className="font-body font-extrabold text-3xl uppercase text-white">Ultime News</h1>
+        <button className="px-4 py-1.5 rounded-full border border-white/20 font-mono text-[11px] uppercase tracking-wide text-white/60">
           Di più
         </button>
       </div>
@@ -51,10 +51,10 @@ export default function NewsPage() {
           <div className="p-4 flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               {first.category && (
-                <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-oro mb-1.5">{first.category}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-oro mb-1.5">{first.category}</p>
               )}
-              <h2 className="font-body font-bold text-[1.1rem] uppercase text-white leading-snug">{first.title}</h2>
-              <p className="font-mono text-[10px] text-white/40 mt-2">{fmtDate(first.date)}</p>
+              <h2 className="font-body font-bold text-[1.3rem] uppercase text-white leading-snug">{first.title}</h2>
+              <p className="font-mono text-[11px] text-white/40 mt-2">{fmtDate(first.date)}</p>
             </div>
             <div className="flex flex-col gap-3 shrink-0 text-white/40 pt-1">
               <button aria-label="Like"><Heart /></button>
@@ -74,10 +74,10 @@ export default function NewsPage() {
           <div className="flex gap-3 p-4">
             <div className="flex-1 min-w-0">
               {second.category && (
-                <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-oro mb-1">{second.category}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-oro mb-1">{second.category}</p>
               )}
-              <h2 className="font-body font-semibold text-base uppercase text-white leading-snug">{second.title}</h2>
-              <p className="font-mono text-[10px] text-white/40 mt-1">{fmtDate(second.date)}</p>
+              <h2 className="font-body font-semibold text-[1.1rem] uppercase text-white leading-snug">{second.title}</h2>
+              <p className="font-mono text-[11px] text-white/40 mt-1">{fmtDate(second.date)}</p>
               <div className="flex gap-4 mt-2 text-white/40">
                 <button aria-label="Like"><Heart /></button>
                 <button aria-label="Condividi"><Share /></button>
@@ -97,10 +97,10 @@ export default function NewsPage() {
           <div className="flex gap-3 p-4">
             <div className="flex-1 min-w-0">
               {n.category && (
-                <p className="font-mono text-[10px] uppercase tracking-[0.15em] text-oro mb-1">{n.category}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.15em] text-oro mb-1">{n.category}</p>
               )}
-              <h2 className="font-body font-semibold text-sm uppercase text-white leading-snug line-clamp-2">{n.title}</h2>
-              <p className="font-mono text-[10px] text-white/40 mt-1">{fmtDate(n.date)}</p>
+              <h2 className="font-body font-semibold text-base uppercase text-white leading-snug line-clamp-2">{n.title}</h2>
+              <p className="font-mono text-[11px] text-white/40 mt-1">{fmtDate(n.date)}</p>
             </div>
             {n.image && (
               // eslint-disable-next-line @next/next/no-img-element
