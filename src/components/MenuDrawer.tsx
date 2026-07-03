@@ -67,7 +67,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         <nav className="px-8 pt-10">
           {MAIN_ITEMS.slice(0, 2).map((item) => (
             <Link key={item.label} href={item.href} onClick={close}
-              className="block py-2 font-body font-extrabold text-5xl uppercase text-white leading-none">
+              className="block py-2 font-body font-extrabold text-4xl uppercase text-white leading-none">
               {item.label}
             </Link>
           ))}
@@ -77,7 +77,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
             onClick={() => setLevel("squadre")}
             className="w-full flex items-center justify-between py-2"
           >
-            <span className="font-body font-extrabold text-5xl uppercase text-white leading-none">SQUADRE</span>
+            <span className="font-body font-extrabold text-4xl uppercase text-white leading-none">SQUADRE</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
               className="w-7 h-7 opacity-50 shrink-0 ml-3">
               <path d="M9 18l6-6-6-6" />
@@ -86,7 +86,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
 
           {MAIN_ITEMS.slice(2).map((item) => (
             <Link key={item.label} href={item.href} onClick={close}
-              className="block py-2 font-body font-extrabold text-5xl uppercase text-white leading-none">
+              className="block py-2 font-body font-extrabold text-4xl uppercase text-white leading-none">
               {item.label}
             </Link>
           ))}
@@ -109,7 +109,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
               className="w-6 h-6 text-oro shrink-0">
               <path d="M15 18l-6-6 6-6" />
             </svg>
-            <span className="font-body font-extrabold text-5xl uppercase text-oro leading-none">SQUADRE</span>
+            <span className="font-body font-extrabold text-4xl uppercase text-oro leading-none">SQUADRE</span>
           </button>
 
           <nav>
@@ -117,7 +117,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
               const isActive = pathname === item.href;
               return (
                 <Link key={item.label} href={item.href} onClick={close}
-                  className={`block py-2 font-body font-extrabold text-5xl uppercase leading-none transition-colors ${
+                  className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
                     isActive ? "text-oro" : "text-white"
                   }`}>
                   {item.label}
