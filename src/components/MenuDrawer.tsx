@@ -80,7 +80,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
       </div>
 
       {/* ── MENU PRINCIPALE ── */}
-      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "80px", ...slide("main") }}>
+      <div className="absolute inset-x-0 overflow-y-auto" style={{ top: "72px", bottom: "220px", ...slide("main") }}>
         <nav className="px-8 pt-8 pb-6">
           <Link href="/" onClick={close} className={itemCls}>HOME</Link>
           <Link href="/news" onClick={close} className={itemCls}>NEWS</Link>
@@ -114,10 +114,10 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-28 w-auto object-contain"
+        <img src="/logo-sardares.png" alt="Sardares" className="h-40 w-auto object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-28 w-auto object-contain"
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-40 w-auto object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
       </div>
 
@@ -129,7 +129,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
             {SQUADRE_ITEMS.map((item) => (
               <Link key={item.label} href={item.href} onClick={close}
                 className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
-                  pathname === item.href ? "text-oro" : "text-white"
+                  "text-white"
                 }`}>
                 {item.label}
               </Link>
@@ -146,7 +146,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
             {CLUB_ITEMS.map((item) => (
               <Link key={item.label} href={item.href} onClick={close}
                 className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
-                  pathname === item.href ? "text-oro" : "text-white"
+                  "text-white"
                 }`}>
                 {item.label}
               </Link>
