@@ -15,14 +15,16 @@ export default function TopNav() {
         <span className="block w-4 h-[1.5px] bg-white" />
       </button>
 
-      {/* Logo */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/logo-tavolara-gold.png"
-        alt="Tavolara Calcio"
-        className="h-8 object-contain"
-        style={{ filter: "brightness(0) invert(1)" }}
-      />
+      {/* Logo → home */}
+      <Link href="/" aria-label="Home">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-tavolara-gold.png"
+          alt="Tavolara Calcio"
+          className="h-8 object-contain"
+          style={{ filter: "brightness(0) invert(1)" }}
+        />
+      </Link>
 
       {/* Login */}
       <Link href="/login" aria-label="Login">
