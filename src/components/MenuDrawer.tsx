@@ -79,7 +79,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
           >
             <span className="font-body font-extrabold text-4xl uppercase text-white leading-none">SQUADRE</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-              className="w-7 h-7 opacity-50 shrink-0 ml-3">
+              className="w-7 h-7 opacity-80 shrink-0 ml-3">
               <path d="M9 18l6-6-6-6" />
             </svg>
           </button>
