@@ -114,10 +114,10 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-10 object-contain"
+        <img src="/logo-sardares.png" alt="Sardares" className="h-14 object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-10 object-contain"
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-14 object-contain"
           style={{ filter: "invert(68%) sepia(37%) saturate(417%) hue-rotate(354deg) brightness(97%) contrast(90%)" }} />
       </div>
 

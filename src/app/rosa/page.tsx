@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback } from "react";
+import Link from "next/link";
 import { PLAYERS, Player } from "@/lib/data";
 
 type RoleTab = "Portieri" | "Difensori" | "Centrocampisti" | "Attaccanti";
@@ -20,7 +21,7 @@ function PlayerCard({ player }: { player: Player }) {
   return (
     <div className="bg-carbon rounded-2xl overflow-hidden">
       <div className="flex gap-3 p-4" style={{ minHeight: "116px" }}>
-        {/* Foto giocatore */}
+        {/* Foto */}
         <div className="w-[68px] shrink-0 rounded-xl overflow-hidden bg-white/5 self-stretch">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -33,25 +34,16 @@ function PlayerCard({ player }: { player: Player }) {
 
         {/* Info */}
         <div className="flex-1 flex flex-col justify-between">
-          {/* Nome + Instagram */}
-          <div className="flex items-start justify-between gap-2">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-widest text-white/50 leading-none mb-0.5">
-                {player.first}
-                {player.captain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(C)</span>}
-                {player.viceCaptain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(VC)</span>}
-              </p>
-              <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-tight">
-                {player.last}
-              </p>
-            </div>
-            <button className="text-white/25 shrink-0 mt-0.5" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-[18px] h-[18px]">
-                <rect x="2" y="2" width="20" height="20" rx="5" />
-                <circle cx="12" cy="12" r="4" />
-                <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
-              </svg>
-            </button>
+          {/* Nome */}
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-widest text-white/50 leading-none mb-0.5">
+              {player.first}
+              {player.captain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(C)</span>}
+              {player.viceCaptain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(VC)</span>}
+            </p>
+            <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-tight">
+              {player.last}
+            </p>
           </div>
 
           {/* Numero + Maglia */}
@@ -123,26 +115,60 @@ function CarouselList({ players }: { players: Player[] }) {
 
 export default function RosaPage() {
   const [activeTab, setActiveTab] = useState<RoleTab>("Portieri");
+  const [showTeamPicker, setShowTeamPicker] = useState(false);
 
   const players = PLAYERS.filter(p => p.role === ROLE_MAP[activeTab]);
 
   return (
-    <div className="min-h-[100svh] bg-nero pb-32">
+    <div className="min-h-[100svh] bg-nero pb-32" onClick={() => showTeamPicker && setShowTeamPicker(false)}>
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-end justify-between">
         <h1 className="font-body font-extrabold text-[2.75rem] uppercase text-white leading-none">
           SQUADRE
         </h1>
-        <div
-          className="flex items-center gap-1 rounded-full px-3 py-1.5"
-          style={{ border: "1px solid rgba(201,168,106,0.4)" }}
-        >
-          <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "var(--color-oro)" }}>
-            PRIMA SQUADRA
-          </span>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" className="w-3 h-3 shrink-0" style={{ color: "var(--color-oro)" }}>
-            <path d="M6 9l6 6 6-6" />
-          </svg>
+
+        {/* Team picker */}
+        <div className="relative">
+          <button
+            onClick={(e) => { e.stopPropagation(); setShowTeamPicker(v => !v); }}
+            className="flex items-center gap-1 rounded-full px-3 py-1.5"
+            style={{ border: "1px solid rgba(201,168,106,0.45)" }}
+          >
+            <span className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "var(--color-oro)" }}>
+              PRIMA SQUADRA
+            </span>
+            <svg
+              viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}
+              strokeLinecap="round" strokeLinejoin="round"
+              className="w-3 h-3 shrink-0 transition-transform"
+              style={{ color: "var(--color-oro)", transform: showTeamPicker ? "rotate(180deg)" : "rotate(0deg)" }}
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+
+          {showTeamPicker && (
+            <div
+              className="absolute right-0 top-full mt-2 rounded-xl overflow-hidden z-20"
+              style={{ backgroundColor: "#1e1c18", border: "1px solid rgba(255,255,255,0.08)", minWidth: "160px" }}
+              onClick={e => e.stopPropagation()}
+            >
+              <button
+                onClick={() => setShowTeamPicker(false)}
+                className="block w-full text-left px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-white border-b"
+                style={{ borderColor: "rgba(255,255,255,0.06)" }}
+              >
+                Prima Squadra
+              </button>
+              <Link
+                href="/juniores"
+                onClick={() => setShowTeamPicker(false)}
+                className="block px-4 py-3 font-mono text-[11px] uppercase tracking-widest text-white/60"
+              >
+                Juniores
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
@@ -169,7 +195,7 @@ export default function RosaPage() {
         ))}
       </div>
 
-      {/* Lista portieri (verticale) o carousel (altri ruoli) */}
+      {/* Giocatori */}
       {activeTab === "Portieri" ? (
         <div className="flex flex-col gap-3 px-4">
           {players.map(p => <PlayerCard key={p.slug} player={p} />)}
@@ -178,13 +204,13 @@ export default function RosaPage() {
         <CarouselList players={players} />
       )}
 
-      {/* Sponsor footer */}
+      {/* Sponsor */}
       <div className="flex items-center gap-6 px-4 pt-10">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares.png" alt="Sardares" className="h-7 object-contain"
+        <img src="/logo-sardares.png" alt="Sardares" className="h-12 object-contain"
           style={{ filter: GOLD_FILTER }} />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-nexum.png" alt="Nexum STP" className="h-7 object-contain"
+        <img src="/logo-nexum.png" alt="Nexum STP" className="h-12 object-contain"
           style={{ filter: GOLD_FILTER }} />
       </div>
     </div>
