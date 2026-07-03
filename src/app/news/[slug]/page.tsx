@@ -29,7 +29,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
           ← News
         </Link>
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-oro mt-4 mb-2">{fmtDate(n.date)}</p>
-        <h1 className="font-display text-3xl uppercase text-avorio leading-tight mb-6">{n.title}</h1>
+        <h1 className="text-3xl text-avorio mb-6">{n.title}</h1>
         {n.body ? (
           <div className="space-y-4">
             {n.body.map((para, i) => (

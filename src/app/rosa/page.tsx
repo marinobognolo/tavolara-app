@@ -123,7 +123,7 @@ export default function RosaPage() {
     <div className="min-h-[100svh] bg-nero pb-32" onClick={() => showTeamPicker && setShowTeamPicker(false)}>
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-end justify-between">
-        <h1 className="font-body font-extrabold text-[2.75rem] uppercase text-white leading-none">
+        <h1 className="text-[2.75rem] text-white leading-none">
           SQUADRE
         </h1>
 

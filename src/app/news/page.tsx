@@ -39,7 +39,7 @@ export default function NewsPage() {
 
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-center justify-between">
-        <h1 className="font-body font-extrabold text-3xl uppercase text-white">Ultime News</h1>
+        <h1 className="text-3xl text-white">Ultime News</h1>
         <button className="px-4 py-1.5 rounded-full border border-white/20 font-mono text-[11px] uppercase tracking-wide text-white/60">
           Di più
         </button>
@@ -109,7 +109,7 @@ export default function NewsPage() {
 
       {/* Gallery ultimi 5 match */}
       <div className="px-4 mt-6">
-        <h2 className="font-display text-2xl text-white mb-4">Photo Gallery</h2>
+        <h2 className="text-2xl text-white mb-4">Photo Gallery</h2>
         <div className="space-y-3">
           {GALLERIES.map((g, i) => (
             <div key={i} className="relative rounded-2xl overflow-hidden" style={{ aspectRatio: "16/9" }}>

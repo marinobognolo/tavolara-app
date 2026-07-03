@@ -79,7 +79,7 @@ export default function LogoPage() {
             LE FASI EVOLUTIVE
           </span>
         </div>
-        <h1 className="font-display text-[2.4rem] uppercase text-white leading-[1.05]">
+        <h1 className="text-[2.4rem] text-white">
           Scorri la linea del tempo
         </h1>
       </div>
@@ -151,7 +151,7 @@ export default function LogoPage() {
         >
           {LOGHI[active].year}
         </p>
-        <h2 className="font-display text-[1.9rem] uppercase text-white leading-tight mb-3">
+        <h2 className="text-[1.9rem] text-white mb-3">
           {LOGHI[active].title}
         </h2>
         <p

@@ -39,7 +39,7 @@ export default function PartitePage() {
       {/* Header */}
       <div className="px-5 pt-24 pb-6">
         <p className="eyebrow mb-2">Stagione 2025/26</p>
-        <h1 className="font-display text-4xl text-avorio">Partite</h1>
+        <h1 className="text-4xl text-avorio">Partite</h1>
       </div>
 
       {/* ── PROSSIMA PARTITA ── */}
