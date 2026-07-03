@@ -5,7 +5,7 @@ import { useState } from "react";
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [zooming, setZooming] = useState(false);
 
-  function handleEnded() {
+  function skip() {
     setZooming(true);
     setTimeout(onComplete, 400);
   }
@@ -17,12 +17,12 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
         autoPlay
         muted
         playsInline
-        onEnded={handleEnded}
+        onEnded={skip}
         className="absolute inset-0 w-full h-full object-cover"
       />
 
-      {/* Logo centrato */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {/* Logo centrato — click per saltare */}
+      <div className="absolute inset-0 flex items-center justify-center" onClick={skip}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo-tavolara-gold.png"
