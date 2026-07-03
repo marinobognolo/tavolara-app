@@ -51,7 +51,8 @@ export default function Home() {
         {/* Titolo */}
         <Link href={`/news/${news.slug}`}>
           <h2 className="font-body font-extrabold text-[1.85rem] uppercase text-white leading-[1.05] mb-5">
-            {news.title}
+            {news.category && <span className="text-oro">{news.category.toUpperCase()} | </span>}
+            {news.title.toUpperCase()}
           </h2>
         </Link>
 
