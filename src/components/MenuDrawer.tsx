@@ -104,20 +104,20 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
         </nav>
       </div>
 
-      {/* Sponsor logos — fissi in basso, affiancati */}
+      {/* Sponsor logos — fissi in basso, centrati */}
       <div
-        className="absolute bottom-0 left-0 right-0 px-8 flex flex-row items-center justify-between"
+        className="absolute bottom-0 left-0 right-0 flex flex-row items-center justify-center gap-10"
         style={{
           paddingBottom: "calc(env(safe-area-inset-bottom) + 1rem)",
           paddingTop: "0.75rem",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
           pointerEvents: "none",
         }}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares-gold.png" alt="Sardares" className="h-7 w-auto object-contain" />
+        <img src="/logo-sardares-gold.png" alt="Sardares" className="h-5 w-auto object-contain opacity-70" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="h-7 w-auto object-contain" />
+        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="h-5 w-auto object-contain opacity-70" />
       </div>
 
       {/* ── SUBMENU SQUADRE ── */}
@@ -127,9 +127,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
           <nav>
             {SQUADRE_ITEMS.map((item) => (
               <Link key={item.label} href={item.href} onClick={close}
-                className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
-                  "text-white"
-                }`}>
+                className="block py-2 font-body font-extrabold text-2xl uppercase text-white leading-none">
                 {item.label}
               </Link>
             ))}
@@ -144,9 +142,7 @@ export default function MenuDrawer({ open, onClose }: { open: boolean; onClose: 
           <nav>
             {CLUB_ITEMS.map((item) => (
               <Link key={item.label} href={item.href} onClick={close}
-                className={`block py-2 font-body font-extrabold text-4xl uppercase leading-none transition-colors ${
-                  "text-white"
-                }`}>
+                className="block py-2 font-body font-extrabold text-2xl uppercase text-white leading-none">
                 {item.label}
               </Link>
             ))}

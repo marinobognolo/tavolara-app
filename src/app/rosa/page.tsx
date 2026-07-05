@@ -123,7 +123,7 @@ export default function RosaPage() {
     <div className="min-h-[100svh] bg-nero pb-32" onClick={() => showTeamPicker && setShowTeamPicker(false)}>
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-end justify-between">
-        <h1 className="text-[2.75rem] text-white leading-none">
+        <h1 className="text-4xl text-white leading-none">
           SQUADRE
         </h1>
 
@@ -205,11 +205,12 @@ export default function RosaPage() {
       )}
 
       {/* Sponsor */}
-      <div className="flex flex-col gap-3 px-4 pt-10">
+      <div className="mt-10 mx-4 pt-6 pb-4 flex flex-row items-center justify-center gap-10"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.1)" }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sardares-gold.png" alt="Sardares" className="w-full h-auto object-contain" />
+        <img src="/logo-sardares-gold.png" alt="Sardares" className="h-5 w-auto object-contain opacity-70" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="w-full h-auto object-contain" />
+        <img src="/logo-sponsor-3-gold.png" alt="Nexum STP" className="h-5 w-auto object-contain opacity-70" />
       </div>
     </div>
   );
