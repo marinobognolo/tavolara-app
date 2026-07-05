@@ -11,48 +11,22 @@ type Standing = { pos: number; team: string; g: number; v: number; p: number; s:
 type Scorer = { name: string; team: string; goals: number; isUs?: boolean };
 type TavScorer = { number?: number; first: string; last: string; goals: number };
 
-// ── RISULTATI 2025/26 — tutte 26 giornate (più recente prima) ──
+// ── RISULTATI 2025/26 — ultime 5 (più recente prima) ──
 const MATCHES_2526: Match[] = [
   { date: "2026-04-26", home: "Tavolara",           away: "F.C. Biasì",            gH: 5, gA: 1, r: "V" },
   { date: "2026-04-18", home: "Palau",               away: "Tavolara",              gH: 1, gA: 1, r: "P" },
   { date: "2026-04-12", home: "La Salette Olbia",   away: "Tavolara",              gH: 1, gA: 3, r: "V" },
   { date: "2026-03-28", home: "Tavolara",           away: "Porto San Paolo",        gH: 6, gA: 0, r: "V" },
   { date: "2026-03-21", home: "Funtanaliras",        away: "Tavolara",              gH: 0, gA: 2, r: "V" },
-  { date: "2026-03-07", home: "Tavolara",           away: "Porto Cervo",            gH: 2, gA: 0, r: "V" },
-  { date: "2026-02-28", home: "Trinità",             away: "Tavolara",              gH: 1, gA: 9, r: "V" },
-  { date: "2026-02-21", home: "Tavolara",           away: "Siniscola 2010",         gH: 5, gA: 0, r: "V" },
-  { date: "2026-02-07", home: "Loiri",               away: "Tavolara",              gH: 1, gA: 7, r: "V" },
-  { date: "2026-01-31", home: "Tavolara",           away: "Alà",                    gH: 5, gA: 4, r: "V" },
-  { date: "2026-01-24", home: "Academy PR",          away: "Tavolara",              gH: 1, gA: 1, r: "P" },
-  { date: "2026-01-17", home: "Tavolara",           away: "Golfo Aranci",           gH: 2, gA: 2, r: "P" },
-  { date: "2026-01-10", home: "Budonese",            away: "Tavolara",              gH: 1, gA: 6, r: "V" },
-  { date: "2025-12-21", home: "F.C. Biasì",         away: "Tavolara",              gH: 0, gA: 4, r: "V" },
-  { date: "2025-12-13", home: "Tavolara",           away: "Palau",                  gH: 5, gA: 3, r: "V" },
-  { date: "2025-12-06", home: "Tavolara",           away: "La Salette Olbia",       gH: 3, gA: 0, r: "V" },
-  { date: "2025-11-30", home: "Porto San Paolo",    away: "Tavolara",              gH: 3, gA: 4, r: "V" },
-  { date: "2025-11-22", home: "Tavolara",           away: "Funtanaliras",           gH: 3, gA: 0, r: "V" },
-  { date: "2025-11-15", home: "Porto Cervo",        away: "Tavolara",              gH: 2, gA: 2, r: "P" },
-  { date: "2025-11-08", home: "Tavolara",           away: "Trinità",               gH: 5, gA: 0, r: "V" },
-  { date: "2025-11-01", home: "Siniscola 2010",     away: "Tavolara",              gH: 0, gA: 4, r: "V" },
-  { date: "2025-10-25", home: "Tavolara",           away: "Loiri",                  gH: 7, gA: 1, r: "V" },
-  { date: "2025-10-18", home: "Alà",                away: "Tavolara",              gH: 1, gA: 3, r: "V" },
-  { date: "2025-10-11", home: "Tavolara",           away: "Academy PR",             gH: 3, gA: 0, r: "V" },
-  { date: "2025-10-04", home: "Golfo Aranci",       away: "Tavolara",              gH: 2, gA: 2, r: "P" },
-  { date: "2025-09-27", home: "Tavolara",           away: "Budonese",              gH: 2, gA: 0, r: "V" },
 ];
 
-// ── RISULTATI 2024/25 — ultimi 10 (più recente prima) ──
+// ── RISULTATI 2024/25 — ultime 5 (più recente prima) ──
 const MATCHES_2425: Match[] = [
   { date: "2025-05-04", home: "Codaruina",           away: "Tavolara",              gH: 1, gA: 4, r: "V" },
   { date: "2025-04-27", home: "Tavolara",            away: "Sporting Paduledda",   gH: 1, gA: 0, r: "V" },
   { date: "2025-04-20", home: "Tavolara",            away: "Atletico Castelsardo",  gH: 2, gA: 1, r: "V" },
   { date: "2025-04-13", home: "Trinità",              away: "Tavolara",              gH: 2, gA: 3, r: "V" },
   { date: "2025-04-06", home: "Tavolara",            away: "Alà",                   gH: 3, gA: 1, r: "V" },
-  { date: "2025-03-30", home: "Academy PR",           away: "Tavolara",              gH: 1, gA: 1, r: "P" },
-  { date: "2025-03-23", home: "Golfo Aranci",         away: "Tavolara",              gH: 3, gA: 1, r: "S" },
-  { date: "2025-03-09", home: "Tavolara",            away: "Atletico Castelsardo",  gH: 3, gA: 0, r: "V" },
-  { date: "2025-03-02", home: "Tavolara",            away: "Funtanaliras",          gH: 2, gA: 3, r: "S" },
-  { date: "2025-02-16", home: "Santa Teresa",         away: "Tavolara",              gH: 1, gA: 3, r: "V" },
 ];
 
 // ── RISULTATI 2023/24 — ultimi 5 (più recente prima) ──
