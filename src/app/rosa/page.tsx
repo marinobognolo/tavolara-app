@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { PLAYERS, Player } from "@/lib/data";
+import { haptic } from "@/lib/haptic";
 
 type RoleTab = "Portieri" | "Difensori" | "Centrocampisti" | "Attaccanti";
 
@@ -190,7 +191,7 @@ export default function RosaPage() {
         {TABS.map(tab => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={() => { haptic(); setActiveTab(tab); }}
             className="shrink-0 px-4 pt-1 pb-3 relative font-mono text-[11px] uppercase tracking-widest transition-colors"
             style={{ color: activeTab === tab ? "white" : "rgba(255,255,255,0.3)" }}
           >
@@ -208,7 +209,11 @@ export default function RosaPage() {
       {/* Giocatori */}
       {activeTab === "Portieri" ? (
         <div className="flex flex-col gap-3 px-4">
-          {players.map(p => <PlayerCard key={p.slug} player={p} />)}
+          {players.map((p, i) => (
+            <div key={p.slug} className={`card-in card-in-${Math.min(i + 1, 8)}`}>
+              <PlayerCard player={p} />
+            </div>
+          ))}
         </div>
       ) : (
         <CarouselList players={players} />

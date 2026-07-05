@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { haptic } from "@/lib/haptic";
 
 const TABS = [
   { href: "/", label: "Home", exact: true, icon: (active: boolean) => (
@@ -42,6 +43,7 @@ export default function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              onClick={() => haptic()}
               className={`relative flex flex-1 flex-col items-center justify-center gap-1 transition-colors duration-200 ${
                 isActive ? "text-oro" : "text-avorio-dim/50"
               }`}

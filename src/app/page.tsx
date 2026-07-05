@@ -3,6 +3,8 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { NEWS } from "@/lib/data";
+import { supabase } from "@/lib/supabase";
+import { haptic } from "@/lib/haptic";
 
 const LATEST = NEWS[0];
 
@@ -616,8 +618,102 @@ function SlideGame() {
   );
 }
 
+// ─── SLIDE 6: Fan Wall ──────────────────────────────────────
+type FanPost = { id: number; nickname: string; reaction: string; message: string | null; created_at: string };
+const REACTIONS = ["🔥", "❤️", "💪", "🏆", "⚡"];
+
+function SlideFanWall() {
+  const [posts, setPosts] = useState<FanPost[]>([]);
+  const [reaction, setReaction] = useState("🔥");
+  const [msg, setMsg] = useState("");
+  const [name, setName] = useState(() => { try { return localStorage.getItem("tav-fan-name") || ""; } catch { return ""; } });
+  const [sending, setSending] = useState(false);
+  const [error, setError] = useState(false);
+
+  const load = useCallback(async () => {
+    try {
+      const { data } = await supabase.from("fan_wall").select("*").order("created_at", { ascending: false }).limit(5);
+      if (data) setPosts(data as FanPost[]);
+    } catch { setError(true); }
+  }, []);
+
+  useEffect(() => { load(); const t = setInterval(load, 12000); return () => clearInterval(t); }, [load]);
+
+  const send = async () => {
+    if (sending) return;
+    haptic("medium");
+    setSending(true);
+    const nick = name.trim() || "Tifoso";
+    try { localStorage.setItem("tav-fan-name", nick); } catch {}
+    try {
+      await supabase.from("fan_wall").insert({ nickname: nick, reaction, message: msg.trim().slice(0, 100) || null });
+      setMsg("");
+      await load();
+    } catch { setError(true); }
+    setSending(false);
+  };
+
+  return (
+    <div className="relative w-full h-full" style={{ backgroundColor: "#0c0a07" }}>
+      {/* Grid bg */}
+      <div className="absolute inset-0 pointer-events-none" style={{ opacity: 0.05, backgroundImage: "linear-gradient(rgba(201,168,106,1) 1px,transparent 1px),linear-gradient(90deg,rgba(201,168,106,1) 1px,transparent 1px)", backgroundSize: "38px 38px" }} />
+      {/* Gold glow */}
+      <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse 80% 40% at 50% 20%, rgba(201,168,106,0.07) 0%, transparent 65%)" }} />
+
+      <div className="relative flex flex-col h-full px-5" style={{ paddingTop: "calc(env(safe-area-inset-top) + 68px)", paddingBottom: "calc(env(safe-area-inset-bottom) + 5rem)" }}>
+        <p className="font-mono text-[0.58rem] uppercase tracking-[0.22em] mb-1" style={{ color: "var(--color-oro)" }}>Tifosi</p>
+        <h2 className="font-body font-extrabold text-[1.7rem] uppercase text-white mb-3 leading-none">FAN WALL</h2>
+
+        {/* Messaggi */}
+        <div className="flex-1 flex flex-col gap-2 overflow-hidden mb-3" onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+          {error && <p className="font-mono text-[0.58rem] text-white/30 uppercase text-center py-4">Configura Supabase su Vercel per attivare il Fan Wall</p>}
+          {!error && posts.length === 0 && <p className="font-mono text-[0.6rem] text-white/30 uppercase text-center py-6">Sii il primo tifoso a scrivere!</p>}
+          {posts.map((p, i) => (
+            <div key={p.id} className={`flex items-start gap-2.5 rounded-2xl px-3 py-2.5 card-in card-in-${i + 1}`} style={{ backgroundColor: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+              <span className="text-[1.25rem] leading-none mt-0.5">{p.reaction}</span>
+              <div className="flex-1 min-w-0">
+                <span className="font-mono text-[0.58rem] uppercase tracking-wide" style={{ color: "var(--color-oro)" }}>{p.nickname}</span>
+                {p.message && <p className="font-mono text-[0.65rem] text-white/80 mt-0.5 leading-snug">{p.message}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Reaction picker */}
+        <div className="flex gap-2 mb-2" onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+          {REACTIONS.map(r => (
+            <button key={r} onClick={() => { haptic(); setReaction(r); }}
+              className="text-[1.2rem] w-9 h-9 rounded-full flex items-center justify-center transition-all duration-150"
+              style={{ backgroundColor: reaction === r ? "rgba(201,168,106,0.22)" : "rgba(255,255,255,0.07)", border: reaction === r ? "1px solid rgba(201,168,106,0.5)" : "1px solid transparent", transform: reaction === r ? "scale(1.15)" : "scale(1)" }}>
+              {r}
+            </button>
+          ))}
+        </div>
+
+        {/* Form */}
+        <div className="flex flex-col gap-2" onTouchStart={e => e.stopPropagation()} onTouchEnd={e => e.stopPropagation()}>
+          <div className="flex gap-2">
+            <input value={msg} onChange={e => setMsg(e.target.value)} onKeyDown={e => e.key === "Enter" && send()}
+              placeholder="Scrivi un messaggio..." maxLength={100}
+              className="flex-1 rounded-xl px-3 py-2 font-mono text-[0.68rem] text-white placeholder-white/25 focus:outline-none"
+              style={{ backgroundColor: "rgba(255,255,255,0.07)", border: "1px solid rgba(255,255,255,0.12)" }} />
+            <button onClick={send} disabled={sending}
+              className="px-4 py-2 rounded-xl font-body font-extrabold text-[0.72rem] uppercase tracking-wide transition-opacity"
+              style={{ backgroundColor: "var(--color-oro)", color: "var(--color-nero)", opacity: sending ? 0.55 : 1 }}>
+              {sending ? "…" : "Invia"}
+            </button>
+          </div>
+          <input value={name} onChange={e => setName(e.target.value)} placeholder="Il tuo nome (facoltativo)"
+            className="w-full rounded-xl px-3 py-2 font-mono text-[0.62rem] text-white/70 placeholder-white/20 focus:outline-none"
+            style={{ backgroundColor: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── HOME ────────────────────────────────────────────────────
-const SLIDES = ["news", "kit", "gallery", "match", "game"] as const;
+const SLIDES = ["news", "kit", "gallery", "match", "game", "fanwall"] as const;
 
 export default function Home() {
   const [active, setActive] = useState(0);
@@ -665,6 +761,7 @@ export default function Home() {
           </div>
           <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideMatch onHighlights={() => setCronacaOpen(true)} /></div>
           <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideGame /></div>
+          <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideFanWall /></div>
         </div>
 
         {/* Dot indicators */}
@@ -675,7 +772,7 @@ export default function Home() {
           {SLIDES.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActive(i)}
+              onClick={() => { haptic(); setActive(i); }}
               className="h-[2px] rounded-full transition-all duration-300"
               style={{
                 width: i === active ? "22px" : "10px",
