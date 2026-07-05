@@ -244,12 +244,21 @@ export default function CorsaPage() {
       speed += 0.0006;
       bgX   -= speed * 0.25;
 
-      // Spawn birilli — distanza variabile per sessione
-      // La difficoltà aumenta solo con la velocità, non con la densità
+      // Spawn birilli — tre modalità di gap per varietà di ritmo
       spawnT -= speed;
       if (spawnT <= 0) {
         obstacles.push({ x: W + 20, w: 16 + Math.random() * 12, h: 22 + Math.random() * 20 });
-        spawnT = Math.max(sessionGapMin, sessionGapBase + Math.random() * 80 - dist / 220);
+        const gapRoll = Math.random();
+        if (gapRoll < 0.18) {
+          // Respiro lungo — pausa di sollievo (18%)
+          spawnT = sessionGapBase * (1.6 + Math.random() * 0.8);
+        } else if (gapRoll < 0.34) {
+          // Coppia ravvicinata — sfida breve (16%)
+          spawnT = Math.max(120, sessionGapBase * 0.52 + Math.random() * 45);
+        } else {
+          // Gap normale con leggera variazione (66%)
+          spawnT = Math.max(sessionGapMin, sessionGapBase + Math.random() * 90 - dist / 220);
+        }
       }
 
       // Spawn palloni
