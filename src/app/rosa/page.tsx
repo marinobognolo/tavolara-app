@@ -120,7 +120,17 @@ export default function RosaPage() {
   const players = PLAYERS.filter(p => p.role === ROLE_MAP[activeTab]);
 
   return (
-    <div className="min-h-[100svh] bg-nero pb-32" onClick={() => showTeamPicker && setShowTeamPicker(false)}>
+    <div className="min-h-[100svh] bg-nero pb-32 relative" onClick={() => showTeamPicker && setShowTeamPicker(false)}>
+      {/* Grid background */}
+      <div
+        className="fixed inset-0 pointer-events-none"
+        style={{
+          opacity: 0.04,
+          backgroundImage:
+            "linear-gradient(rgba(201,168,106,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,106,1) 1px, transparent 1px)",
+          backgroundSize: "38px 38px",
+        }}
+      />
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-end justify-between">
         <h1 className="text-4xl text-white leading-none">
