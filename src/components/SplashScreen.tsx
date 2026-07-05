@@ -19,6 +19,11 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
   }, [onComplete]);
 
   useEffect(() => {
+    // Su localhost (dev server / preview) salta la splash
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      onComplete();
+      return;
+    }
     // Se l'utente ha già visto la splash di recente, salta subito
     try {
       const last = Number(localStorage.getItem(SPLASH_KEY) ?? "0");
