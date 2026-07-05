@@ -1,130 +1,127 @@
 import type { Metadata } from "next";
+import { CountdownWidget } from "./CountdownWidget";
+import { PartiteTabs } from "./PartiteTabs";
 
 export const metadata: Metadata = { title: "Partite" };
 
 const NEXT_MATCH = {
   home: "Tavolara",
   away: "Da definire",
-  date: "13 settembre 2026",
-  venue: "Geovillage, Olbia",
+  datetime: null as string | null, // es. "2026-09-13T16:00:00" quando confermata
+  date: "Da definire",
+  venue: "Da definire",
   competition: "Prima Categoria",
 };
 
-const MATCHES = [
-  { date: "2026-04-26", home: "Tavolara", away: "FC Biasi",      gH: 5, gA: 1, comp: "Seconda Categoria", r: "V" },
-  { date: "2026-04-19", home: "Tavolara", away: "Budonese",      gH: 3, gA: 0, comp: "Seconda Categoria", r: "V" },
-  { date: "2026-04-12", home: "Palau",    away: "Tavolara",      gH: 1, gA: 1, comp: "Seconda Categoria", r: "P" },
-  { date: "2026-04-05", home: "Tavolara", away: "Calangianus",   gH: 2, gA: 0, comp: "Seconda Categoria", r: "V" },
-  { date: "2026-03-29", home: "Tempio",   away: "Tavolara",      gH: 0, gA: 2, comp: "Seconda Categoria", r: "V" },
-  { date: "2026-03-22", home: "Tavolara", away: "Ozierese",      gH: 1, gA: 1, comp: "Seconda Categoria", r: "P" },
-  { date: "2026-03-15", home: "Arzachena",away: "Tavolara",      gH: 2, gA: 1, comp: "Seconda Categoria", r: "S" },
-];
-
-const BADGE: Record<string, { bg: string; color: string }> = {
-  V: { bg: "rgba(74,222,128,0.13)",  color: "#4ade80" },
-  P: { bg: "rgba(250,204,21,0.13)",  color: "#facc15" },
-  S: { bg: "rgba(248,113,113,0.13)", color: "#f87171" },
-};
-
-function fmtDate(iso: string) {
-  return new Date(iso)
-    .toLocaleDateString("it-IT", { day: "2-digit", month: "short" })
-    .toUpperCase();
+function TavLogo({ size = 22 }: { size?: number }) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/logo-tavolara-gold.png"
+      alt=""
+      aria-hidden
+      style={{ width: size, height: size, objectFit: "contain", flexShrink: 0 }}
+    />
+  );
 }
 
 export default function PartitePage() {
   return (
-    <div className="min-h-[100svh] bg-nero pb-28">
+    <div className="min-h-[100svh] pb-28" style={{ backgroundColor: "var(--color-nero)" }}>
 
-      {/* Header */}
-      <div className="px-5 pt-24 pb-6">
-        <p className="eyebrow mb-2">Stagione 2025/26</p>
-        <h1 className="text-4xl text-avorio">Partite</h1>
-      </div>
+      {/* ── PROSSIMA PARTITA HERO ── */}
+      <div
+        className="relative overflow-hidden flex flex-col"
+        style={{
+          minHeight: "calc(100svh - 80px)",
+          background: "linear-gradient(160deg, #080600 0%, #181000 45%, #0c0900 100%)",
+        }}
+      >
+        {/* Gold radial glow */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 90% 65% at 50% 52%, rgba(201,168,106,0.10) 0%, transparent 68%)" }} />
+        {/* Grid */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.038]"
+          style={{
+            backgroundImage: "linear-gradient(rgba(201,168,106,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,106,1) 1px, transparent 1px)",
+            backgroundSize: "42px 42px",
+          }} />
+        {/* Top gold bar */}
+        <div className="h-[3px] shrink-0" style={{ backgroundColor: "var(--color-oro)" }} />
 
-      {/* ── PROSSIMA PARTITA ── */}
-      <div className="mx-5 mb-8 bg-carbon rounded-2xl overflow-hidden">
-        <div className="h-[3px]" style={{ backgroundColor: "var(--color-oro)" }} />
-        <div className="p-5">
-          <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-oro mb-5">
-            Prossima · {NEXT_MATCH.competition}
+        {/* Header */}
+        <div className="relative px-6 pt-20 pb-2">
+          <p className="font-mono text-[9px] uppercase tracking-[0.28em]" style={{ color: "var(--color-oro)" }}>
+            Stagione 2026/27
           </p>
+          <h1 className="font-body font-extrabold text-[2rem] uppercase text-white leading-none mt-1">
+            Partite
+          </h1>
+        </div>
 
-          <div className="flex items-center gap-2">
-            <p className="flex-1 font-body font-extrabold text-xl uppercase text-white">
-              {NEXT_MATCH.home}
-            </p>
-            <p className="shrink-0 font-mono text-[11px] uppercase tracking-widest text-white/25">
-              vs
-            </p>
-            <p className="flex-1 text-right font-body font-extrabold text-xl uppercase text-white/40">
-              {NEXT_MATCH.away}
-            </p>
+        {/* Main hero content */}
+        <div className="relative flex-1 flex flex-col items-center justify-center px-6 pb-8 text-center">
+
+          {/* Competition badge */}
+          <div className="mb-10 px-5 py-2 rounded-full font-mono text-[9px] uppercase tracking-[0.24em]"
+            style={{ border: "1px solid rgba(201,168,106,0.3)", color: "var(--color-oro)", background: "rgba(201,168,106,0.07)" }}>
+            Prossima · {NEXT_MATCH.competition}
           </div>
 
-          <div
-            className="mt-4 pt-4 flex items-center justify-between"
-            style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
-          >
-            <p className="font-mono text-[9px] uppercase tracking-wider text-white/40">
-              {NEXT_MATCH.date}
-            </p>
-            <p className="font-mono text-[9px] uppercase tracking-wider text-white/40">
-              {NEXT_MATCH.venue}
-            </p>
+          {/* Teams */}
+          <div className="w-full flex items-center justify-between gap-2 mb-2">
+            {/* Home */}
+            <div className="flex-1 flex flex-col items-center gap-3">
+              {NEXT_MATCH.home === "Tavolara" && <TavLogo size={64} />}
+              <p className="font-body font-extrabold text-[1.25rem] uppercase text-white leading-none">
+                {NEXT_MATCH.home}
+              </p>
+            </div>
+            {/* VS */}
+            <div className="shrink-0 px-2">
+              <p className="font-mono text-[22px] font-bold" style={{ color: "rgba(255,255,255,0.10)", letterSpacing: "0.12em" }}>VS</p>
+            </div>
+            {/* Away */}
+            <div className="flex-1 flex flex-col items-center gap-3">
+              {NEXT_MATCH.away === "Tavolara" && <TavLogo size={64} />}
+              <p className="font-body font-extrabold text-[1.25rem] uppercase leading-none" style={{ color: "rgba(255,255,255,0.42)" }}>
+                {NEXT_MATCH.away}
+              </p>
+            </div>
           </div>
+
+          {/* Countdown */}
+          <CountdownWidget datetime={NEXT_MATCH.datetime} />
+
+          {/* Date + Venue bar */}
+          <div className="w-full flex items-center justify-between px-5 py-4 rounded-2xl"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <div className="text-left">
+              <p className="font-mono text-[8px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.28)" }}>Data</p>
+              <p className="font-body font-extrabold text-[0.85rem] uppercase text-white">{NEXT_MATCH.date}</p>
+            </div>
+            <div className="w-px h-8 mx-4" style={{ background: "rgba(255,255,255,0.08)" }} />
+            <div className="text-right">
+              <p className="font-mono text-[8px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.28)" }}>Luogo</p>
+              <p className="font-body font-extrabold text-[0.85rem] uppercase text-white">{NEXT_MATCH.venue}</p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* Scroll hint */}
+        <div className="relative flex flex-col items-center pb-5 gap-1">
+          <p className="font-mono text-[8px] uppercase tracking-[0.22em]" style={{ color: "rgba(255,255,255,0.2)" }}>
+            Scorri per i risultati
+          </p>
+          <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{ opacity: 0.25 }}>
+            <path d="M1 1l5 5 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </div>
       </div>
 
-      {/* ── ULTIMI RISULTATI ── */}
-      <div className="px-5">
-        <p className="eyebrow mb-4">Ultimi risultati</p>
-        <div className="flex flex-col gap-2">
-          {MATCHES.map((m, i) => {
-            const badge = BADGE[m.r];
-            const tavHome = m.home === "Tavolara";
-            return (
-              <div key={i} className="bg-carbon rounded-2xl p-4 flex items-center gap-3">
-
-                {/* Badge V / P / S */}
-                <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-mono text-xs font-bold"
-                  style={{ backgroundColor: badge.bg, color: badge.color }}
-                >
-                  {m.r}
-                </div>
-
-                {/* Squadre + punteggio */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5 flex-wrap leading-none">
-                    <span
-                      className="font-body font-extrabold text-sm uppercase"
-                      style={{ color: tavHome ? "white" : "rgba(255,255,255,0.45)" }}
-                    >
-                      {m.home}
-                    </span>
-                    <span
-                      className="font-mono text-sm font-bold"
-                      style={{ color: "var(--color-oro)" }}
-                    >
-                      {m.gH}–{m.gA}
-                    </span>
-                    <span
-                      className="font-body font-extrabold text-sm uppercase"
-                      style={{ color: !tavHome ? "white" : "rgba(255,255,255,0.45)" }}
-                    >
-                      {m.away}
-                    </span>
-                  </div>
-                  <p className="font-mono text-[9px] uppercase tracking-wider text-white/30 mt-1">
-                    {fmtDate(m.date)} · {m.comp}
-                  </p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {/* ── TAB: PARTITE / CLASSIFICA / MARCATORI ── */}
+      <PartiteTabs />
 
     </div>
   );

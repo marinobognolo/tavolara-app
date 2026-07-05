@@ -12,7 +12,7 @@ const SQUADRE_ITEMS = [
 ];
 
 const CLUB_ITEMS = [
-  { label: "CHI SIAMO", href: "/club" },
+  { label: "CHI SIAMO", href: "/chi-siamo" },
   { label: "LOGO", href: "/logo" },
   { label: "ORGANIGRAMMA", href: "/organigramma" },
   { label: "PALMARES", href: "/palmares" },

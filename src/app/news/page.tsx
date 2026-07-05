@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { NEWS, fmtDate } from "@/lib/data";
+import { NEWS } from "@/lib/data";
+import NewsCarousel from "@/components/NewsCarousel";
 
 export const metadata: Metadata = { title: "News" };
 
@@ -24,43 +24,8 @@ export default function NewsPage() {
         </button>
       </div>
 
-      {/* Lista news — tutte le card identiche */}
-      <div className="flex flex-col gap-2 px-4">
-        {NEWS.map((n) => (
-          <Link
-            key={n.slug}
-            href={`/news/${n.slug}`}
-            className="block bg-carbon rounded-2xl overflow-hidden"
-          >
-            <div className="flex gap-4 p-4 items-center">
-              {/* Testo */}
-              <div className="flex-1 min-w-0">
-                {n.category && (
-                  <p className="font-mono text-[9px] uppercase tracking-[0.15em] mb-1" style={{ color: "var(--color-oro)" }}>
-                    {n.category}
-                  </p>
-                )}
-                <p className="font-body font-extrabold text-[1rem] uppercase text-white leading-snug line-clamp-2">
-                  {n.title}
-                </p>
-                <p className="font-mono text-[10px] text-white/40 mt-1.5">{fmtDate(n.date)}</p>
-              </div>
-
-              {/* Foto — dimensione fissa uguale per tutti */}
-              {n.image && (
-                <div className="w-[72px] h-[72px] shrink-0 rounded-xl overflow-hidden bg-white/5">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={n.image}
-                    alt=""
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-            </div>
-          </Link>
-        ))}
-      </div>
+      {/* Lista news a blocchi di 3 con swipe */}
+      <NewsCarousel news={NEWS} />
 
       {/* Gallery ultimi 5 match */}
       <div className="px-4 mt-8">

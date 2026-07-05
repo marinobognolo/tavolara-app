@@ -7,43 +7,43 @@ const LOGHI = [
     year: "1954",
     title: "Le origini",
     desc: "Il primo stemma del Gruppo Sportivo Tavolara: l'isola e la barca a tratto, dalla fondazione.",
-    img: "/loghi/1954.png",
+    img: "/1954.png",
   },
   {
     year: "1970",
     title: "Lo scudo a colori",
     desc: "Lo stemma biancoverde con l'isola e la barca; in basso l'anno di fondazione.",
-    img: "/loghi/1970.png",
+    img: "/1970.png",
   },
   {
     year: "2000",
     title: "Gli anni della Serie D",
     desc: "Lo stemma con l'aquila, nel periodo più alto della storia biancoverde.",
-    img: "/loghi/2000.png",
+    img: "/2000.png",
   },
   {
     year: "2004",
     title: "Il Cinquantenario",
     desc: "Il marchio per i 50 anni del club (1954–2004).",
-    img: "/loghi/2004.png",
+    img: "/2004.png",
   },
   {
     year: "2010",
     title: "La S.S. Tavolara",
     desc: "Lo stemma della Società Sportiva, con l'isola e la barca su scudo biancoverde.",
-    img: "/loghi/2010.png",
+    img: "/2010.png",
   },
   {
     year: "2019",
     title: "La rinascita",
     desc: "Il marchio dell'A.S.D. Tavolara Calcio: lo scudo del nuovo corso.",
-    img: "/loghi/2019.png",
+    img: "/2019.png",
   },
   {
     year: "2024",
     title: "I 70 anni",
     desc: "Il nuovo stemma dei 70 anni: richiama il vecchio scudo rendendolo più moderno.",
-    img: "/loghi/2024.png",
+    img: "/2024.png",
   },
 ];
 
@@ -70,6 +70,9 @@ export default function LogoPage() {
     >
       {/* Header */}
       <div className="px-5 pt-24 pb-8">
+        <a href="/club" className="font-mono text-[12px] uppercase tracking-[0.18em] mb-5 inline-flex items-center gap-2" style={{ color: "var(--color-oro)" }}>
+          ← Club
+        </a>
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-px" style={{ backgroundColor: "var(--color-oro)" }} />
           <span
@@ -82,6 +85,25 @@ export default function LogoPage() {
         <h1 className="text-[2.4rem] text-white">
           Scorri la linea del tempo
         </h1>
+      </div>
+
+      {/* Testo introduttivo */}
+      <div className="px-5 pb-8 space-y-5">
+        <p className="text-[13.5px] leading-relaxed font-mono uppercase tracking-wide" style={{ color: "var(--color-oro)" }}>
+          La storia dello stemma biancoverde: come è nato il marchio del Tavolara e come è cambiato, fase dopo fase.
+        </p>
+        <div>
+          <p className="font-body font-extrabold text-[1rem] uppercase text-white mb-2">La nascita del marchio</p>
+          <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+            Il segno del Tavolara nasce con la società, nel 1954: un'identità legata al mare, all'isola che domina il golfo di Olbia e ai colori sociali, il verde e il bianco.
+          </p>
+        </div>
+        <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+          Negli anni il marchio è cambiato seguendo le stagioni del club — rifondazioni, ritorni, nuovi corsi — ma ha sempre conservato gli elementi che lo rendono riconoscibili: il nome dell'isola, lo scudo e i colori biancoverdi.
+        </p>
+        <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+          Questa è la sua evoluzione: scorri la linea del tempo per vedere come lo stemma è cambiato, fase dopo fase.
+        </p>
       </div>
 
       {/* Carousel */}
@@ -108,36 +130,21 @@ export default function LogoPage() {
                 cursor: abs > 0 ? "pointer" : "default",
               }}
             >
-              <div
-                className="rounded-full overflow-hidden relative flex items-center justify-center"
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={logo.img}
+                alt={logo.title}
+                className="object-contain"
                 style={{
                   width: `${SIZE}px`,
                   height: `${SIZE}px`,
-                  backgroundColor: "#060606",
-                  boxShadow:
-                    abs === 0
-                      ? "0 0 60px rgba(201,168,106,0.2), 0 0 120px rgba(201,168,106,0.08)"
-                      : "none",
+                  filter: abs === 0 ? "drop-shadow(0 0 20px rgba(201,168,106,0.3))" : "none",
+                  transition: "filter 0.4s ease",
                 }}
-              >
-                {/* Fallback year text */}
-                <span
-                  className="absolute font-body font-extrabold text-2xl"
-                  style={{ color: "rgba(255,255,255,0.1)" }}
-                >
-                  {logo.year}
-                </span>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={logo.img}
-                  alt={logo.title}
-                  className="relative z-10 object-contain"
-                  style={{ width: "75%", height: "75%" }}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = "none";
-                  }}
-                />
-              </div>
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
             </div>
           );
         })}

@@ -14,7 +14,12 @@ type Game = {
 };
 
 const GAMES: Game[] = [
-  // I giochi verranno aggiunti qui
+  {
+    id: "corsa",
+    title: "Corsa",
+    subtitle: "Endless runner · Salta i birilli",
+    href: "/game/corsa",
+  },
 ];
 
 export default function GamePage() {
@@ -87,36 +92,11 @@ function HubView({ onBack }: { onBack: () => void }) {
       className="min-h-[100svh] overflow-y-auto"
       style={{ backgroundColor: "var(--color-nero)", paddingBottom: "calc(env(safe-area-inset-bottom) + 5rem)" }}
     >
-      {/* Custom topbar con back */}
-      <div
-        className="fixed top-0 left-0 right-0 z-20 flex items-center px-5"
-        style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 12px)",
-          paddingBottom: "12px",
-          backgroundColor: "rgba(13,10,8,0.92)",
-          backdropFilter: "blur(10px)",
-          borderBottom: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        <button onClick={onBack} className="p-1 text-white mr-4" aria-label="Indietro">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo-tavolara-gold.png"
-          alt="Tavolara"
-          className="h-9 object-contain"
-          style={{ filter: "brightness(0) invert(1)" }}
-        />
-      </div>
-
       {/* Welcome hero */}
       <div
         className="relative flex flex-col items-center justify-center text-center px-8"
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 90px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 80px)",
           paddingBottom: "3.5rem",
           minHeight: "62svh",
           background: "linear-gradient(180deg, #0e0820 0%, #100c1a 60%, var(--color-nero) 100%)",
@@ -172,25 +152,27 @@ function HubView({ onBack }: { onBack: () => void }) {
 
       {/* Game cards */}
       <div className="px-4 pt-6 space-y-4">
-        <p className="font-mono text-[0.58rem] uppercase tracking-widest px-1" style={{ color: "rgba(255,255,255,0.32)" }}>
+        <p className="font-mono text-[0.58rem] uppercase tracking-widest px-1" style={{ color: "rgba(255,255,255,0.75)" }}>
           Le sfide
         </p>
 
-        {GAMES.length === 0 ? (
-          <div
-            className="rounded-3xl flex flex-col items-center justify-center py-20"
-            style={{ backgroundColor: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)" }}
-          >
-            <p className="font-body font-extrabold text-[1rem] uppercase" style={{ color: "rgba(255,255,255,0.15)" }}>
-              Giochi in arrivo
-            </p>
-            <p className="font-mono text-[0.55rem] uppercase mt-1" style={{ color: "rgba(255,255,255,0.1)" }}>
-              Torna presto!
-            </p>
-          </div>
-        ) : (
-          GAMES.map((game) => <GameCard key={game.id} game={game} />)
-        )}
+        {GAMES.map((game) => <GameCard key={game.id} game={game} />)}
+
+        {/* Prossimi giochi in uscita */}
+        <div
+          className="rounded-3xl px-5 py-6"
+          style={{ backgroundColor: "rgba(255,255,255,0.02)", border: "1px dashed rgba(255,255,255,0.1)" }}
+        >
+          <p className="font-mono text-[0.58rem] uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+            In arrivo
+          </p>
+          <p className="font-body font-extrabold text-[1.1rem] uppercase text-white leading-tight mb-1">
+            Nuovi giochi in uscita
+          </p>
+          <p className="font-mono text-[0.6rem] uppercase tracking-wide" style={{ color: "var(--color-oro)" }}>
+            Snake · Tav-Man · Quiz Tavolara · Pronostico — torna presto!
+          </p>
+        </div>
       </div>
     </div>
   );
