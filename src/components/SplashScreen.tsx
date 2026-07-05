@@ -33,7 +33,16 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
     const tryPlay = () => {
       if (!video) { setPhase("fallback"); setTimeout(skip, 1800); return; }
       video.play()
-        .then(() => setPhase("playing"))
+        .then(() => {
+          setPhase("playing");
+          // Se dopo 2s il video non avanza (browser headless / bloccato), vai in fallback
+          setTimeout(() => {
+            if (!doneRef.current && video.currentTime < 0.1) {
+              setPhase("fallback");
+              setTimeout(skip, 1800);
+            }
+          }, 2000);
+        })
         .catch(() => {
           setPhase("fallback");
           setTimeout(skip, 1800);
@@ -41,7 +50,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
     };
 
     const t = setTimeout(tryPlay, 150);
-    const hard = setTimeout(skip, 15000);
+    const hard = setTimeout(skip, 10000);
 
     return () => { clearTimeout(t); clearTimeout(hard); };
   }, [skip, onComplete]);
