@@ -46,9 +46,6 @@ export default function PartitePage() {
             backgroundImage: "linear-gradient(rgba(201,168,106,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,106,1) 1px, transparent 1px)",
             backgroundSize: "42px 42px",
           }} />
-        {/* Top gold bar */}
-        <div className="h-[3px] shrink-0" style={{ backgroundColor: "var(--color-oro)" }} />
-
         {/* Header */}
         <div className="relative px-6 pt-20 pb-2">
           <p className="font-mono text-[9px] uppercase tracking-[0.28em]" style={{ color: "var(--color-oro)" }}>
