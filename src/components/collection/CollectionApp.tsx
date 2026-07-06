@@ -232,7 +232,7 @@ function PackTab({
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 10,
             textTransform: "uppercase", letterSpacing: "0.15em",
-            color: "rgba(255,255,255,0.3)",
+            color: "rgba(255,255,255,0.75)",
           }}>
             Bustine esaurite · Torni domani
           </p>
@@ -248,7 +248,7 @@ function PackTab({
         <p style={{
           fontFamily: "var(--font-mono)", fontSize: 8,
           textTransform: "uppercase", letterSpacing: "0.14em",
-          color: "rgba(255,255,255,0.22)", lineHeight: 1.8,
+          color: "rgba(255,255,255,0.65)", lineHeight: 1.8,
         }}>
           5 bustine gratis ogni giorno · 3 carte per bustina<br />
           Probabilità: C 45% · R 30% · SR 15% · UR 8% · L 2%
