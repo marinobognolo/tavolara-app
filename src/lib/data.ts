@@ -67,6 +67,21 @@ export type NewsItem = {
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "enzo-coscia-magazziere",
+    title: "Enzo Coscia confermato magazziere per la stagione 2026/2027",
+    excerpt: "La società conferma Enzo Coscia nel ruolo di magazziere per la stagione 2026/2027.",
+    category: "Ufficiale",
+    date: "2026-07-06",
+    image: "/coscia.png",
+    body: [
+      "La società Tavolara Calcio è lieta di comunicare la conferma di Enzo Coscia nel ruolo di magazziere della prima squadra per la stagione sportiva 2026/2027.",
+      "Una conferma che rispecchia il clima di continuità e di fiducia che caratterizza il lavoro della società biancoverde. Enzo Coscia proseguirà il suo impegno al servizio del gruppo, garantendo quella cura e quella disponibilità che lo hanno contraddistinto nel corso delle stagioni precedenti.",
+      "Il ruolo del magazziere è fondamentale nel quotidiano di una squadra: dalla gestione del materiale sportivo all'organizzazione del magazzino, dalla cura del kit gara al supporto nello svolgimento degli allenamenti. Un lavoro spesso silenzioso ma indispensabile per il buon funzionamento dell'intero sistema squadra.",
+      "Con la conferma di Enzo Coscia, il Tavolara ribadisce la volontà di costruire un ambiente solido e coeso, in cui ogni membro dello staff rappresenta un tassello fondamentale del progetto. La sua presenza è una garanzia di professionalità e dedizione per tutta la società biancoverde.",
+      "A Enzo va il ringraziamento della società per il lavoro svolto e il più sincero augurio di buon lavoro per la stagione 2026/2027.",
+    ],
+  },
+  {
     slug: "guido-tamponi-preparatore-atletico",
     title: "Guido Tamponi è il nuovo preparatore atletico",
     excerpt: "La società è lieta di comunicare che Guido Tamponi ricoprirà il ruolo di preparatore atletico per la stagione 2026/2027.",
