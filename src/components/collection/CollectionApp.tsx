@@ -174,14 +174,14 @@ function PackTab({
         <p style={{
           fontFamily: "var(--font-mono)", fontSize: 9,
           textTransform: "uppercase", letterSpacing: "0.2em",
-          color: "rgba(255,255,255,0.35)", marginTop: 6,
+          color: "rgba(255,255,255,0.72)", marginTop: 6,
         }}>
           {state.packsLeft === 1 ? "bustina disponibile" : "bustine disponibili"}
         </p>
         {state.packsLeft < PACKS_PER_DAY && (
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 10,
-            color: "rgba(255,255,255,0.4)", marginTop: 10, letterSpacing: "0.1em",
+            color: "rgba(255,255,255,0.72)", marginTop: 10, letterSpacing: "0.1em",
           }}>
             Ricarica in <span style={{ color: "var(--color-oro)" }}>{countdown}</span>
           </p>
@@ -381,7 +381,7 @@ function AlbumTab({
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 9,
             textTransform: "uppercase", letterSpacing: "0.14em",
-            color: "rgba(255,255,255,0.35)",
+            color: "rgba(255,255,255,0.72)",
           }}>Completamento album</p>
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 9,
@@ -425,7 +425,7 @@ function AlbumTab({
                   </p>
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 9,
-                    color: "rgba(255,255,255,0.3)",
+                    color: "rgba(255,255,255,0.65)",
                   }}>
                     {ownedCount}/{PLAYERS.length}
                   </p>
@@ -509,7 +509,7 @@ function AlbumTab({
                   </p>
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 8,
-                    color: "rgba(255,255,255,0.28)", textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.65)", textTransform: "uppercase",
                     letterSpacing: "0.08em", marginTop: 1,
                   }}>
                     {p.role}
@@ -650,7 +650,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
               </p>
               <p style={{
                 fontFamily: "var(--font-mono)", fontSize: 9,
-                color: "rgba(255,255,255,0.35)", marginTop: 3,
+                color: "rgba(255,255,255,0.72)", marginTop: 3,
                 letterSpacing: "0.06em", lineHeight: 1.5,
               }}>
                 {a.desc}
@@ -659,7 +659,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
                 {/* Progress */}
                 <p style={{
                   fontFamily: "var(--font-mono)", fontSize: 8,
-                  color: a.done ? "var(--color-oro)" : "rgba(255,255,255,0.25)",
+                  color: a.done ? "var(--color-oro)" : "rgba(255,255,255,0.65)",
                   letterSpacing: "0.08em",
                 }}>
                   {a.progress}
@@ -673,7 +673,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 7,
                     textTransform: "uppercase", letterSpacing: "0.1em",
-                    color: "rgba(255,255,255,0.3)",
+                    color: "rgba(255,255,255,0.65)",
                   }}>
                     Premio: {a.reward}
                   </p>
@@ -693,7 +693,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
         <p style={{
           fontFamily: "var(--font-mono)", fontSize: 8,
           textTransform: "uppercase", letterSpacing: "0.14em",
-          color: "rgba(255,255,255,0.2)", lineHeight: 1.9,
+          color: "rgba(255,255,255,0.65)", lineHeight: 1.9,
         }}>
           I premi sono fisici e verranno consegnati durante la stagione.<br />
           La raccolta è gratuita e riservata ai tifosi del Tavolara Calcio.<br />
