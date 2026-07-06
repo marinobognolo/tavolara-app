@@ -38,8 +38,14 @@ const MATCHES_2324: Match[] = [
   { date: "2024-03-31", home: "Atletico Phiniscollis", away: "Tavolara",            gH: 2, gA: 3, r: "V" },
 ];
 
-// ── RISULTATI 2021/22 — dati non disponibili ──
-const MATCHES_2122: Match[] = [];
+// ── RISULTATI 2021/22 — ultime 5 (più recente prima) ──
+const MATCHES_2122: Match[] = [
+  { date: "2022-04-30", home: "Tre Monti",     away: "Tavolara",         gH: 2, gA: 0, r: "S" },
+  { date: "2022-04-24", home: "Tavolara",      away: "Juve Luras",       gH: 6, gA: 0, r: "V" },
+  { date: "2022-04-17", home: "Tavolara",      away: "Azzanì",           gH: 0, gA: 1, r: "S" },
+  { date: "2022-04-10", home: "Audax Padru",   away: "Tavolara",         gH: 2, gA: 1, r: "S" },
+  { date: "2022-04-03", home: "Tavolara",      away: "San Pantaleo 2020",gH: 2, gA: 0, r: "V" },
+];
 
 // ── RISULTATI 2022/23 — ultimi 5 (più recente prima) ──
 const MATCHES_2223: Match[] = [
