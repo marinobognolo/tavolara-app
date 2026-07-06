@@ -376,6 +376,46 @@ function Empty({ text = "Dati in aggiornamento" }: { text?: string }) {
   );
 }
 
+// ── ACCORDION STAGIONE ─────────────────────────────────────────
+function SeasonAccordion({
+  label, sub, defaultOpen = false, badge, children,
+}: {
+  label: string; sub: string; defaultOpen?: boolean; badge?: string; children: React.ReactNode;
+}) {
+  const [open, setOpen] = useState(defaultOpen);
+  return (
+    <div className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${open ? "rgba(201,168,106,0.22)" : "rgba(255,255,255,0.07)"}`, transition: "border-color 0.2s" }}>
+      <button
+        onClick={() => setOpen(v => !v)}
+        className="w-full flex items-center justify-between px-4 py-4 text-left"
+        style={{ background: open ? "rgba(201,168,106,0.06)" : "var(--color-carbon)" }}
+      >
+        <div>
+          <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-none">{label}</p>
+          <p className="font-mono text-[9px] uppercase tracking-[0.18em] mt-1" style={{ color: "rgba(255,255,255,0.35)" }}>{sub}</p>
+        </div>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}
+          strokeLinecap="round" strokeLinejoin="round"
+          className="w-4 h-4 shrink-0 transition-transform duration-300"
+          style={{ color: open ? "var(--color-oro)" : "rgba(255,255,255,0.35)", transform: open ? "rotate(180deg)" : "rotate(0deg)" }}>
+          <path d="M6 9l6 6 6-6" />
+        </svg>
+      </button>
+      {open && (
+        <div className="px-4 pb-4 pt-3 space-y-3" style={{ borderTop: "1px solid rgba(255,255,255,0.05)" }}>
+          {badge && (
+            <div className="px-3 py-1.5 rounded-xl inline-block font-mono text-[10px] uppercase tracking-wider"
+              style={{ background: "rgba(201,168,106,0.1)", color: "var(--color-oro)", border: "1px solid rgba(201,168,106,0.25)" }}>
+              {badge}
+            </div>
+          )}
+          {children}
+        </div>
+      )}
+    </div>
+  );
+}
+
 // ── COMPONENTE PRINCIPALE ──────────────────────────────────────
 export function PartiteTabs() {
   const [tab, setTab] = useState<Tab>("partite");
@@ -396,31 +436,22 @@ export function PartiteTabs() {
 
       {/* ── TAB: PARTITE ── */}
       {tab === "partite" && (
-        <div className="space-y-8">
-          {SEASONS.map((season) => (
-            <div key={season.id}>
-              <div className="flex items-center gap-3 mb-1">
-                <p className="font-body font-extrabold text-[1.1rem] uppercase text-white">{season.label}</p>
-                <div className="flex-1 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
-              </div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] mb-3" style={{ color: "rgba(255,255,255,0.35)" }}>
-                {season.competition}
-              </p>
-              {season.promo && (
-                <div className="mb-3 px-3 py-1.5 rounded-xl inline-block font-mono text-[10px] uppercase tracking-wider"
-                  style={{ background: "rgba(201,168,106,0.1)", color: "var(--color-oro)", border: "1px solid rgba(201,168,106,0.25)" }}>
-                  {season.promo}
-                </div>
-              )}
-              {season.matches.length === 0 ? (
-                <Empty />
-              ) : (
+        <div className="space-y-3">
+          {SEASONS.map((season, idx) => (
+            <SeasonAccordion
+              key={season.id}
+              label={season.label}
+              sub={season.competition}
+              defaultOpen={idx === 0}
+              badge={season.promo}
+            >
+              {season.matches.length === 0 ? <Empty /> : (
                 <div className="flex flex-col gap-2">
                   {season.matches.map((m, i) => {
                     const badge = BADGE[m.r];
                     const tavHome = m.home === "Tavolara";
                     return (
-                      <div key={i} className="rounded-2xl p-4 flex items-center gap-3" style={{ background: "var(--color-carbon)" }}>
+                      <div key={i} className="rounded-2xl p-4 flex items-center gap-3" style={{ background: "rgba(255,255,255,0.03)" }}>
                         <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 font-mono text-xs font-bold"
                           style={{ backgroundColor: badge.bg, color: badge.color }}>
                           {m.r}
@@ -454,86 +485,54 @@ export function PartiteTabs() {
                   })}
                 </div>
               )}
-            </div>
+            </SeasonAccordion>
           ))}
         </div>
       )}
 
       {/* ── TAB: CLASSIFICA ── */}
       {tab === "classifica" && (
-        <div className="space-y-8">
-
-          {/* 2026/27 */}
-          <div>
-            <SectionHeader label="2026 / 27" sub="Prima Categoria" />
-            <div className="mt-3"><Empty text="Stagione non ancora iniziata" /></div>
-          </div>
-
-          {/* 2025/26 */}
-          <div>
-            <SectionHeader label="2025 / 26" sub="Seconda Categoria · Girone H" />
-            <div className="mt-3"><StandingsTable rows={STANDINGS_2526} /></div>
-          </div>
-
-          {/* 2024/25 */}
-          <div>
-            <SectionHeader label="2024 / 25" sub="Seconda Categoria · Girone H" />
-            <div className="mt-3"><StandingsTable rows={STANDINGS_2425} /></div>
-          </div>
-
-          {/* 2023/24 */}
-          <div>
-            <SectionHeader label="2023 / 24" sub="Seconda Categoria · Girone F" />
-            <div className="mt-3"><StandingsTable rows={STANDINGS_2324} /></div>
-          </div>
-
-          {/* 2022/23 */}
-          <div>
-            <SectionHeader label="2022 / 23" sub="Terza Categoria · Girone G" />
-            <div className="mt-3"><StandingsTable rows={STANDINGS_2223} /></div>
-          </div>
-
+        <div className="space-y-3">
+          <SeasonAccordion label="2026 / 27" sub="Prima Categoria" defaultOpen>
+            <Empty text="Stagione non ancora iniziata" />
+          </SeasonAccordion>
+          <SeasonAccordion label="2025 / 26" sub="Seconda Categoria · Girone H" badge="★ Campioni — Promossi in Prima Categoria">
+            <StandingsTable rows={STANDINGS_2526} />
+          </SeasonAccordion>
+          <SeasonAccordion label="2024 / 25" sub="Seconda Categoria · Girone H">
+            <StandingsTable rows={STANDINGS_2425} />
+          </SeasonAccordion>
+          <SeasonAccordion label="2023 / 24" sub="Seconda Categoria · Girone F">
+            <StandingsTable rows={STANDINGS_2324} />
+          </SeasonAccordion>
+          <SeasonAccordion label="2022 / 23" sub="Terza Categoria · Girone G">
+            <StandingsTable rows={STANDINGS_2223} />
+          </SeasonAccordion>
         </div>
       )}
 
       {/* ── TAB: MARCATORI ── */}
       {tab === "marcatori" && (
-        <div className="space-y-10">
-
-          {/* 2026/27 */}
-          <div className="space-y-4">
-            <SectionHeader label="2026 / 27" sub="Prima Categoria" />
+        <div className="space-y-3">
+          <SeasonAccordion label="2026 / 27" sub="Prima Categoria" defaultOpen>
             <Empty text="Stagione non ancora iniziata" />
-          </div>
-
-          {/* 2025/26 */}
-          <div className="space-y-4">
-            <SectionHeader label="2025 / 26" sub="Seconda Categoria · Girone H" />
+          </SeasonAccordion>
+          <SeasonAccordion label="2025 / 26" sub="Seconda Categoria · Girone H" badge="★ Campioni — Promossi in Prima Categoria">
             <ScorerList title="Classifica marcatori" scorers={SCORERS_2526} />
             <TavScorerList title="Marcatori Tavolara" scorers={TAV_SCORERS_2526} />
-          </div>
-
-          {/* 2024/25 */}
-          <div className="space-y-4">
-            <SectionHeader label="2024 / 25" sub="Seconda Categoria · Girone H" />
+          </SeasonAccordion>
+          <SeasonAccordion label="2024 / 25" sub="Seconda Categoria · Girone H">
             <ScorerList title="Classifica marcatori" scorers={SCORERS_2425} />
             <TavScorerList title="Marcatori Tavolara" scorers={TAV_SCORERS_2425} />
-          </div>
-
-          {/* 2023/24 */}
-          <div className="space-y-4">
-            <SectionHeader label="2023 / 24" sub="Seconda Categoria · Girone F" />
+          </SeasonAccordion>
+          <SeasonAccordion label="2023 / 24" sub="Seconda Categoria · Girone F">
             <ScorerList title="Classifica marcatori" scorers={SCORERS_2324} />
             <TavScorerList title="Marcatori Tavolara" scorers={TAV_SCORERS_2324} />
-          </div>
-
-          {/* 2022/23 */}
-          <div className="space-y-4">
-            <SectionHeader label="2022 / 23" sub="Terza Categoria · Girone G" />
+          </SeasonAccordion>
+          <SeasonAccordion label="2022 / 23" sub="Terza Categoria · Girone G">
             <ScorerList title="Classifica marcatori" scorers={SCORERS_2223} />
             <TavScorerList title="Marcatori Tavolara" scorers={TAV_SCORERS_2223} />
-          </div>
-
+          </SeasonAccordion>
         </div>
       )}
 
