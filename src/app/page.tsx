@@ -622,7 +622,7 @@ function SlideGame() {
 type FanPost = { id: number; nickname: string; reaction: string; message: string | null; created_at: string };
 const REACTIONS = ["🔥", "❤️", "💪", "🏆", "⚡"];
 
-function SlideFanWall() {
+function SlideFanWall({ isActive }: { isActive: boolean }) {
   const [posts, setPosts] = useState<FanPost[]>([]);
   const [reaction, setReaction] = useState("🔥");
   const [msg, setMsg] = useState("");
@@ -637,7 +637,13 @@ function SlideFanWall() {
     } catch { setError(true); }
   }, []);
 
-  useEffect(() => { load(); const t = setInterval(load, 12000); return () => clearInterval(t); }, [load]);
+  // Carica solo quando la slide è visibile — evita richieste Supabase continue in background
+  useEffect(() => {
+    if (!isActive) return;
+    load();
+    const t = setInterval(load, 12000);
+    return () => clearInterval(t);
+  }, [load, isActive]);
 
   const send = async () => {
     if (sending) return;
@@ -764,7 +770,7 @@ export default function Home() {
           </div>
           <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideMatch onHighlights={() => setCronacaOpen(true)} /></div>
           <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideGame /></div>
-          <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideFanWall /></div>
+          <div style={{ width: "100vw" }} className="h-full shrink-0"><SlideFanWall isActive={active === 5} /></div>
         </div>
 
         {/* Dot indicators */}

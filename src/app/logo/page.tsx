@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import Link from "next/link";
 
 const LOGHI = [
   {
@@ -70,9 +71,9 @@ export default function LogoPage() {
     >
       {/* Header */}
       <div className="px-5 pt-24 pb-8">
-        <a href="/club" className="font-mono text-[12px] uppercase tracking-[0.18em] mb-5 inline-flex items-center gap-2" style={{ color: "var(--color-oro)" }}>
+        <Link href="/club" className="font-mono text-[12px] uppercase tracking-[0.18em] mb-5 inline-flex items-center gap-2" style={{ color: "var(--color-oro)" }}>
           ← Club
-        </a>
+        </Link>
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-px" style={{ backgroundColor: "var(--color-oro)" }} />
           <span

@@ -16,7 +16,8 @@ export default function ClubShell({ children }: { children: React.ReactNode }) {
   const onTouchEnd = useCallback((e: React.TouchEvent) => {
     const dx = e.changedTouches[0].clientX - touchX.current;
     const dy = e.changedTouches[0].clientY - touchY.current;
-    if (Math.abs(dx) > 60 && Math.abs(dy) < Math.abs(dx) * 0.6) {
+    // Solo swipe verso destra (back) → torna a /club
+    if (dx > 60 && Math.abs(dy) < dx * 0.6) {
       router.push("/club");
     }
   }, [router]);
