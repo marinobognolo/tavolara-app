@@ -77,18 +77,18 @@ body {
 
 /* ── Card stagger entrance ─────────────────────────── */
 @keyframes card-in {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { transform: translateY(14px); opacity: 0.6; }
+  to   { transform: translateY(0);    opacity: 1; }
 }
-.card-in   { animation: card-in 0.38s ease both; }
-.card-in-1 { animation-delay: 0.04s; }
-.card-in-2 { animation-delay: 0.09s; }
-.card-in-3 { animation-delay: 0.14s; }
-.card-in-4 { animation-delay: 0.19s; }
-.card-in-5 { animation-delay: 0.24s; }
-.card-in-6 { animation-delay: 0.29s; }
-.card-in-7 { animation-delay: 0.34s; }
-.card-in-8 { animation-delay: 0.38s; }
+.card-in   { animation: card-in 0.32s ease forwards; }
+.card-in-1 { animation-delay: 0.03s; }
+.card-in-2 { animation-delay: 0.07s; }
+.card-in-3 { animation-delay: 0.11s; }
+.card-in-4 { animation-delay: 0.15s; }
+.card-in-5 { animation-delay: 0.19s; }
+.card-in-6 { animation-delay: 0.23s; }
+.card-in-7 { animation-delay: 0.27s; }
+.card-in-8 { animation-delay: 0.30s; }
 
 /* ── Skeleton shimmer ──────────────────────────────── */
 @keyframes shimmer {
@@ -113,20 +113,3 @@ body {
 }
 .ptr-spin { animation: ptr-spin 0.7s linear infinite; }
 
-/* ── View Transitions (browser native) ────────────── */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (view-transition-name: auto) {
-    ::view-transition-old(root) {
-      animation: 180ms ease-in both vt-slide-out;
-    }
-    ::view-transition-new(root) {
-      animation: 280ms ease-out both vt-slide-in;
-    }
-    @keyframes vt-slide-out {
-      to { transform: translateX(-18px); opacity: 0; }
-    }
-    @keyframes vt-slide-in {
-      from { transform: translateX(18px); opacity: 0; }
-    }
-  }
-}
