@@ -38,6 +38,9 @@ const MATCHES_2324: Match[] = [
   { date: "2024-03-31", home: "Atletico Phiniscollis", away: "Tavolara",            gH: 2, gA: 3, r: "V" },
 ];
 
+// ── RISULTATI 2021/22 — dati non disponibili ──
+const MATCHES_2122: Match[] = [];
+
 // ── RISULTATI 2022/23 — ultimi 5 (più recente prima) ──
 const MATCHES_2223: Match[] = [
   { date: "2023-04-30", home: "Alà",                 away: "Tavolara",              gH: 2, gA: 4, r: "V" },
@@ -52,6 +55,7 @@ const SEASONS: Season[] = [
   { id: "2024-25", label: "2024 / 25", competition: "Seconda Categoria · Girone H", matches: MATCHES_2425 },
   { id: "2023-24", label: "2023 / 24", competition: "Seconda Categoria · Girone F", matches: MATCHES_2324 },
   { id: "2022-23", label: "2022 / 23", competition: "Terza Categoria · Girone G",   matches: MATCHES_2223 },
+  { id: "2021-22", label: "2021 / 22", competition: "Terza Categoria · Girone D",   matches: MATCHES_2122 },
 ];
 
 // ── CLASSIFICHE ────────────────────────────────────────────────
@@ -105,6 +109,21 @@ const STANDINGS_2324: Standing[] = [
   { pos: 12, team: "Orani",                 g: 26, v:  8, p: 3, s: 15, gf:  39, gs:  51, pt: 27 },
   { pos: 13, team: "Gennargentu Desulo",    g: 26, v:  4, p: 6, s: 16, gf:  39, gs:  64, pt: 18 },
   { pos: 14, team: "Atletico Phiniscollis", g: 26, v:  0, p: 5, s: 21, gf:  28, gs:  88, pt:  5 },
+];
+
+const STANDINGS_2122: Standing[] = [
+  { pos:  1, team: "Don Cesare Delogu",      g: 22, v: 18, p: 1, s:  3, gf:  77, gs:  29, pt: 55 },
+  { pos:  2, team: "Audax Padru",             g: 22, v: 15, p: 3, s:  4, gf:  65, gs:  26, pt: 48 },
+  { pos:  3, team: "M.B. Orange",             g: 22, v: 15, p: 3, s:  4, gf:  49, gs:  27, pt: 48 },
+  { pos:  4, team: "Funtanaliras Monti",      g: 22, v: 14, p: 3, s:  5, gf:  67, gs:  27, pt: 45 },
+  { pos:  5, team: "Atletico Tomi's Oschiri", g: 22, v: 14, p: 2, s:  6, gf:  52, gs:  25, pt: 44 },
+  { pos:  6, team: "Azzanì",                  g: 22, v: 10, p: 1, s: 11, gf:  47, gs:  52, pt: 31 },
+  { pos:  7, team: "Tavolara Calcio",         g: 22, v:  9, p: 3, s: 10, gf:  45, gs:  37, pt: 30, isUs: true },
+  { pos:  8, team: "S.M. Alzachena",          g: 22, v:  8, p: 3, s: 11, gf:  39, gs:  49, pt: 27 },
+  { pos:  9, team: "San Pantaleo 2020",       g: 22, v:  6, p: 4, s: 12, gf:  32, gs:  52, pt: 22 },
+  { pos: 10, team: "Tre Monti",               g: 22, v:  4, p: 4, s: 14, gf:  28, gs:  57, pt: 16 },
+  { pos: 11, team: "Aggius",                  g: 22, v:  3, p: 4, s: 15, gf:  27, gs:  75, pt: 13 },
+  { pos: 12, team: "Juve Luras",              g: 22, v:  0, p: 1, s: 21, gf:  21, gs:  93, pt:  1 },
 ];
 
 const STANDINGS_2223: Standing[] = [
@@ -163,6 +182,19 @@ const SCORERS_2324: Scorer[] = [
   { name: "Campa V.",              team: "F.C. Biasì",            goals: 11 },
 ];
 
+const SCORERS_2122: Scorer[] = [
+  { name: "La Vecchia Alessandro", team: "Audax Padru",             goals: 29 },
+  { name: "Muresu Matteo",         team: "Don Cesare Delogu",       goals: 28 },
+  { name: "Carta Marco",           team: "Azzanì",                  goals: 16 },
+  { name: "Maludrottu Teo",        team: "Atletico Tomi's Oschiri", goals: 15 },
+  { name: "Deiana Alessandro",     team: "Tavolara Calcio",         goals: 14, isUs: true },
+  { name: "Borit Viorel",          team: "Don Cesare Delogu",       goals: 13 },
+  { name: "Pusceddu Mauro",        team: "S.M. Alzachena",          goals: 11 },
+  { name: "Falai Gianni",          team: "Audax Padru",             goals: 11 },
+  { name: "Sini Lorenzo",          team: "Don Cesare Delogu",       goals: 10 },
+  { name: "Francioni Fabio",       team: "Funtanaliras Monti",      goals: 10 },
+];
+
 const SCORERS_2223: Scorer[] = [
   { name: "Carbini P.",            team: "Golfo Aranci",          goals: 35 },
   { name: "Fogarizzu G.",          team: "Atletico Tomi's",       goals: 17 },
@@ -219,6 +251,19 @@ const TAV_SCORERS_2324: TavScorer[] = [
   { first: "V.",  last: "Brondolone", goals: 1 },
   { first: "G.",  last: "Bronzolo",   goals: 1 },
   { first: "G.",  last: "Brugu",      goals: 1 },
+];
+
+const TAV_SCORERS_2122: TavScorer[] = [
+  { first: "Alessandro", last: "Deiana",   goals: 14 },
+  { first: "Alberto",    last: "Pricope",  goals: 10 },
+  { first: "Samuele",    last: "Pedroni",  goals:  5 },
+  { first: "Gabriele",   last: "Loi",      goals:  4 },
+  { first: "Federico",   last: "Asara",    goals:  3 },
+  { first: "Marino",     last: "Bognolo",  goals:  2 },
+  { first: "Claudio",    last: "Ghisu",    goals:  2 },
+  { first: "Gabriele",   last: "Mura",     goals:  2 },
+  { first: "Paolo",      last: "Brundu",   goals:  1 },
+  { first: "Gabriele",   last: "Careddu",  goals:  1 },
 ];
 
 const TAV_SCORERS_2223: TavScorer[] = [
@@ -508,6 +553,9 @@ export function PartiteTabs() {
           <SeasonAccordion label="2022 / 23" sub="Terza Categoria · Girone G">
             <StandingsTable rows={STANDINGS_2223} />
           </SeasonAccordion>
+          <SeasonAccordion label="2021 / 22" sub="Terza Categoria · Girone D">
+            <StandingsTable rows={STANDINGS_2122} />
+          </SeasonAccordion>
         </div>
       )}
 
@@ -532,6 +580,10 @@ export function PartiteTabs() {
           <SeasonAccordion label="2022 / 23" sub="Terza Categoria · Girone G">
             <ScorerList title="Classifica marcatori" scorers={SCORERS_2223} />
             <TavScorerList title="Marcatori Tavolara" scorers={TAV_SCORERS_2223} />
+          </SeasonAccordion>
+          <SeasonAccordion label="2021 / 22" sub="Terza Categoria · Girone D">
+            <ScorerList title="Classifica marcatori" scorers={SCORERS_2122} />
+            <TavScorerList title="Marcatori Tavolara" scorers={TAV_SCORERS_2122} />
           </SeasonAccordion>
         </div>
       )}
