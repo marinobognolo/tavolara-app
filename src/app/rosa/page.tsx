@@ -70,16 +70,6 @@ function PlayerCard({ player }: { player: Player }) {
 
 function CarouselList({ players }: { players: Player[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [activePage, setActivePage] = useState(0);
-
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const firstChild = el.children[0] as HTMLElement | null;
-    if (!firstChild) return;
-    const pageW = firstChild.offsetWidth + 12;
-    setActivePage(Math.round(el.scrollLeft / pageW));
-  }, []);
 
   const pages: Player[][] = [];
   for (let i = 0; i < players.length; i += 3) {
@@ -89,27 +79,22 @@ function CarouselList({ players }: { players: Player[] }) {
   return (
     <div
       ref={scrollRef}
-      onScroll={handleScroll}
-      className="flex gap-3 pl-4 overflow-x-auto"
+      className="flex gap-4 pl-4 overflow-x-auto"
       style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
     >
-      {pages.map((group, gi) => {
-        const dist = Math.abs(gi - activePage);
-        return (
-          <div
-            key={gi}
-            className="flex flex-col gap-3 shrink-0 transition-opacity duration-300"
-            style={{
-              width: "calc(84vw - 8px)",
-              scrollSnapAlign: "start",
-              opacity: dist === 0 ? 1 : dist === 1 ? 0.35 : 0.15,
-              paddingRight: gi === pages.length - 1 ? "16px" : "0",
-            } as React.CSSProperties}
-          >
-            {group.map(p => <PlayerCard key={p.slug} player={p} />)}
-          </div>
-        );
-      })}
+      {pages.map((group, gi) => (
+        <div
+          key={gi}
+          className="flex flex-col gap-3 shrink-0"
+          style={{
+            width: "calc(100vw - 32px)",
+            scrollSnapAlign: "start",
+            paddingRight: gi === pages.length - 1 ? "16px" : "0",
+          }}
+        >
+          {group.map(p => <PlayerCard key={p.slug} player={p} />)}
+        </div>
+      ))}
     </div>
   );
 }
@@ -207,13 +192,7 @@ export default function RosaPage() {
       </div>
 
       {/* Giocatori */}
-      <div className="flex flex-col gap-3 px-4">
-        {players.map((p, i) => (
-          <div key={p.slug} className={`card-in card-in-${Math.min(i + 1, 8)}`}>
-            <PlayerCard player={p} />
-          </div>
-        ))}
-      </div>
+      <CarouselList players={players} />
 
       {/* Sponsor */}
       <div className="mt-10 mx-4 pt-6 pb-4 flex flex-row items-center justify-center gap-10"
