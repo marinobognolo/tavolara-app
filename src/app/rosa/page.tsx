@@ -207,17 +207,13 @@ export default function RosaPage() {
       </div>
 
       {/* Giocatori */}
-      {activeTab === "Portieri" ? (
-        <div className="flex flex-col gap-3 px-4">
-          {players.map((p, i) => (
-            <div key={p.slug} className={`card-in card-in-${Math.min(i + 1, 8)}`}>
-              <PlayerCard player={p} />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <CarouselList players={players} />
-      )}
+      <div className="flex flex-col gap-3 px-4">
+        {players.map((p, i) => (
+          <div key={p.slug} className={`card-in card-in-${Math.min(i + 1, 8)}`}>
+            <PlayerCard player={p} />
+          </div>
+        ))}
+      </div>
 
       {/* Sponsor */}
       <div className="mt-10 mx-4 pt-6 pb-4 flex flex-row items-center justify-center gap-10"
