@@ -224,7 +224,6 @@ function SlideNews() {
 function SlideKit() {
   return (
     <div className="relative w-full h-full bg-nero flex flex-col items-center justify-center px-6">
-      <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ backgroundColor: "var(--color-oro)" }} />
       <p className="font-mono text-[0.6rem] uppercase tracking-[0.2em] mb-2" style={{ color: "var(--color-oro)" }}>
         Stagione 2026/27
       </p>
