@@ -150,10 +150,10 @@ export function CollectibleCard({
         boxShadow: `0 0 14px ${r.glow}`,
         position: "relative", overflow: "hidden", flexShrink: 0,
       }}>
-        {/* Photo */}
+        {/* Photo — riempie tutta la carta */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={`/giocatori/${player.slug}/01.jpg`} alt={player.last}
-          style={{ width: "100%", height: "76%", objectFit: "cover", objectPosition: "center top" }} />
+          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", position: "absolute", inset: 0 }} />
 
         {/* Sweep sheen */}
         <div style={{
@@ -260,11 +260,12 @@ export function CollectibleCard({
           WebkitUserSelect: "none",
         }}
       >
-        {/* Photo */}
+        {/* Photo — riempie tutta la carta */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={`/giocatori/${player.slug}/01.jpg`} alt={player.last}
           style={{
-            width: "100%", height: "76%",
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
             objectFit: "cover", objectPosition: "center top",
             pointerEvents: "none",
           }} />
