@@ -35,7 +35,7 @@ export const viewport = { themeColor: "#14110c" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="it" className={`${cormorant.variable} ${manrope.variable} ${spaceMono.variable} h-full`}>
+    <html lang="it" data-scroll-behavior="smooth" className={`${cormorant.variable} ${manrope.variable} ${spaceMono.variable} h-full`}>
       <body className="min-h-full bg-nero text-avorio">
         <AppShell>
           <TopNav />
