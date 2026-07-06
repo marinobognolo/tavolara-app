@@ -2,9 +2,6 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 
-const SPLASH_KEY = "tav_splash_ts";
-const SPLASH_TTL = 30 * 60 * 1000; // 30 minuti
-
 export default function SplashScreen({ onComplete }: { onComplete: () => void }) {
   const [phase, setPhase] = useState<"idle" | "playing" | "fallback" | "zoom">("idle");
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,26 +10,11 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
   const skip = useCallback(() => {
     if (doneRef.current) return;
     doneRef.current = true;
-    try { localStorage.setItem(SPLASH_KEY, String(Date.now())); } catch {}
     setPhase("zoom");
     setTimeout(onComplete, 450);
   }, [onComplete]);
 
   useEffect(() => {
-    // Su localhost (dev server / preview) salta la splash
-    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
-      onComplete();
-      return;
-    }
-    // Se l'utente ha già visto la splash di recente, salta subito
-    try {
-      const last = Number(localStorage.getItem(SPLASH_KEY) ?? "0");
-      if (Date.now() - last < SPLASH_TTL) {
-        onComplete();
-        return;
-      }
-    } catch {}
-
     const video = videoRef.current;
 
     const tryPlay = () => {
@@ -40,7 +22,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
       video.play()
         .then(() => {
           setPhase("playing");
-          // Se dopo 2s il video non avanza (browser headless / bloccato), vai in fallback
+          // Se dopo 2s il video non avanza (browser che blocca autoplay), fallback
           setTimeout(() => {
             if (!doneRef.current && video.currentTime < 0.1) {
               setPhase("fallback");
@@ -58,11 +40,10 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
     const hard = setTimeout(skip, 10000);
 
     return () => { clearTimeout(t); clearTimeout(hard); };
-  }, [skip, onComplete]);
+  }, [skip]);
 
   return (
     <div className="fixed inset-0 z-50 bg-nero overflow-hidden" onClick={skip}>
-      {/* Video */}
       <video
         ref={videoRef}
         src="/splash.mp4"
@@ -75,7 +56,7 @@ export default function SplashScreen({ onComplete }: { onComplete: () => void })
         style={{ opacity: phase === "playing" ? 1 : 0, transition: "opacity 0.4s" }}
       />
 
-      {/* Logo — visibile solo nel fallback (video non disponibile) e durante zoom */}
+      {/* Logo solo se il video non parte */}
       {(phase === "fallback" || phase === "zoom") && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {/* eslint-disable-next-line @next/next/no-img-element */}
