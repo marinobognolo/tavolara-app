@@ -190,7 +190,8 @@ export function CollectibleCard({
         }}>
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 6, fontWeight: 700,
-            color: "#000", letterSpacing: "0.04em",
+            color: rarity === "leggendaria" ? "#111" : "white",
+            letterSpacing: "0.04em",
           }}>
             {r.short}
           </p>
@@ -333,7 +334,8 @@ export function CollectibleCard({
         }}>
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700,
-            color: "#000", letterSpacing: "0.08em",
+            color: rarity === "leggendaria" ? "#111" : "white",
+            letterSpacing: "0.08em",
           }}>
             {r.label.toUpperCase()}
           </p>
