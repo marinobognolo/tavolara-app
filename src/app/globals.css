@@ -17,6 +17,7 @@
 }
 
 * { border-color: var(--color-granito-2); }
+button { border: none; }
 
 html {
   scroll-behavior: smooth;
@@ -112,4 +113,28 @@ body {
   to { transform: rotate(360deg); }
 }
 .ptr-spin { animation: ptr-spin 0.7s linear infinite; }
+
+/* ── TAV Collection ────────────────────────────────── */
+@keyframes tav-holo {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+@keyframes tav-prism {
+  0%   { filter: hue-rotate(0deg) brightness(1.15); }
+  50%  { filter: hue-rotate(180deg) brightness(1.35); }
+  100% { filter: hue-rotate(360deg) brightness(1.15); }
+}
+@keyframes tav-sweep {
+  0%   { left: -40%; }
+  100% { left: 150%; }
+}
+@keyframes tav-pulse-glow {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.6); }
+}
+@keyframes tav-card-in {
+  from { transform: translateY(48px) scale(0.88); opacity: 0; }
+  to   { transform: translateY(0) scale(1); opacity: 1; }
+}
 
