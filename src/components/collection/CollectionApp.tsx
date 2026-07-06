@@ -818,7 +818,7 @@ export function CollectionApp() {
               flex: 1, padding: "14px 4px",
               fontFamily: "var(--font-mono)", fontSize: 9,
               textTransform: "uppercase", letterSpacing: "0.16em",
-              color: tab === t ? "var(--color-oro)" : "rgba(255,255,255,0.3)",
+              color: tab === t ? "var(--color-oro)" : "rgba(255,255,255,0.65)",
               borderBottom: `2px solid ${tab === t ? "var(--color-oro)" : "transparent"}`,
               background: "none",
               cursor: "pointer",
