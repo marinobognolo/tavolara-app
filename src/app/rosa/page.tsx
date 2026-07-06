@@ -23,7 +23,7 @@ function PlayerCard({ player }: { player: Player }) {
     <div className="bg-carbon rounded-2xl overflow-hidden">
       <div className="flex gap-3 p-4" style={{ minHeight: "116px" }}>
         {/* Foto */}
-        <div className="w-[68px] shrink-0 rounded-xl overflow-hidden bg-white/5 self-stretch">
+        <div className="w-[68px] shrink-0 rounded-xl overflow-hidden self-stretch" style={{ backgroundColor: "var(--color-granito-2)" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`/giocatori/${player.slug}/01.jpg`}
