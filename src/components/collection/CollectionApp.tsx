@@ -174,7 +174,7 @@ function PackTab({
         <p style={{
           fontFamily: "var(--font-mono)", fontSize: 9,
           textTransform: "uppercase", letterSpacing: "0.2em",
-          color: "rgba(255,255,255,0.72)", marginTop: 6,
+          color: "white", marginTop: 6,
         }}>
           {state.packsLeft === 1 ? "bustina disponibile" : "bustine disponibili"}
         </p>
