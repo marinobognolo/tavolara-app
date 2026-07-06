@@ -79,8 +79,13 @@ function CarouselList({ players }: { players: Player[] }) {
   return (
     <div
       ref={scrollRef}
-      className="flex gap-4 pl-4 overflow-x-auto"
-      style={{ scrollSnapType: "x mandatory", scrollbarWidth: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+      className="flex gap-3 overflow-x-auto"
+      style={{
+        scrollSnapType: "x mandatory",
+        scrollPaddingLeft: "16px",
+        scrollbarWidth: "none",
+        WebkitOverflowScrolling: "touch",
+      } as React.CSSProperties}
     >
       {pages.map((group, gi) => (
         <div
@@ -89,7 +94,8 @@ function CarouselList({ players }: { players: Player[] }) {
           style={{
             width: "calc(100vw - 32px)",
             scrollSnapAlign: "start",
-            paddingRight: gi === pages.length - 1 ? "16px" : "0",
+            marginLeft: gi === 0 ? "16px" : "0",
+            marginRight: gi === pages.length - 1 ? "16px" : "0",
           }}
         >
           {group.map(p => <PlayerCard key={p.slug} player={p} />)}
