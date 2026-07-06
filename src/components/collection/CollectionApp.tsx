@@ -9,6 +9,7 @@ import {
 } from "@/lib/collection";
 import { CollectibleCard } from "./CollectibleCard";
 import { haptic } from "@/lib/haptic";
+import { useAuth } from "@/lib/auth-context";
 
 type Tab = "pack" | "album" | "premi";
 type AlbumView = "rarity" | "player";
@@ -28,48 +29,77 @@ function fmtCountdown(ms: number): string {
 }
 
 /* ── Pack visual ─────────────────────────────────────── */
-function PackIcon({ available }: { available: boolean }) {
+function PackIcon({ available, bonus = false, locked = false }: { available: boolean; bonus?: boolean; locked?: boolean }) {
+  const borderColor = locked
+    ? "rgba(255,255,255,0.12)"
+    : bonus
+      ? "rgba(201,168,106,0.9)"
+      : available ? "rgba(201,168,106,0.6)" : "rgba(255,255,255,0.07)";
+  const bg = locked
+    ? "rgba(255,255,255,0.02)"
+    : bonus
+      ? "linear-gradient(155deg, #2a1e00 0%, #140e00 60%, #1e1500 100%)"
+      : available
+        ? "linear-gradient(155deg, #1a1200 0%, #0a0800 60%, #140e00 100%)"
+        : "rgba(255,255,255,0.03)";
+
   return (
     <div style={{
       width: 88, height: 123,
       borderRadius: 10,
-      background: available
-        ? "linear-gradient(155deg, #1a1200 0%, #0a0800 60%, #140e00 100%)"
-        : "rgba(255,255,255,0.03)",
-      border: available ? "1.5px solid rgba(201,168,106,0.6)" : "1px solid rgba(255,255,255,0.07)",
-      boxShadow: available ? "0 0 20px rgba(201,168,106,0.2)" : "none",
+      background: bg,
+      border: `${locked || (!available && !bonus) ? "1px" : "1.5px"} solid ${borderColor}`,
+      boxShadow: locked ? "none" : (bonus || available) ? `0 0 20px rgba(201,168,106,${bonus ? 0.35 : 0.2})` : "none",
       display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center", gap: 8,
       position: "relative", overflow: "hidden",
-      opacity: available ? 1 : 0.3,
+      opacity: (!available && !bonus && !locked) ? 0.3 : 1,
       flexShrink: 0,
     }}>
-      {available && (
+      {(available || bonus) && !locked && (
         <div style={{
           position: "absolute", top: 0, bottom: 0, width: "35%",
           background: "linear-gradient(90deg, transparent, rgba(201,168,106,0.07), transparent)",
           animation: "tav-sweep 3.5s ease infinite",
         }} />
       )}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/logo-tavolara-gold.png"
-        alt=""
-        aria-hidden
-        style={{ width: 32, height: 32, objectFit: "contain", opacity: available ? 0.85 : 0.3 }}
-      />
-      <div style={{
-        width: "70%", height: 1,
-        background: available ? "rgba(201,168,106,0.3)" : "rgba(255,255,255,0.07)",
-        borderRadius: 1,
-      }} />
-      <p style={{
-        fontFamily: "var(--font-mono)", fontSize: 7,
-        textTransform: "uppercase", letterSpacing: "0.12em",
-        color: available ? "rgba(201,168,106,0.7)" : "rgba(255,255,255,0.2)",
-      }}>
-        {available ? "Tap" : "—"}
-      </p>
+      {locked ? (
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5}
+          style={{ width: 24, height: 24 }}>
+          <rect x="3" y="11" width="18" height="11" rx="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" />
+        </svg>
+      ) : (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-tavolara-gold.png"
+            alt=""
+            aria-hidden
+            style={{ width: 32, height: 32, objectFit: "contain", opacity: available || bonus ? 0.85 : 0.3 }}
+          />
+          <div style={{
+            width: "70%", height: 1,
+            background: (available || bonus) ? "rgba(201,168,106,0.3)" : "rgba(255,255,255,0.07)",
+            borderRadius: 1,
+          }} />
+          <p style={{
+            fontFamily: "var(--font-mono)", fontSize: 7,
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            color: (available || bonus) ? "rgba(201,168,106,0.7)" : "rgba(255,255,255,0.2)",
+          }}>
+            {bonus ? "Login" : available ? "Tap" : "—"}
+          </p>
+        </>
+      )}
+      {bonus && !locked && (
+        <div style={{
+          position: "absolute", top: 5, right: 5,
+          background: "var(--color-oro)", borderRadius: 3, padding: "1px 4px",
+        }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 6, color: "#111", fontWeight: 700 }}>+1</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -142,11 +172,15 @@ function RevealCard({
 function PackTab({
   state,
   countdown,
+  isLoggedIn,
   onOpen,
+  onOpenBonus,
 }: {
   state: CollectionState;
   countdown: string;
+  isLoggedIn: boolean;
   onOpen: (cards: RevealedCard[]) => void;
+  onOpenBonus: () => void;
 }) {
   const handleOpen = useCallback(() => {
     if (state.packsLeft <= 0) return;
@@ -159,6 +193,8 @@ function PackTab({
     }));
     onOpen(cards);
   }, [state.packsLeft, onOpen]);
+
+  const bonusAvailable = isLoggedIn && !state.bonusPackUsed;
 
   return (
     <div>
@@ -188,7 +224,7 @@ function PackTab({
         )}
       </div>
 
-      {/* Pack grid */}
+      {/* Pack grid: 3 normali + 1 bonus login */}
       <div style={{
         display: "flex", flexWrap: "wrap", gap: 12,
         justifyContent: "center", marginBottom: 32,
@@ -202,7 +238,36 @@ function PackTab({
             <PackIcon available={i < state.packsLeft} />
           </button>
         ))}
+
+        {/* 4ª bustina: login bonus */}
+        <button
+          onClick={bonusAvailable ? onOpenBonus : isLoggedIn ? undefined : () => { window.location.href = "/login"; }}
+          style={{ background: "none", border: "none", padding: 0, cursor: bonusAvailable || !isLoggedIn ? "pointer" : "default" }}
+        >
+          <PackIcon
+            available={bonusAvailable}
+            bonus={!state.bonusPackUsed}
+            locked={!isLoggedIn}
+          />
+        </button>
       </div>
+
+      {/* Login nudge se non loggato */}
+      {!isLoggedIn && (
+        <button
+          onClick={() => { window.location.href = "/login"; }}
+          style={{
+            width: "100%", marginBottom: 12, padding: "14px 0", borderRadius: 14,
+            background: "rgba(201,168,106,0.08)",
+            border: "1.5px solid rgba(201,168,106,0.35)",
+            fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 800,
+            textTransform: "uppercase", letterSpacing: "0.1em",
+            color: "var(--color-oro)", cursor: "pointer",
+          }}
+        >
+          Accedi per sbloccare la 4ª bustina
+        </button>
+      )}
 
       {/* CTA */}
       {state.packsLeft > 0 ? (
@@ -221,6 +286,23 @@ function PackTab({
           }}
         >
           Apri bustina
+        </button>
+      ) : bonusAvailable ? (
+        <button
+          onClick={onOpenBonus}
+          style={{
+            width: "100%",
+            padding: "16px 0",
+            borderRadius: 14,
+            background: "var(--color-oro)",
+            border: "none",
+            fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 800,
+            textTransform: "uppercase", letterSpacing: "0.12em",
+            color: "var(--color-nero)",
+            cursor: "pointer",
+          }}
+        >
+          Apri bustina bonus
         </button>
       ) : (
         <div style={{
@@ -250,7 +332,8 @@ function PackTab({
           textTransform: "uppercase", letterSpacing: "0.14em",
           color: "rgba(255,255,255,0.65)", lineHeight: 1.8,
         }}>
-          5 bustine gratis ogni giorno · 3 carte per bustina<br />
+          3 bustine gratis ogni giorno · 3 carte per bustina<br />
+          +1 bustina bonus per gli utenti registrati<br />
           Probabilità: C 45% · R 30% · SR 15% · UR 8% · L 2%
         </p>
       </div>
@@ -706,6 +789,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
 
 /* ── Main App ────────────────────────────────────────── */
 export function CollectionApp() {
+  const { gamer } = useAuth();
   const [state, setState] = useState<CollectionState | null>(null);
   const [tab, setTab] = useState<Tab>("pack");
   const [albumView, setAlbumView] = useState<AlbumView>("rarity");
@@ -770,6 +854,36 @@ export function CollectionApp() {
   const handleRevealDone = useCallback(() => {
     setRevealCards(null);
   }, []);
+
+  const handleOpenBonus = useCallback(() => {
+    if (!state || state.bonusPackUsed) return;
+    haptic();
+    const rarities = openPack();
+    const cards: RevealedCard[] = rarities.map((rarity) => ({
+      player: PLAYERS[Math.floor(Math.random() * PLAYERS.length)],
+      rarity,
+      flipped: false,
+    }));
+    setState((prev) => {
+      if (!prev) return prev;
+      const newOwned = { ...prev.owned };
+      cards.forEach(({ player, rarity }) => {
+        const id = cardId(player.slug, rarity);
+        newOwned[id] = (newOwned[id] || 0) + 1;
+      });
+      const next: CollectionState = { ...prev, bonusPackUsed: true, owned: newOwned };
+      saveState(next);
+      return next;
+    });
+    setRevealCards(cards);
+    cards.forEach((_, i) => {
+      setTimeout(() => {
+        setRevealCards((prev) =>
+          prev ? prev.map((c, j) => (j === i ? { ...c, flipped: true } : c)) : null
+        );
+      }, 500 + i * 750);
+    });
+  }, [state]);
 
   if (!state) return null;
 
@@ -836,7 +950,9 @@ export function CollectionApp() {
           <PackTab
             state={state}
             countdown={countdown}
+            isLoggedIn={!!gamer}
             onOpen={handleOpenPack}
+            onOpenBonus={handleOpenBonus}
           />
         )}
         {tab === "album" && (

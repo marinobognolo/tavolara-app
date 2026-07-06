@@ -60,7 +60,7 @@ export const RARITIES: Record<RarityKey, Rarity> = {
 
 export const RARITY_ORDER: RarityKey[] = ["comune", "rara", "super", "ultra", "leggendaria"];
 
-export const PACKS_PER_DAY = 5;
+export const PACKS_PER_DAY = 3;
 export const CARDS_PER_PACK = 3;
 export const REFILL_MS = 24 * 60 * 60 * 1000;
 
@@ -88,6 +88,7 @@ export interface CollectionState {
   owned: Record<string, number>;
   packsLeft: number;
   refillAt: number;
+  bonusPackUsed: boolean;
 }
 
 function defaultState(): CollectionState {
@@ -95,6 +96,7 @@ function defaultState(): CollectionState {
     owned: {},
     packsLeft: PACKS_PER_DAY,
     refillAt: Date.now() + REFILL_MS,
+    bonusPackUsed: false,
   };
 }
 
@@ -107,8 +109,10 @@ export function loadState(): CollectionState {
       if (Date.now() >= s.refillAt) {
         s.packsLeft = PACKS_PER_DAY;
         s.refillAt = Date.now() + REFILL_MS;
+        s.bonusPackUsed = false;
         saveState(s);
       }
+      if (s.bonusPackUsed === undefined) s.bonusPackUsed = false;
       return s;
     }
   } catch {}
