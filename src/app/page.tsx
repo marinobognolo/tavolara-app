@@ -719,31 +719,34 @@ export default function Home() {
   const [active, setActive] = useState(0);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [cronacaOpen, setCronacaOpen] = useState(false);
-  const touchX = useRef(0);
-  const touchY = useRef(0);
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const isDragging = useRef(false);
 
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    touchX.current = e.touches[0].clientX;
-    touchY.current = e.touches[0].clientY;
+  const handleStart = useCallback((x: number, y: number) => {
+    startX.current = x;
+    startY.current = y;
+    isDragging.current = true;
   }, []);
 
-  const onTouchEnd = useCallback(
-    (e: React.TouchEvent) => {
-      const dx = e.changedTouches[0].clientX - touchX.current;
-      const dy = e.changedTouches[0].clientY - touchY.current;
-      if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
-      if (dx < 0 && active < SLIDES.length - 1) setActive((a) => a + 1);
-      if (dx > 0 && active > 0) setActive((a) => a - 1);
-    },
-    [active]
-  );
+  const handleEnd = useCallback((x: number, y: number) => {
+    if (!isDragging.current) return;
+    isDragging.current = false;
+    const dx = x - startX.current;
+    const dy = y - startY.current;
+    if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx) * 0.8) return;
+    if (dx < 0 && active < SLIDES.length - 1) setActive((a) => a + 1);
+    if (dx > 0 && active > 0) setActive((a) => a - 1);
+  }, [active]);
 
   return (
     <>
       <div
         className="fixed inset-0 z-10 overflow-hidden"
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
+        onTouchStart={(e) => handleStart(e.touches[0].clientX, e.touches[0].clientY)}
+        onTouchEnd={(e) => handleEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY)}
+        onMouseDown={(e) => handleStart(e.clientX, e.clientY)}
+        onMouseUp={(e) => handleEnd(e.clientX, e.clientY)}
       >
         {/* Slides container */}
         <div
