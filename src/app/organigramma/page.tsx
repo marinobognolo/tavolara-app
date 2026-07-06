@@ -42,12 +42,12 @@ const ORG = [
     ],
   },
   {
-    area: "Aiutanti",
+    area: "Collaboratori",
     members: [
-      { name: "Fabio Usai", role: "Aiutante" },
-      { name: "Andrea Atzori", role: "Aiutante" },
-      { name: "Dorin", role: "Aiutante" },
-      { name: "Gianni", role: "Aiutante · Autista" },
+      { name: "Fabio Usai", role: "Collaboratore" },
+      { name: "Andrea Atzori", role: "Collaboratore" },
+      { name: "Dorin", role: "Collaboratore" },
+      { name: "Gianni", role: "Collaboratore · Autista" },
     ],
   },
   {
