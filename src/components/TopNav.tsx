@@ -10,7 +10,7 @@ export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const isGame = pathname.startsWith("/game");
+  const isGame = pathname.startsWith("/game") || pathname === "/login";
   const hideLoginIcon = isGame || pathname === "/login";
 
   useEffect(() => {
