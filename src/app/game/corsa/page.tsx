@@ -462,7 +462,7 @@ export default function CorsaPage() {
         <>
           <div className="px-4 pt-4 grid grid-cols-2 gap-3">
             <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.07)" }}>
-              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Ultima partita</p>
+              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.6)" }}>Ultima partita</p>
               <p className="font-body font-extrabold text-[1.8rem] text-white">{lastScore}</p>
               {newRecord && <p className="font-mono text-[9px] uppercase tracking-wider mt-1" style={{ color: "var(--color-oro)" }}>★ Record!</p>}
             </div>
@@ -483,7 +483,7 @@ export default function CorsaPage() {
                   <div className="w-5 h-5 rounded-full border-2 border-white/20 border-t-[var(--color-oro)] animate-spin" />
                 </div>
               ) : leaderboard.length === 0 ? (
-                <p className="font-mono text-[10px] text-white/30 text-center py-4">Nessun punteggio ancora</p>
+                <p className="font-mono text-[10px] text-white/60 text-center py-4">Nessun punteggio ancora</p>
               ) : (
                 <div className="flex flex-col gap-1">
                   {leaderboard.map((entry, i) => (
@@ -502,7 +502,7 @@ export default function CorsaPage() {
                       {/* Posizione */}
                       <span
                         className="font-mono text-[11px] font-bold w-6 text-center shrink-0"
-                        style={{ color: i === 0 ? "#FFD700" : i === 1 ? "#C0C0C0" : i === 2 ? "#CD7F32" : "rgba(255,255,255,0.3)" }}
+                        style={{ color: i === 0 ? "#FFD700" : i === 1 ? "#C0C0C0" : i === 2 ? "#CD7F32" : "rgba(255,255,255,0.6)" }}
                       >
                         {i === 0 ? "★" : i + 1}
                       </span>
@@ -529,10 +529,10 @@ export default function CorsaPage() {
                 className="rounded-2xl p-4 text-center"
                 style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.06)" }}
               >
-                <p className="font-mono text-[9px] uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+                <p className="font-mono text-[9px] uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.6)" }}>
                   Classifica
                 </p>
-                <p className="font-body text-white/50 text-[0.82rem] mb-3">
+                <p className="font-body text-white/75 text-[0.82rem] mb-3">
                   Fai il login per vedere la classifica e salvare il tuo punteggio
                 </p>
                 <a
