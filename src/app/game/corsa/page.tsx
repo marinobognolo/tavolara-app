@@ -380,29 +380,17 @@ export default function CorsaPage() {
           ctx.fillText("RECORD  " + bestLocal, W / 2, H / 2 + 46);
         }
       } else if (mode === "over") {
-        ctx.fillStyle = "rgba(13,10,7,0.80)";
+        ctx.fillStyle = "rgba(13,10,7,0.82)";
         ctx.fillRect(0, 0, W, H);
         ctx.fillStyle = "#c9a86a";
-        ctx.font = "bold 19px ui-monospace,monospace";
-        ctx.fillText("GAME OVER", W / 2, H / 2 - 28);
-        ctx.fillStyle = "#f3efe6";
         ctx.font = "bold 28px ui-monospace,monospace";
-        ctx.fillText(String(score).padStart(5, "0"), W / 2, H / 2 + 4);
-        ctx.fillStyle = "rgba(179,172,156,0.55)";
-        ctx.font = "600 10px ui-monospace,monospace";
-        ctx.fillText("PUNTI", W / 2, H / 2 + 18);
-        if (score >= bestLocal && score > 0) {
-          ctx.fillStyle = "#c9a86a";
-          ctx.font = "600 11px ui-monospace,monospace";
-          ctx.fillText("★  NUOVO RECORD!", W / 2, H / 2 + 36);
-        } else if (bestLocal > 0) {
-          ctx.fillStyle = "rgba(179,172,156,0.4)";
-          ctx.font = "500 10px ui-monospace,monospace";
-          ctx.fillText("RECORD  " + bestLocal, W / 2, H / 2 + 36);
-        }
-        ctx.fillStyle = "rgba(179,172,156,0.6)";
-        ctx.font = "500 10px ui-monospace,monospace";
-        ctx.fillText("Tocca per rigiocare", W / 2, H / 2 + 54);
+        ctx.fillText("GAME OVER", W / 2, H / 2 - 24);
+        ctx.fillStyle = "#f3efe6";
+        ctx.font = "bold 48px ui-monospace,monospace";
+        ctx.fillText(String(score), W / 2, H / 2 + 36);
+        ctx.fillStyle = "rgba(179,172,156,0.5)";
+        ctx.font = "500 11px ui-monospace,monospace";
+        ctx.fillText("Tocca per rigiocare", W / 2, H / 2 + 62);
       }
       ctx.textAlign = "left";
     };
