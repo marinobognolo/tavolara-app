@@ -443,7 +443,7 @@ export default function CorsaPage() {
       {/* Header — solo titolo */}
       <div
         className="flex items-center px-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top) + 56px)", paddingBottom: "10px" }}
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "10px" }}
       >
         <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "var(--color-oro)" }}>TAV GAME</p>
