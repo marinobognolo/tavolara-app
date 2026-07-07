@@ -28,78 +28,95 @@ function fmtCountdown(ms: number): string {
   return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
 }
 
-/* ── Pack visual ─────────────────────────────────────── */
-function PackIcon({ available, bonus = false, locked = false }: { available: boolean; bonus?: boolean; locked?: boolean }) {
+/* ── Physical Pack visual ─────────────────────────────── */
+const ZIGZAG_BODY = "polygon(0px 20px,5.5px 8px,11px 20px,16.5px 8px,22px 20px,27.5px 8px,33px 20px,38.5px 8px,44px 20px,49.5px 8px,55px 20px,60.5px 8px,66px 20px,71.5px 8px,77px 20px,82.5px 8px,88px 20px,88px 123px,0px 123px)";
+const ZIGZAG_FLAP = "polygon(0 0,88px 0,88px 20px,82.5px 8px,77px 20px,71.5px 8px,66px 20px,60.5px 8px,55px 20px,49.5px 8px,44px 20px,38.5px 8px,33px 20px,27.5px 8px,22px 20px,16.5px 8px,11px 20px,5.5px 8px,0px 20px)";
+const ZIGZAG_SVG  = "M 0,20 L5.5,8 L11,20 L16.5,8 L22,20 L27.5,8 L33,20 L38.5,8 L44,20 L49.5,8 L55,20 L60.5,8 L66,20 L71.5,8 L77,20 L82.5,8 L88,20 L88,115 Q88,123 80,123 L8,123 Q0,123 0,115 Z";
+
+function PhysicalPack({
+  available,
+  locked = false,
+  isBonus = false,
+  isOpening = false,
+}: {
+  available: boolean;
+  locked?: boolean;
+  isBonus?: boolean;
+  isOpening?: boolean;
+}) {
   const borderColor = locked
-    ? "rgba(255,255,255,0.12)"
-    : bonus
-      ? "rgba(201,168,106,0.9)"
-      : available ? "rgba(201,168,106,0.6)" : "rgba(255,255,255,0.07)";
-  const bg = locked
-    ? "rgba(255,255,255,0.02)"
-    : bonus
-      ? "linear-gradient(155deg, #2a1e00 0%, #140e00 60%, #1e1500 100%)"
-      : available
-        ? "linear-gradient(155deg, #1a1200 0%, #0a0800 60%, #140e00 100%)"
-        : "rgba(255,255,255,0.03)";
+    ? "rgba(255,255,255,0.18)"
+    : available ? "rgba(201,168,106,0.95)" : "rgba(201,168,106,0.28)";
+  const overlay = available ? "rgba(0,0,0,0.38)" : "rgba(0,0,0,0.68)";
+  const burstAnim = isOpening ? "tav-pack-burst 0.42s ease 0.36s forwards" : "none";
 
   return (
-    <div style={{
-      width: 88, height: 123,
-      borderRadius: 10,
-      background: bg,
-      border: `${locked || (!available && !bonus) ? "1px" : "1.5px"} solid ${borderColor}`,
-      boxShadow: locked ? "none" : (bonus || available) ? `0 0 20px rgba(201,168,106,${bonus ? 0.35 : 0.2})` : "none",
-      display: "flex", flexDirection: "column",
-      alignItems: "center", justifyContent: "center", gap: 8,
-      position: "relative", overflow: "hidden",
-      opacity: (!available && !bonus && !locked) ? 0.3 : 1,
-      flexShrink: 0,
-    }}>
-      {(available || bonus) && !locked && (
-        <div style={{
-          position: "absolute", top: 0, bottom: 0, width: "35%",
-          background: "linear-gradient(90deg, transparent, rgba(201,168,106,0.07), transparent)",
-          animation: "tav-sweep 3.5s ease infinite",
-        }} />
-      )}
-      {locked ? (
-        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth={1.5}
-          style={{ width: 24, height: 24 }}>
-          <rect x="3" y="11" width="18" height="11" rx="2" />
-          <path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" />
-        </svg>
-      ) : (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-tavolara-gold.png"
-            alt=""
-            aria-hidden
-            style={{ width: 32, height: 32, objectFit: "contain", opacity: available || bonus ? 0.85 : 0.3 }}
-          />
-          <div style={{
-            width: "70%", height: 1,
-            background: (available || bonus) ? "rgba(201,168,106,0.3)" : "rgba(255,255,255,0.07)",
-            borderRadius: 1,
-          }} />
-          <p style={{
-            fontFamily: "var(--font-mono)", fontSize: 7,
-            textTransform: "uppercase", letterSpacing: "0.12em",
-            color: (available || bonus) ? "rgba(201,168,106,0.7)" : "rgba(255,255,255,0.2)",
-          }}>
-            {bonus ? "Login" : available ? "Tap" : "—"}
-          </p>
-        </>
-      )}
-      {bonus && !locked && (
-        <div style={{
-          position: "absolute", top: 5, right: 5,
-          background: "var(--color-oro)", borderRadius: 3, padding: "1px 4px",
-        }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: 6, color: "#111", fontWeight: 700 }}>+1</p>
+    <div style={{ width: 88, height: 123, position: "relative", flexShrink: 0, opacity: (!available && !locked) ? 0.3 : 1 }}>
+
+      {/* Body — photo with zigzag clip */}
+      <div style={{ position: "absolute", inset: 0, clipPath: ZIGZAG_BODY, animation: burstAnim }}>
+        {locked ? (
+          <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.025)" }} />
+        ) : (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/BUSTINA.jpg" alt="" aria-hidden
+              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%" }}
+            />
+            <div style={{ position: "absolute", inset: 0, background: overlay }} />
+          </>
+        )}
+      </div>
+
+      {/* SVG border */}
+      <svg viewBox="0 0 88 123" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 3, animation: burstAnim }}>
+        <path d={ZIGZAG_SVG} fill="none" stroke={borderColor} strokeWidth="1.5"
+          strokeDasharray={locked ? "3,2" : undefined} />
+      </svg>
+
+      {/* Content */}
+      <div style={{ position: "absolute", top: 20, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 7, zIndex: 4, animation: burstAnim }}>
+        {locked ? (
+          <>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth={1.5} style={{ width: 22, height: 22 }}>
+              <rect x="3" y="11" width="18" height="11" rx="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" />
+            </svg>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 6, color: "rgba(255,255,255,0.28)", margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>Login</p>
+          </>
+        ) : (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-tavolara-gold.png" alt="" aria-hidden
+              style={{ width: 26, height: 26, objectFit: "contain", opacity: available ? 0.92 : 0.35 }}
+            />
+            <div style={{ width: "55%", height: 1, background: available ? "rgba(201,168,106,0.4)" : "rgba(255,255,255,0.08)" }} />
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 7, color: available ? "rgba(201,168,106,0.75)" : "rgba(255,255,255,0.18)", margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+              {available ? "Tap" : "—"}
+            </p>
+          </>
+        )}
+      </div>
+
+      {/* Bonus badge */}
+      {isBonus && available && (
+        <div style={{ position: "absolute", top: 22, right: 7, background: "var(--color-oro)", borderRadius: 3, padding: "1px 4px", zIndex: 5 }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 6, color: "#111", fontWeight: 700, margin: 0 }}>+1</p>
         </div>
       )}
+
+      {/* Top flap — tears away on open */}
+      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 20, clipPath: ZIGZAG_FLAP, zIndex: 4, pointerEvents: "none", animation: isOpening ? "tav-pack-flap 0.45s ease forwards" : "none" }}>
+        {!locked && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/BUSTINA.jpg" alt="" aria-hidden
+              style={{ position: "absolute", top: 0, left: 0, width: 88, height: 123, objectFit: "cover", objectPosition: "center 25%", pointerEvents: "none" }}
+            />
+            <div style={{ position: "absolute", inset: 0, background: overlay }} />
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -180,21 +197,33 @@ function PackTab({
   countdown: string;
   isLoggedIn: boolean;
   onOpen: (cards: RevealedCard[]) => void;
-  onOpenBonus: () => void;
+  onOpenBonus: (cards: RevealedCard[]) => void;
 }) {
-  const handleOpen = useCallback(() => {
-    if (state.packsLeft <= 0) return;
-    haptic();
-    const rarities = openPack();
-    const cards: RevealedCard[] = rarities.map((rarity) => ({
+  const [openingIdx, setOpeningIdx] = useState<number | null>(null);
+  const bonusAvailable = isLoggedIn && !state.bonusPackUsed;
+
+  const makeCards = useCallback((): RevealedCard[] =>
+    openPack().map((rarity) => ({
       player: PLAYERS[Math.floor(Math.random() * PLAYERS.length)],
       rarity,
       flipped: false,
-    }));
-    onOpen(cards);
-  }, [state.packsLeft, onOpen]);
+    })), []);
 
-  const bonusAvailable = isLoggedIn && !state.bonusPackUsed;
+  const handlePackClick = useCallback((i: number) => {
+    if (openingIdx !== null || i >= state.packsLeft) return;
+    haptic();
+    const cards = makeCards();
+    setOpeningIdx(i);
+    setTimeout(() => { setOpeningIdx(null); onOpen(cards); }, 700);
+  }, [openingIdx, state.packsLeft, makeCards, onOpen]);
+
+  const handleBonusClick = useCallback(() => {
+    if (openingIdx !== null || !bonusAvailable) return;
+    haptic();
+    const cards = makeCards();
+    setOpeningIdx(PACKS_PER_DAY);
+    setTimeout(() => { setOpeningIdx(null); onOpenBonus(cards); }, 700);
+  }, [openingIdx, bonusAvailable, makeCards, onOpenBonus]);
 
   return (
     <div>
@@ -232,22 +261,26 @@ function PackTab({
         {Array.from({ length: PACKS_PER_DAY }).map((_, i) => (
           <button
             key={i}
-            onClick={i < state.packsLeft ? handleOpen : undefined}
-            style={{ background: "none", border: "none", padding: 0, cursor: i < state.packsLeft ? "pointer" : "default" }}
+            onClick={() => handlePackClick(i)}
+            style={{ background: "none", border: "none", padding: 0, cursor: i < state.packsLeft && openingIdx === null ? "pointer" : "default" }}
           >
-            <PackIcon available={i < state.packsLeft} />
+            <PhysicalPack
+              available={i < state.packsLeft}
+              isOpening={openingIdx === i}
+            />
           </button>
         ))}
 
         {/* 4ª bustina: login bonus */}
         <button
-          onClick={bonusAvailable ? onOpenBonus : isLoggedIn ? undefined : () => { window.location.href = "/login"; }}
-          style={{ background: "none", border: "none", padding: 0, cursor: bonusAvailable || !isLoggedIn ? "pointer" : "default" }}
+          onClick={bonusAvailable ? handleBonusClick : isLoggedIn ? undefined : () => { window.location.href = "/login"; }}
+          style={{ background: "none", border: "none", padding: 0, cursor: (bonusAvailable || !isLoggedIn) && openingIdx === null ? "pointer" : "default" }}
         >
-          <PackIcon
+          <PhysicalPack
             available={bonusAvailable}
-            bonus={!state.bonusPackUsed}
             locked={!isLoggedIn}
+            isBonus
+            isOpening={openingIdx === PACKS_PER_DAY}
           />
         </button>
       </div>
@@ -272,7 +305,7 @@ function PackTab({
       {/* CTA */}
       {state.packsLeft > 0 ? (
         <button
-          onClick={handleOpen}
+          onClick={() => handlePackClick(state.packsLeft - 1)}
           style={{
             width: "100%",
             padding: "16px 0",
@@ -282,14 +315,14 @@ function PackTab({
             fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 800,
             textTransform: "uppercase", letterSpacing: "0.12em",
             color: "var(--color-nero)",
-            cursor: "pointer",
+            cursor: openingIdx === null ? "pointer" : "default",
           }}
         >
           Apri bustina
         </button>
       ) : bonusAvailable ? (
         <button
-          onClick={onOpenBonus}
+          onClick={handleBonusClick}
           style={{
             width: "100%",
             padding: "16px 0",
@@ -299,7 +332,7 @@ function PackTab({
             fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 800,
             textTransform: "uppercase", letterSpacing: "0.12em",
             color: "var(--color-nero)",
-            cursor: "pointer",
+            cursor: openingIdx === null ? "pointer" : "default",
           }}
         >
           Apri bustina bonus
@@ -855,15 +888,7 @@ export function CollectionApp() {
     setRevealCards(null);
   }, []);
 
-  const handleOpenBonus = useCallback(() => {
-    if (!state || state.bonusPackUsed) return;
-    haptic();
-    const rarities = openPack();
-    const cards: RevealedCard[] = rarities.map((rarity) => ({
-      player: PLAYERS[Math.floor(Math.random() * PLAYERS.length)],
-      rarity,
-      flipped: false,
-    }));
+  const handleOpenBonus = useCallback((cards: RevealedCard[]) => {
     setState((prev) => {
       if (!prev) return prev;
       const newOwned = { ...prev.owned };
@@ -883,7 +908,7 @@ export function CollectionApp() {
         );
       }, 500 + i * 750);
     });
-  }, [state]);
+  }, []);
 
   if (!state) return null;
 
