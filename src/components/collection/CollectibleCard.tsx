@@ -103,6 +103,14 @@ export function CollectibleCard({
     const el = cardRef.current;
     if (!el) return;
 
+    const onTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      const rect = el.getBoundingClientRect();
+      updateTilt(
+        (touch.clientX - rect.left) / rect.width,
+        (touch.clientY - rect.top) / rect.height
+      );
+    };
     const onTouchMove = (e: TouchEvent) => {
       e.preventDefault();
       const touch = e.touches[0];
@@ -114,9 +122,11 @@ export function CollectibleCard({
     };
     const onTouchEnd = () => resetTilt();
 
+    el.addEventListener("touchstart", onTouchStart, { passive: false });
     el.addEventListener("touchmove", onTouchMove, { passive: false });
     el.addEventListener("touchend", onTouchEnd);
     return () => {
+      el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchmove", onTouchMove);
       el.removeEventListener("touchend", onTouchEnd);
     };
@@ -245,8 +255,8 @@ export function CollectibleCard({
         onMouseLeave={resetTilt}
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: 280, height: 392,
-          borderRadius: 16,
+          width: 310, height: 434,
+          borderRadius: 18,
           border: `2px solid ${r.color}`,
           background: r.bg,
           boxShadow: `0 0 60px ${r.glow}, 0 24px 64px rgba(0,0,0,0.8)`,

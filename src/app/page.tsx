@@ -210,7 +210,7 @@ function SlideNews() {
           </h2>
         </Link>
         <Link href="/news" className="flex flex-col items-center gap-1 mt-8">
-          <span className="font-body font-bold text-[0.68rem] uppercase tracking-widest text-white/50">Tutte le news</span>
+          <span className="font-body font-bold text-[0.82rem] uppercase tracking-widest text-white/80">Tutte le news</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5 text-white/30">
             <path d="M6 9l6 6 6-6" />
           </svg>
@@ -230,16 +230,16 @@ function SlideKit() {
       <h2 className="text-[1.75rem] text-white text-center mb-10 leading-tight">
         KIT HOME<br />26/27
       </h2>
-      <div className="w-44 h-60 rounded-2xl bg-carbon border border-white/10 flex items-center justify-center">
+      <div className="w-56 h-72 rounded-2xl bg-carbon border border-white/10 flex items-center justify-center">
         <div className="text-center px-5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-tavolara-gold.png"
             alt="Tavolara"
-            className="h-14 w-auto mx-auto mb-4 object-contain"
+            className="h-24 w-auto mx-auto mb-5 object-contain"
             style={{ filter: "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345deg) brightness(0.88)" }}
           />
-          <p className="font-mono text-[0.55rem] uppercase tracking-widest text-white/40">Prossimamente</p>
+          <p className="font-mono text-[0.72rem] uppercase tracking-widest text-white/65">Prossimamente</p>
         </div>
       </div>
       <Link
@@ -519,6 +519,9 @@ function SlideMatch({ onHighlights }: { onHighlights: () => void }) {
           ref={timelineRef}
           className="flex gap-2 overflow-x-auto mt-4 -mx-5 px-5"
           style={{ scrollbarWidth: "none", WebkitOverflowScrolling: "touch" } as React.CSSProperties}
+          onTouchStart={e => e.stopPropagation()}
+          onTouchEnd={e => e.stopPropagation()}
+          onTouchMove={e => e.stopPropagation()}
         >
           {EVENTS.map((ev, i) => <EventCard key={i} ev={ev} />)}
           <div className="shrink-0 w-2" />
