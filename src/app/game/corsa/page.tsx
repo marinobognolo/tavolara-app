@@ -11,18 +11,29 @@ export default function CorsaPage() {
   const [lastScore, setLastScore] = useState<number | null>(null);
   const [newRecord, setNewRecord] = useState(false);
 
+  // Nascondi TopNav e BottomNav mentre il gioco è aperto
+  useEffect(() => {
+    const selectors = ['nav.fixed.top-0', 'nav.fixed.bottom-0'];
+    const els = selectors.map(s => document.querySelector(s) as HTMLElement | null);
+    els.forEach(el => { if (el) el.style.display = 'none'; });
+    return () => { els.forEach(el => { if (el) el.style.display = ''; }); };
+  }, []);
+
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const H = 340;
-    let W = canvas.clientWidth || 390;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    let W = canvas.clientWidth || 390;
+    let H = canvas.clientHeight || window.innerHeight - 56;
+    let groundY = H - 52;
 
     const resize = () => {
       W = canvas.clientWidth || 390;
+      H = canvas.clientHeight || window.innerHeight - 56;
+      groundY = H - 52;
       canvas.width = Math.floor(W * dpr);
       canvas.height = Math.floor(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -30,7 +41,6 @@ export default function CorsaPage() {
     resize();
     window.addEventListener("resize", resize);
 
-    const groundY = H - 52;
     const GRAV = 0.58;
     const JUMP_INIT = -9.0;
     const JUMP_DBL = -8.2;
@@ -51,13 +61,11 @@ export default function CorsaPage() {
     let score = 0;
     let spawnT = 0;
     let ballT = 0;
-    let bgX = 0;
     let holding = false;
     let holdT = 0;
     let jumpsUsed = 0;
     let mode: "idle" | "playing" | "over" = "idle";
 
-    // Parametri di sessione — variano ad ogni partita
     let sessionGapBase = 200;
     let sessionGapMin = 110;
 
@@ -74,9 +82,8 @@ export default function CorsaPage() {
       speed = 3.0;
       dist = 0;
       score = 0;
-      // Ogni partita ha una spaziatura birilli diversa (sessione unica)
-      sessionGapBase = 260 + Math.random() * 100; // 260–360
-      sessionGapMin  = 190 + Math.random() * 40;  // 190–230
+      sessionGapBase = 260 + Math.random() * 100;
+      sessionGapMin  = 190 + Math.random() * 40;
       spawnT = sessionGapBase + 30;
       ballT  = 160 + Math.random() * 120;
       player.y = groundY - player.h;
@@ -140,7 +147,6 @@ export default function CorsaPage() {
       ctx.lineTo(x + w, groundY);
       ctx.closePath();
       ctx.fill();
-      // Striscia bianca
       ctx.fillStyle = "rgba(255,255,255,0.88)";
       ctx.fillRect(x + w * 0.18, oy + h * 0.42, w * 0.64, 2.5);
     };
@@ -153,7 +159,6 @@ export default function CorsaPage() {
       ctx.strokeStyle = "#1a1611";
       ctx.lineWidth = 1.2;
       ctx.stroke();
-      // Pentagono centrale
       ctx.fillStyle = "#1a1611";
       ctx.beginPath();
       ctx.arc(bx, by, 3.2, 0, Math.PI * 2);
@@ -176,22 +181,17 @@ export default function CorsaPage() {
       const hipX = px + pw / 2;
       const hipY = py + ph - 10;
       ctx.lineWidth = 3;
-      // Gambe
       ctx.strokeStyle = "#c8c0b0";
       ctx.beginPath(); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX - 5 + swing * 5, footY); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(hipX, hipY); ctx.lineTo(hipX + 5 - swing * 5, footY); ctx.stroke();
-      // Maglia verde Tavolara
       ctx.fillStyle = "#1f7a4d";
       ctx.fillRect(px + 4, py + 8, pw - 8, ph - 16);
-      // Striscia bianca verticale sulla maglia
       ctx.fillStyle = "#f3efe6";
       ctx.fillRect(px + pw / 2 - 1.5, py + 8, 3, ph - 16);
-      // Testa
       ctx.fillStyle = "#e8c39a";
       ctx.beginPath();
       ctx.arc(px + pw / 2, py + 6, 7, 0, Math.PI * 2);
       ctx.fill();
-      // Braccio
       ctx.strokeStyle = "#1f7a4d";
       ctx.lineWidth = 2.5;
       ctx.beginPath();
@@ -207,28 +207,32 @@ export default function CorsaPage() {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      const period = W + 360;
-      const ix = ((bgX % period) + period) % period;
+      // Parallax montagne — usa dist (sempre positivo) per evitare glitch da modulo negativo
+      const period = W + 440;
+      const px = (dist * 0.12) % period;
 
-      // Collinette sullo sfondo (isola di Tavolara stilizzata)
-      const hill = (x: number, w: number, h: number, color: string) => {
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.moveTo(x, groundY);
-        ctx.bezierCurveTo(x + w * 0.2, groundY - h * 0.5, x + w * 0.4, groundY - h, x + w * 0.5, groundY - h);
-        ctx.bezierCurveTo(x + w * 0.6, groundY - h, x + w * 0.8, groundY - h * 0.5, x + w, groundY);
-        ctx.closePath();
-        ctx.fill();
+      const drawHill = (baseX: number, w: number, h: number, color: string) => {
+        // Disegna 2 copie affiancate per lo scorrimento senza stacchi
+        for (let rep = 0; rep < 2; rep++) {
+          const x = baseX - px + rep * period;
+          if (x + w < -10 || x > W + 10) continue;
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.moveTo(x, groundY);
+          ctx.bezierCurveTo(x + w * 0.2, groundY - h * 0.5, x + w * 0.4, groundY - h, x + w * 0.5, groundY - h);
+          ctx.bezierCurveTo(x + w * 0.6, groundY - h, x + w * 0.8, groundY - h * 0.5, x + w, groundY);
+          ctx.closePath();
+          ctx.fill();
+        }
       };
-      hill(ix - period * 0.4, 420, 115, "#1c1914");
-      hill(ix + 50,            300,  80, "#181510");
 
-      // Linea terreno
+      drawHill(W * 0.05, 440, 115, "#1c1914");
+      drawHill(W * 0.55, 320, 80, "#181510");
+
       ctx.strokeStyle = "#2c261e";
       ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(W, groundY); ctx.stroke();
 
-      // Linea campo tratteggiata
       ctx.strokeStyle = "rgba(31,122,77,0.45)";
       ctx.setLineDash([12, 20]);
       ctx.lineDashOffset = -((dist * 0.45) % 32);
@@ -242,26 +246,20 @@ export default function CorsaPage() {
       dist  += speed;
       score  = Math.floor(dist / 14);
       speed += 0.0006;
-      bgX   -= speed * 0.25;
 
-      // Spawn birilli — tre modalità di gap per varietà di ritmo
       spawnT -= speed;
       if (spawnT <= 0) {
         obstacles.push({ x: W + 20, w: 16 + Math.random() * 12, h: 22 + Math.random() * 20 });
         const gapRoll = Math.random();
         if (gapRoll < 0.18) {
-          // Respiro lungo — pausa di sollievo (18%)
           spawnT = sessionGapBase * (1.6 + Math.random() * 0.8);
         } else if (gapRoll < 0.34) {
-          // Coppia ravvicinata — sfida breve (16%)
           spawnT = Math.max(120, sessionGapBase * 0.52 + Math.random() * 45);
         } else {
-          // Gap normale con leggera variazione (66%)
           spawnT = Math.max(sessionGapMin, sessionGapBase + Math.random() * 90 - dist / 220);
         }
       }
 
-      // Spawn palloni
       ballT -= speed;
       if (ballT <= 0) {
         const rnd = Math.random();
@@ -277,7 +275,6 @@ export default function CorsaPage() {
       popups = popups.filter((p) => p.life > 0);
       popups.forEach((p) => { p.y -= 1.4; p.life -= 1; });
 
-      // Fisica salto
       if (holding && player.vy < 0 && holdT < MAX_HOLD) {
         player.vy -= HOLD_FORCE;
         holdT += 1;
@@ -293,7 +290,6 @@ export default function CorsaPage() {
         holding = false;
       }
 
-      // Collisione birilli → game over
       for (const o of obstacles) {
         if (
           player.x + player.w - 6 > o.x &&
@@ -313,7 +309,6 @@ export default function CorsaPage() {
         }
       }
 
-      // Collisione palloni → +5 bonus
       for (const b of balls) {
         const cx = player.x + player.w / 2;
         const cy = player.y + player.h / 2;
@@ -333,7 +328,6 @@ export default function CorsaPage() {
       obstacles.forEach((o) => drawCone(o.x, o.w, o.h));
       drawPlayer(now);
 
-      // Popup "+5"
       popups.forEach((p) => {
         const alpha = p.life / 30;
         ctx.globalAlpha = alpha;
@@ -344,7 +338,6 @@ export default function CorsaPage() {
         ctx.globalAlpha = 1;
       });
 
-      // HUD punteggio
       ctx.textAlign = "right";
       ctx.fillStyle = "#c9a86a";
       ctx.font = "bold 22px ui-monospace,monospace";
@@ -353,7 +346,6 @@ export default function CorsaPage() {
       ctx.font = "600 10px ui-monospace,monospace";
       ctx.fillText("BEST " + bestLocal, W - 14, 50);
 
-      // Overlay
       ctx.textAlign = "center";
       if (mode === "idle") {
         ctx.fillStyle = "rgba(13,10,7,0.62)";
@@ -391,11 +383,11 @@ export default function CorsaPage() {
     let raf = 0;
     let lastTs = 0;
     let accumulator = 0;
-    const STEP = 1000 / 60; // fisica sempre a 60 fps logici
+    const STEP = 1000 / 60;
 
     const loop = (now: number) => {
       if (lastTs > 0) {
-        accumulator += Math.min(now - lastTs, 100); // clamp a 100ms per evitare spiral
+        accumulator += Math.min(now - lastTs, 100);
         while (accumulator >= STEP) {
           if (mode === "playing") update();
           accumulator -= STEP;
@@ -420,20 +412,31 @@ export default function CorsaPage() {
 
   return (
     <div
-      className="min-h-[100svh] flex flex-col"
-      style={{ backgroundColor: "var(--color-nero)", paddingBottom: "calc(env(safe-area-inset-bottom) + 5rem)" }}
+      className="fixed inset-0 flex flex-col"
+      style={{ backgroundColor: "#0d0a07", zIndex: 55 }}
     >
-      {/* Header */}
+      {/* Header compatto */}
       <div
-        className="flex items-center gap-3 px-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "12px" }}
+        className="flex items-center gap-3 px-4 shrink-0"
+        style={{
+          paddingTop: "calc(env(safe-area-inset-top) + 10px)",
+          paddingBottom: "10px",
+          background: "linear-gradient(to bottom, rgba(13,10,7,0.95), transparent)",
+          position: "absolute", top: 0, left: 0, right: 0, zIndex: 10,
+          pointerEvents: "none",
+        }}
       >
-        <Link href="/game" className="p-1 text-white" aria-label="Tav Game">
+        <Link
+          href="/game"
+          className="p-1 text-white"
+          aria-label="Tav Game"
+          style={{ pointerEvents: "auto" }}
+        >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
             <path d="M15 18l-6-6 6-6" />
           </svg>
         </Link>
-        <div>
+        <div className="flex-1">
           <p className="font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "var(--color-oro)" }}>
             TAV GAME
           </p>
@@ -441,83 +444,40 @@ export default function CorsaPage() {
             Corsa
           </p>
         </div>
+        <div className="text-right">
+          <p className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.3)" }}>Record</p>
+          <p className="font-mono text-[0.85rem] font-bold" style={{ color: "var(--color-oro)" }}>{best > 0 ? best : "—"}</p>
+        </div>
       </div>
 
-      {/* Canvas */}
+      {/* Canvas — riempie tutto lo schermo */}
       <canvas
         ref={canvasRef}
-        className="block w-full touch-none select-none"
-        style={{ height: "340px", background: "#0d0a07" }}
+        className="block w-full flex-1 touch-none select-none"
+        style={{ minHeight: 0, background: "#0d0a07" }}
         aria-label="Corsa — TAV GAME"
       />
 
-      {/* Info bar */}
-      <div
-        className="flex items-center justify-between px-4 py-2.5"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
-      >
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.3)" }}>
-          Tieni premuto = più alto  ·  doppio salto
-        </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.14em]" style={{ color: "var(--color-oro)" }}>
-          Record {best}
-        </span>
-      </div>
-
-      {/* Score cards */}
-      <div className="px-4 pt-4 grid grid-cols-2 gap-3">
+      {/* Score ultima partita — overlay in basso */}
+      {lastScore !== null && (
         <div
-          className="rounded-2xl p-4 text-center"
-          style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.07)" }}
-        >
-          <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>
-            Ultima partita
-          </p>
-          <p className="font-body font-extrabold text-[1.8rem] text-white">
-            {lastScore ?? "—"}
-          </p>
-          {newRecord && lastScore !== null && (
-            <p className="font-mono text-[9px] uppercase tracking-wider mt-1" style={{ color: "var(--color-oro)" }}>
-              ★ Record!
-            </p>
-          )}
-        </div>
-        <div
-          className="rounded-2xl p-4 text-center"
+          className="shrink-0 flex items-center justify-between px-5"
           style={{
-            background: "var(--color-carbon)",
-            border: `1px solid rgba(201,168,106,${best > 0 ? "0.3" : "0.08"})`,
+            paddingBottom: "calc(env(safe-area-inset-bottom) + 12px)",
+            paddingTop: 10,
+            background: "linear-gradient(transparent, rgba(13,10,7,0.96))",
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            pointerEvents: "none",
           }}
         >
-          <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "var(--color-oro)" }}>
-            Record
+          <p className="font-mono text-[10px] uppercase tracking-widest" style={{ color: "rgba(255,255,255,0.3)" }}>
+            Ultima partita
           </p>
-          <p className="font-body font-extrabold text-[1.8rem]" style={{ color: "var(--color-oro)" }}>
-            {best > 0 ? best : "—"}
-          </p>
-        </div>
-      </div>
-
-      {/* Come si gioca */}
-      <div className="px-4 pt-4">
-        <div
-          className="rounded-2xl p-4 space-y-2"
-          style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)" }}
-        >
-          <p className="font-mono text-[9px] uppercase tracking-widest mb-3" style={{ color: "rgba(255,255,255,0.25)" }}>
-            Come si gioca
-          </p>
-          <p className="font-mono text-[11px] uppercase leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
-            SALTA I BIRILLI DORATI — TIENI PREMUTO PER SALTARE PIÙ IN ALTO.
-          </p>
-          <p className="font-mono text-[11px] uppercase leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
-            PREMI DI NUOVO MENTRE SEI IN ARIA PER IL DOPPIO SALTO.
-          </p>
-          <p className="font-mono text-[11px] uppercase leading-relaxed" style={{ color: "var(--color-oro)" }}>
-            RACCOGLI I PALLONI DURANTE LA CORSA: OGNI PALLONE VALE +5 PUNTI BONUS.
+          <p className="font-body font-extrabold text-[1.1rem]" style={{ color: newRecord ? "var(--color-oro)" : "white" }}>
+            {lastScore}{newRecord && " ★"}
           </p>
         </div>
-      </div>
+      )}
     </div>
   );
 }
