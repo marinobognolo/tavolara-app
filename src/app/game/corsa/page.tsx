@@ -1,14 +1,39 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useAuth } from "@/lib/auth-context";
 
 type Popup = { x: number; y: number; val: number; life: number };
+type LeaderEntry = { nickname: string; score: number };
 
 export default function CorsaPage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const { gamer } = useAuth();
   const [best, setBest] = useState(0);
   const [lastScore, setLastScore] = useState<number | null>(null);
   const [newRecord, setNewRecord] = useState(false);
+  const [leaderboard, setLeaderboard] = useState<LeaderEntry[]>([]);
+  const [leaderLoading, setLeaderLoading] = useState(false);
+
+  const fetchLeaderboard = async () => {
+    setLeaderLoading(true);
+    try {
+      const res = await fetch("/api/game/corsa");
+      if (res.ok) setLeaderboard(await res.json());
+    } catch {}
+    setLeaderLoading(false);
+  };
+
+  const saveScore = async (score: number) => {
+    if (!gamer) return;
+    try {
+      await fetch("/api/game/corsa", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nickname: gamer.nickname, score }),
+      });
+    } catch {}
+  };
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,12 +41,16 @@ export default function CorsaPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const H = 340;
     let W = canvas.clientWidth || 390;
+    let H = canvas.clientHeight || Math.round(W * 4 / 3);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    let groundY = H - 52;
 
     const resize = () => {
       W = canvas.clientWidth || 390;
+      H = canvas.clientHeight || Math.round(W * 4 / 3);
+      groundY = H - 52;
       canvas.width = Math.floor(W * dpr);
       canvas.height = Math.floor(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -29,7 +58,6 @@ export default function CorsaPage() {
     resize();
     window.addEventListener("resize", resize);
 
-    const groundY = H - 52;
     const GRAV = 0.58;
     const JUMP_INIT = -9.0;
     const JUMP_DBL = -8.2;
@@ -64,7 +92,6 @@ export default function CorsaPage() {
     } catch {}
     setBest(bestLocal);
 
-    // Refs per il timestep — accessibili dal closure di press()
     let lastTs = 0;
     let accumulator = 0;
 
@@ -77,7 +104,6 @@ export default function CorsaPage() {
       score = 0;
       sessionGapBase = 260 + Math.random() * 100;
       sessionGapMin  = 190 + Math.random() * 40;
-      // Ritardo generoso prima del primo birillo
       spawnT = sessionGapBase + 200;
       ballT  = 380 + Math.random() * 160;
       player.y = groundY - player.h;
@@ -90,14 +116,12 @@ export default function CorsaPage() {
 
     const press = () => {
       if (mode === "idle" || mode === "over") {
-        // Primo tap: avvia SENZA saltare — azzera il timestep per evitare scatti
         reset();
         mode = "playing";
         lastTs = 0;
         accumulator = 0;
         return;
       }
-      // Durante il gioco: salta
       if (player.grounded) {
         player.vy = JUMP_INIT;
         player.grounded = false;
@@ -131,8 +155,6 @@ export default function CorsaPage() {
     canvas.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointerup", onPointerUp);
     window.addEventListener("pointercancel", onPointerUp);
-
-    /* ── Helpers ── */
 
     const drawCone = (x: number, w: number, h: number) => {
       const oy = groundY - h;
@@ -193,8 +215,6 @@ export default function CorsaPage() {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      // Silhouette isola di Tavolara — profilo a tavola (plateau piatto + scogliere)
-      // Scorre lentamente come parallasse sfondo
       const period = W + 520;
       const px = (dist * 0.10) % period;
 
@@ -205,18 +225,13 @@ export default function CorsaPage() {
           ctx.fillStyle = "#1c1914";
           ctx.beginPath();
           ctx.moveTo(x, groundY);
-          // Salita graduale sinistra
           ctx.bezierCurveTo(x + 40, groundY, x + 60, groundY - 30, x + 80, groundY - 60);
-          // Scogliera sinistra che sale al plateau
           ctx.bezierCurveTo(x + 90, groundY - 85, x + 100, groundY - 105, x + 110, groundY - 110);
-          // Plateau piatto — caratteristica di Tavolara
           ctx.lineTo(x + 240, groundY - 108);
-          // Scogliera destra quasi verticale
           ctx.bezierCurveTo(x + 260, groundY - 105, x + 275, groundY - 80, x + 290, groundY - 45);
           ctx.bezierCurveTo(x + 300, groundY - 20, x + 310, groundY - 8, x + 320, groundY);
           ctx.closePath();
           ctx.fill();
-          // Seconda montagna in distanza (Molarotto)
           ctx.fillStyle = "#181410";
           ctx.beginPath();
           ctx.moveTo(x + 330, groundY);
@@ -226,22 +241,16 @@ export default function CorsaPage() {
           ctx.fill();
         }
       };
-
       drawTavolara(W * 0.1);
 
-      // Linea terreno
       ctx.strokeStyle = "#2c261e"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(W, groundY); ctx.stroke();
-
-      // Linea campo tratteggiata
       ctx.strokeStyle = "rgba(31,122,77,0.45)";
       ctx.setLineDash([12, 20]);
       ctx.lineDashOffset = -((dist * 0.45) % 32);
       ctx.beginPath(); ctx.moveTo(0, groundY + 7); ctx.lineTo(W, groundY + 7); ctx.stroke();
       ctx.setLineDash([]);
     };
-
-    /* ── Update ── */
 
     const update = () => {
       dist  += speed;
@@ -306,6 +315,9 @@ export default function CorsaPage() {
             setBest(bestLocal);
             try { localStorage.setItem("tavgame-corsa-best", String(bestLocal)); } catch {}
           }
+          // Salva score su DB e carica classifica
+          saveScore(score);
+          fetchLeaderboard();
           break;
         }
       }
@@ -321,18 +333,14 @@ export default function CorsaPage() {
       }
     };
 
-    /* ── Draw ── */
-
     const draw = (now: number) => {
       drawBg();
       balls.forEach((b) => drawBall(b.x, b.y, b.r));
       obstacles.forEach((o) => drawCone(o.x, o.w, o.h));
       drawPlayer(now);
 
-      // Popup "+5"
       popups.forEach((p) => {
-        const alpha = p.life / 30;
-        ctx.globalAlpha = alpha;
+        ctx.globalAlpha = p.life / 30;
         ctx.fillStyle = "#c9a86a";
         ctx.font = "bold 13px ui-monospace,monospace";
         ctx.textAlign = "center";
@@ -340,15 +348,19 @@ export default function CorsaPage() {
         ctx.globalAlpha = 1;
       });
 
-      // Score HUD — visibile durante il gioco
+      // HUD score + record (in-canvas, in alto)
       if (mode === "playing") {
         ctx.textAlign = "right";
         ctx.fillStyle = "#c9a86a";
         ctx.font = "bold 22px ui-monospace,monospace";
-        ctx.fillText(String(score).padStart(5, "0"), W - 14, 34);
+        ctx.fillText(String(score).padStart(5, "0"), W - 14, 38);
+        if (bestLocal > 0) {
+          ctx.fillStyle = "rgba(201,168,106,0.35)";
+          ctx.font = "500 10px ui-monospace,monospace";
+          ctx.fillText("RECORD  " + bestLocal, W - 14, 54);
+        }
       }
 
-      // Overlay
       ctx.textAlign = "center";
       if (mode === "idle") {
         ctx.fillStyle = "rgba(13,10,7,0.65)";
@@ -399,7 +411,6 @@ export default function CorsaPage() {
 
     const loop = (now: number) => {
       if (lastTs > 0) {
-        // Cap a 48ms (max ~3 frame catch-up) per evitare scatti
         accumulator += Math.min(now - lastTs, 48);
         while (accumulator >= STEP) {
           if (mode === "playing") update();
@@ -421,6 +432,7 @@ export default function CorsaPage() {
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -428,32 +440,28 @@ export default function CorsaPage() {
       className="min-h-[100svh] flex flex-col"
       style={{ backgroundColor: "var(--color-nero)", paddingBottom: "calc(env(safe-area-inset-bottom) + 5rem)" }}
     >
-      {/* Header */}
+      {/* Header — solo titolo */}
       <div
-        className="flex items-center gap-3 px-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "12px" }}
+        className="flex items-center px-4"
+        style={{ paddingTop: "calc(env(safe-area-inset-top) + 56px)", paddingBottom: "10px" }}
       >
-        <div className="flex-1">
+        <div>
           <p className="font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "var(--color-oro)" }}>TAV GAME</p>
           <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-none">Corsa</p>
         </div>
-        <div className="text-right">
-          <p className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.3)" }}>Record</p>
-          <p className="font-mono text-[0.85rem] font-bold" style={{ color: "var(--color-oro)" }}>{best > 0 ? best : "—"}</p>
-        </div>
       </div>
 
-      {/* Canvas */}
+      {/* Canvas — 3:4 responsive */}
       <canvas
         ref={canvasRef}
         className="block w-full touch-none select-none"
-        style={{ height: "340px", background: "#0d0a07" }}
+        style={{ aspectRatio: "3/4", background: "#0d0a07" }}
         aria-label="Corsa — TAV GAME"
       />
 
       {/* Info */}
       <div
-        className="flex items-center justify-between px-4 py-2.5"
+        className="flex items-center px-4 py-2.5"
         style={{ borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
       >
         <span className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.3)" }}>
@@ -461,19 +469,95 @@ export default function CorsaPage() {
         </span>
       </div>
 
-      {/* Score card — solo dopo game over */}
+      {/* Score cards — solo dopo game over */}
       {lastScore !== null && (
-        <div className="px-4 pt-4 grid grid-cols-2 gap-3">
-          <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.07)" }}>
-            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Ultima partita</p>
-            <p className="font-body font-extrabold text-[1.8rem] text-white">{lastScore}</p>
-            {newRecord && <p className="font-mono text-[9px] uppercase tracking-wider mt-1" style={{ color: "var(--color-oro)" }}>★ Record!</p>}
+        <>
+          <div className="px-4 pt-4 grid grid-cols-2 gap-3">
+            <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Ultima partita</p>
+              <p className="font-body font-extrabold text-[1.8rem] text-white">{lastScore}</p>
+              {newRecord && <p className="font-mono text-[9px] uppercase tracking-wider mt-1" style={{ color: "var(--color-oro)" }}>★ Record!</p>}
+            </div>
+            <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: `1px solid rgba(201,168,106,${best > 0 ? "0.3" : "0.08"})` }}>
+              <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "var(--color-oro)" }}>Record</p>
+              <p className="font-body font-extrabold text-[1.8rem]" style={{ color: "var(--color-oro)" }}>{best > 0 ? best : "—"}</p>
+            </div>
           </div>
-          <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: `1px solid rgba(201,168,106,${best > 0 ? "0.3" : "0.08"})` }}>
-            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "var(--color-oro)" }}>Record</p>
-            <p className="font-body font-extrabold text-[1.8rem]" style={{ color: "var(--color-oro)" }}>{best > 0 ? best : "—"}</p>
-          </div>
-        </div>
+
+          {/* Classifica — solo se loggato */}
+          {gamer ? (
+            <div className="px-4 pt-5">
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] mb-3" style={{ color: "var(--color-oro)" }}>
+                Classifica
+              </p>
+              {leaderLoading ? (
+                <div className="flex justify-center py-6">
+                  <div className="w-5 h-5 rounded-full border-2 border-white/20 border-t-[var(--color-oro)] animate-spin" />
+                </div>
+              ) : leaderboard.length === 0 ? (
+                <p className="font-mono text-[10px] text-white/30 text-center py-4">Nessun punteggio ancora</p>
+              ) : (
+                <div className="flex flex-col gap-1">
+                  {leaderboard.map((entry, i) => (
+                    <div
+                      key={entry.nickname}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl"
+                      style={{
+                        background: entry.nickname === gamer.nickname
+                          ? "rgba(201,168,106,0.08)"
+                          : "var(--color-carbon)",
+                        border: entry.nickname === gamer.nickname
+                          ? "1px solid rgba(201,168,106,0.3)"
+                          : "1px solid rgba(255,255,255,0.05)",
+                      }}
+                    >
+                      {/* Posizione */}
+                      <span
+                        className="font-mono text-[11px] font-bold w-6 text-center shrink-0"
+                        style={{ color: i === 0 ? "#FFD700" : i === 1 ? "#C0C0C0" : i === 2 ? "#CD7F32" : "rgba(255,255,255,0.3)" }}
+                      >
+                        {i === 0 ? "★" : i + 1}
+                      </span>
+                      {/* Nickname */}
+                      <span
+                        className="font-body font-extrabold text-[0.88rem] uppercase flex-1 truncate"
+                        style={{ color: entry.nickname === gamer.nickname ? "var(--color-oro)" : "white" }}
+                      >
+                        {entry.nickname}
+                        {entry.nickname === gamer.nickname && <span className="font-mono text-[8px] ml-2 opacity-60">TU</span>}
+                      </span>
+                      {/* Punteggio */}
+                      <span className="font-mono text-[0.88rem] font-bold" style={{ color: "var(--color-oro)" }}>
+                        {entry.score}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="px-4 pt-5">
+              <div
+                className="rounded-2xl p-4 text-center"
+                style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <p className="font-mono text-[9px] uppercase tracking-widest mb-2" style={{ color: "rgba(255,255,255,0.3)" }}>
+                  Classifica
+                </p>
+                <p className="font-body text-white/50 text-[0.82rem] mb-3">
+                  Fai il login per vedere la classifica e salvare il tuo punteggio
+                </p>
+                <a
+                  href="/login"
+                  className="inline-block font-mono text-[10px] uppercase tracking-widest px-5 py-2 rounded-full"
+                  style={{ background: "var(--color-oro)", color: "var(--color-nero)" }}
+                >
+                  Accedi
+                </a>
+              </div>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
