@@ -141,6 +141,8 @@ body {
   0%   { transform: translateY(0) rotate(0deg); opacity: 1; }
   100% { transform: translateY(-55px) rotate(-14deg); opacity: 0; }
 }
+.tav-carousel::-webkit-scrollbar { display: none; }
+
 @keyframes tav-pack-burst {
   0%   { transform: scale(1) translateY(0); opacity: 1; }
   35%  { transform: scale(1.1) translateY(-5px); opacity: 1; }

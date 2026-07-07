@@ -28,13 +28,9 @@ function fmtCountdown(ms: number): string {
   return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
 }
 
-/* ── Physical Pack sizes & paths ─────────────────────── */
-const PACK_W = 148;
-const PACK_H = 207;
-// percentage clip-paths — scale with any container size
-const ZIGZAG_BODY_PCT = "polygon(0% 16.26%,6.25% 6.5%,12.5% 16.26%,18.75% 6.5%,25% 16.26%,31.25% 6.5%,37.5% 16.26%,43.75% 6.5%,50% 16.26%,56.25% 6.5%,62.5% 16.26%,68.75% 6.5%,75% 16.26%,81.25% 6.5%,87.5% 16.26%,93.75% 6.5%,100% 16.26%,100% 100%,0% 100%)";
-const ZIGZAG_FLAP_PCT = "polygon(0% 0%,100% 0%,100% 16.26%,93.75% 6.5%,87.5% 16.26%,81.25% 6.5%,75% 16.26%,68.75% 6.5%,62.5% 16.26%,56.25% 6.5%,50% 16.26%,43.75% 6.5%,37.5% 16.26%,31.25% 6.5%,25% 16.26%,18.75% 6.5%,12.5% 16.26%,6.25% 6.5%,0% 16.26%)";
-const ZIGZAG_SVG = "M 0,20 L5.5,8 L11,20 L16.5,8 L22,20 L27.5,8 L33,20 L38.5,8 L44,20 L49.5,8 L55,20 L60.5,8 L66,20 L71.5,8 L77,20 L82.5,8 L88,20 L88,115 Q88,123 80,123 L8,123 Q0,123 0,115 Z";
+/* ── Physical Pack ────────────────────────────────────── */
+const PACK_W = 250;
+const PACK_H = 350;
 const PACK_PHOTOS = ["/BUSTINA%201.jpg", "/BUSTINA%202.jpg", "/BUSTINA%203.jpg"];
 const LOCKED_PHOTO = "/BUSTINA%204.jpg";
 
@@ -44,59 +40,85 @@ function PhysicalPack({
   isBonus = false,
   isOpening = false,
   photo = PACK_PHOTOS[0],
+  dimmed = false,
 }: {
   available: boolean;
   locked?: boolean;
   isBonus?: boolean;
   isOpening?: boolean;
   photo?: string;
+  dimmed?: boolean;
 }) {
+  const borderAlpha = locked ? 0.18 : available ? 0.88 : 0.28;
   const borderColor = locked
-    ? "rgba(255,255,255,0.25)"
-    : available ? "rgba(201,168,106,0.95)" : "rgba(201,168,106,0.4)";
-  const overlay = locked
-    ? "rgba(0,0,0,0.72)"
-    : available
-    ? "rgba(0,0,0,0.08)"
-    : "rgba(0,0,0,0.52)";
-  const burstAnim = isOpening ? "tav-pack-burst 0.42s ease 0.36s forwards" : "none";
+    ? `rgba(255,255,255,${borderAlpha})`
+    : `rgba(201,168,106,${borderAlpha})`;
+  const overlay = locked ? "rgba(0,0,0,0.72)" : available ? "rgba(0,0,0,0.1)" : "rgba(0,0,0,0.52)";
+  const glow = !dimmed && available && !locked
+    ? ", 0 0 48px rgba(201,168,106,0.16), 0 20px 64px rgba(0,0,0,0.7)"
+    : ", 0 8px 32px rgba(0,0,0,0.45)";
 
   return (
-    <div style={{ width: PACK_W, height: PACK_H, position: "relative", flexShrink: 0 }}>
+    <div style={{
+      width: PACK_W, height: PACK_H, position: "relative", flexShrink: 0,
+      borderRadius: 14, overflow: "hidden",
+      boxShadow: `inset 0 0 0 2px ${borderColor}${glow}`,
+      opacity: dimmed ? 0.38 : 1,
+      transform: dimmed ? "scale(0.92)" : "scale(1)",
+      transition: isOpening ? "none" : "opacity 0.3s, transform 0.3s",
+      animation: isOpening ? "tav-pack-burst 0.55s cubic-bezier(0.4,0,0.2,1) forwards" : "none",
+    }}>
 
-      {/* Body — photo with % zigzag clip */}
-      <div style={{ position: "absolute", inset: 0, clipPath: ZIGZAG_BODY_PCT, animation: burstAnim }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={photo} alt="" aria-hidden
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%" }}
-        />
-        <div style={{ position: "absolute", inset: 0, background: overlay }} />
+      {/* Photo — clipped naturally by overflow:hidden + border-radius */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={photo} alt="" aria-hidden
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%" }}
+      />
+
+      {/* Dark overlay */}
+      <div style={{ position: "absolute", inset: 0, background: overlay }} />
+
+      {/* Top header strip */}
+      <div style={{
+        position: "absolute", top: 0, left: 0, right: 0, height: 38,
+        background: "linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.38) 100%)",
+        display: "flex", alignItems: "center", justifyContent: "space-between",
+        padding: "0 14px", zIndex: 2,
+      }}>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "rgba(201,168,106,0.88)", letterSpacing: "0.22em", textTransform: "uppercase" }}>TAVOLARA</span>
+        <div style={{ display: "flex", gap: 4 }}>
+          {[0,1,2,3,4].map(i => <div key={i} style={{ width: 3, height: 3, borderRadius: "50%", background: "rgba(201,168,106,0.38)" }} />)}
+        </div>
+        <span style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "rgba(201,168,106,0.88)", letterSpacing: "0.22em", textTransform: "uppercase" }}>2025</span>
       </div>
 
-      {/* SVG border — viewBox scales automatically */}
-      <svg viewBox="0 0 88 123" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 3, animation: burstAnim }}>
-        <path d={ZIGZAG_SVG} fill="none" stroke={borderColor} strokeWidth="1.5"
-          strokeDasharray={locked ? "3,2" : undefined} />
-      </svg>
+      {/* Perforation tear line */}
+      <div style={{
+        position: "absolute", top: 38, left: 10, right: 10, height: 1, zIndex: 2,
+        backgroundImage: "repeating-linear-gradient(90deg, rgba(201,168,106,0.45) 0px, rgba(201,168,106,0.45) 5px, transparent 5px, transparent 10px)",
+      }} />
 
-      {/* Content */}
-      <div style={{ position: "absolute", top: "16.26%", left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, zIndex: 4, animation: burstAnim }}>
+      {/* Center content */}
+      <div style={{
+        position: "absolute", top: 39, left: 0, right: 0, bottom: 0,
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        gap: 10, zIndex: 2,
+      }}>
         {locked ? (
           <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={1.5} style={{ width: 34, height: 34 }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" strokeWidth={1.4} style={{ width: 36, height: 36 }}>
               <rect x="3" y="11" width="18" height="11" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" />
             </svg>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.4)", margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>Login</p>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.45)", margin: 0, letterSpacing: "0.16em", textTransform: "uppercase" }}>Login</p>
           </>
         ) : (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-tavolara-gold.png" alt="" aria-hidden
-              style={{ width: 42, height: 42, objectFit: "contain", opacity: available ? 0.92 : 0.4 }}
+              style={{ width: 52, height: 52, objectFit: "contain", opacity: available ? 0.92 : 0.3, filter: available ? "drop-shadow(0 0 14px rgba(201,168,106,0.55))" : "none" }}
             />
-            <div style={{ width: "52%", height: 1, background: available ? "rgba(201,168,106,0.45)" : "rgba(255,255,255,0.1)" }} />
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: available ? "rgba(201,168,106,0.9)" : "rgba(255,255,255,0.22)", margin: 0, letterSpacing: "0.14em", textTransform: "uppercase" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: available ? "rgba(201,168,106,0.88)" : "rgba(255,255,255,0.22)", margin: 0, letterSpacing: "0.18em", textTransform: "uppercase" }}>
               {available ? "Tap" : "—"}
             </p>
           </>
@@ -105,18 +127,22 @@ function PhysicalPack({
 
       {/* Bonus badge */}
       {isBonus && available && (
-        <div style={{ position: "absolute", top: "18%", right: "6%", background: "var(--color-oro)", borderRadius: 4, padding: "2px 6px", zIndex: 5 }}>
+        <div style={{ position: "absolute", top: 48, right: 14, background: "var(--color-oro)", borderRadius: 4, padding: "2px 7px", zIndex: 5 }}>
           <p style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "#111", fontWeight: 700, margin: 0 }}>+1</p>
         </div>
       )}
 
-      {/* Top flap — covers full area, clip reveals only top strip */}
-      <div style={{ position: "absolute", inset: 0, clipPath: ZIGZAG_FLAP_PCT, zIndex: 4, pointerEvents: "none", animation: isOpening ? "tav-pack-flap 0.45s ease forwards" : "none" }}>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={photo} alt="" aria-hidden
-          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%", pointerEvents: "none" }}
-        />
-        <div style={{ position: "absolute", inset: 0, background: overlay }} />
+      {/* Bottom gradient */}
+      <div style={{
+        position: "absolute", bottom: 0, left: 0, right: 0,
+        background: "linear-gradient(transparent, rgba(0,0,0,0.78))",
+        padding: "48px 14px 14px", zIndex: 2,
+      }}>
+        <p style={{
+          fontFamily: "var(--font-mono)", fontSize: 7, textAlign: "center", margin: 0,
+          color: available && !locked ? "rgba(201,168,106,0.58)" : "transparent",
+          letterSpacing: "0.22em", textTransform: "uppercase",
+        }}>Collection · 2025</p>
       </div>
     </div>
   );
@@ -201,7 +227,15 @@ function PackTab({
   onOpenBonus: (cards: RevealedCard[]) => void;
 }) {
   const [openingIdx, setOpeningIdx] = useState<number | null>(null);
+  const [currentIdx, setCurrentIdx] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const bonusAvailable = isLoggedIn && !state.bonusPackUsed;
+
+  const handleCarouselScroll = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    setCurrentIdx(Math.max(0, Math.min(Math.round(el.scrollLeft / (PACK_W + 16)), PACKS_PER_DAY)));
+  }, []);
 
   const makeCards = useCallback((): RevealedCard[] =>
     openPack().map((rarity) => ({
@@ -254,108 +288,113 @@ function PackTab({
         )}
       </div>
 
-      {/* Pack grid: 2×2 */}
-      <div style={{
-        display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
-        maxWidth: 316, margin: "0 auto 32px",
-      }}>
-        {Array.from({ length: PACKS_PER_DAY }).map((_, i) => (
+      {/* Carousel */}
+      <div style={{ position: "relative", margin: "0 -20px 8px" }}>
+        <div
+          ref={scrollRef}
+          onScroll={handleCarouselScroll}
+          className="tav-carousel"
+          style={{
+            display: "flex",
+            overflowX: "auto",
+            scrollSnapType: "x mandatory",
+            WebkitOverflowScrolling: "touch",
+            scrollbarWidth: "none",
+            gap: 16,
+            paddingLeft: `calc(50vw - ${PACK_W / 2}px)`,
+            paddingRight: `calc(50vw - ${PACK_W / 2}px)`,
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          {Array.from({ length: PACKS_PER_DAY }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => handlePackClick(i)}
+              style={{
+                background: "none", border: "none", padding: 0,
+                scrollSnapAlign: "center", flexShrink: 0,
+                cursor: i < state.packsLeft && openingIdx === null ? "pointer" : "default",
+              }}
+            >
+              <PhysicalPack
+                available={i < state.packsLeft}
+                isOpening={openingIdx === i}
+                photo={PACK_PHOTOS[i]}
+                dimmed={currentIdx !== i}
+              />
+            </button>
+          ))}
           <button
-            key={i}
-            onClick={() => handlePackClick(i)}
-            style={{ background: "none", border: "none", padding: 0, cursor: i < state.packsLeft && openingIdx === null ? "pointer" : "default" }}
+            onClick={bonusAvailable ? handleBonusClick : isLoggedIn ? undefined : () => { window.location.href = "/login"; }}
+            style={{
+              background: "none", border: "none", padding: 0,
+              scrollSnapAlign: "center", flexShrink: 0,
+              cursor: (bonusAvailable || !isLoggedIn) && openingIdx === null ? "pointer" : "default",
+            }}
           >
             <PhysicalPack
-              available={i < state.packsLeft}
-              isOpening={openingIdx === i}
-              photo={PACK_PHOTOS[i]}
+              available={bonusAvailable}
+              locked={!isLoggedIn}
+              isBonus
+              isOpening={openingIdx === PACKS_PER_DAY}
+              photo={LOCKED_PHOTO}
+              dimmed={currentIdx !== PACKS_PER_DAY}
             />
           </button>
-        ))}
-
-        {/* 4ª bustina: login bonus */}
-        <button
-          onClick={bonusAvailable ? handleBonusClick : isLoggedIn ? undefined : () => { window.location.href = "/login"; }}
-          style={{ background: "none", border: "none", padding: 0, cursor: (bonusAvailable || !isLoggedIn) && openingIdx === null ? "pointer" : "default" }}
-        >
-          <PhysicalPack
-            available={bonusAvailable}
-            locked={!isLoggedIn}
-            isBonus
-            isOpening={openingIdx === PACKS_PER_DAY}
-            photo={LOCKED_PHOTO}
-          />
-        </button>
+        </div>
+        {/* Side gradients */}
+        <div style={{ position: "absolute", top: 0, left: 0, bottom: 0, width: 52, background: "linear-gradient(to right, var(--color-nero) 20%, transparent)", pointerEvents: "none" }} />
+        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: 52, background: "linear-gradient(to left, var(--color-nero) 20%, transparent)", pointerEvents: "none" }} />
       </div>
 
-      {/* Login nudge se non loggato */}
-      {!isLoggedIn && (
-        <button
-          onClick={() => { window.location.href = "/login"; }}
-          style={{
-            width: "100%", marginBottom: 12, padding: "14px 0", borderRadius: 14,
-            background: "rgba(201,168,106,0.08)",
-            border: "1.5px solid rgba(201,168,106,0.35)",
+      {/* Dots */}
+      <div style={{ display: "flex", gap: 6, justifyContent: "center", marginBottom: 28 }}>
+        {Array.from({ length: PACKS_PER_DAY + 1 }).map((_, i) => (
+          <div key={i} style={{
+            height: 5, borderRadius: 3,
+            width: currentIdx === i ? 18 : 5,
+            background: currentIdx === i ? "var(--color-oro)" : "rgba(255,255,255,0.28)",
+            transition: "all 0.25s ease",
+          }} />
+        ))}
+      </div>
+
+      {/* CTA dinamica sul pacchetto corrente */}
+      {(() => {
+        const isBonus = currentIdx === PACKS_PER_DAY;
+        const packOpen = !isBonus && currentIdx < state.packsLeft && openingIdx === null;
+        const bonusOpen = isBonus && bonusAvailable && openingIdx === null;
+        const ctaBase = {
+          width: "100%", padding: "16px 0", borderRadius: 14, border: "none",
+          fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 800,
+          textTransform: "uppercase" as const, letterSpacing: "0.12em",
+          color: "var(--color-nero)", cursor: "pointer" as const,
+          background: "var(--color-oro)",
+        };
+        if (packOpen) return (
+          <button onClick={() => handlePackClick(currentIdx)} style={ctaBase}>Apri bustina</button>
+        );
+        if (bonusOpen) return (
+          <button onClick={handleBonusClick} style={ctaBase}>Apri bustina bonus</button>
+        );
+        if (isBonus && !isLoggedIn) return (
+          <button onClick={() => { window.location.href = "/login"; }} style={{
+            width: "100%", padding: "16px 0", borderRadius: 14,
+            background: "rgba(201,168,106,0.08)", border: "1.5px solid rgba(201,168,106,0.35)",
             fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 800,
             textTransform: "uppercase", letterSpacing: "0.1em",
             color: "var(--color-oro)", cursor: "pointer",
-          }}
-        >
-          Accedi per sbloccare la 4ª bustina
-        </button>
-      )}
-
-      {/* CTA */}
-      {state.packsLeft > 0 ? (
-        <button
-          onClick={() => handlePackClick(state.packsLeft - 1)}
-          style={{
-            width: "100%",
-            padding: "16px 0",
-            borderRadius: 14,
-            background: "var(--color-oro)",
-            border: "none",
-            fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 800,
-            textTransform: "uppercase", letterSpacing: "0.12em",
-            color: "var(--color-nero)",
-            cursor: openingIdx === null ? "pointer" : "default",
-          }}
-        >
-          Apri bustina
-        </button>
-      ) : bonusAvailable ? (
-        <button
-          onClick={handleBonusClick}
-          style={{
-            width: "100%",
-            padding: "16px 0",
-            borderRadius: 14,
-            background: "var(--color-oro)",
-            border: "none",
-            fontFamily: "var(--font-body)", fontSize: 14, fontWeight: 800,
-            textTransform: "uppercase", letterSpacing: "0.12em",
-            color: "var(--color-nero)",
-            cursor: openingIdx === null ? "pointer" : "default",
-          }}
-        >
-          Apri bustina bonus
-        </button>
-      ) : (
-        <div style={{
-          padding: "16px 20px", borderRadius: 14,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          textAlign: "center",
-        }}>
-          <p style={{
-            fontFamily: "var(--font-mono)", fontSize: 10,
-            textTransform: "uppercase", letterSpacing: "0.15em",
-            color: "white",
-          }}>
-            Bustine esaurite · Torni domani
-          </p>
-        </div>
-      )}
+          }}>Accedi per sbloccare</button>
+        );
+        return (
+          <div style={{ padding: "16px 20px", borderRadius: 14, background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.07)", textAlign: "center" }}>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 10, textTransform: "uppercase", letterSpacing: "0.15em", color: "white" }}>
+              {isBonus && isLoggedIn ? "Bonus già usata oggi" : "Bustine esaurite · Torni domani"}
+            </p>
+          </div>
+        );
+      })()}
 
       {/* Info */}
       <div style={{
