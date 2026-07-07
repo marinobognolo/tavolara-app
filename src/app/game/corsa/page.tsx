@@ -17,15 +17,12 @@ export default function CorsaPage() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const H = 340;
     let W = canvas.clientWidth || 390;
-    let H = canvas.clientHeight || 460;
-    let groundY = H - 52;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resize = () => {
       W = canvas.clientWidth || 390;
-      H = canvas.clientHeight || 460;
-      groundY = H - 52;
       canvas.width = Math.floor(W * dpr);
       canvas.height = Math.floor(H * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -33,6 +30,7 @@ export default function CorsaPage() {
     resize();
     window.addEventListener("resize", resize);
 
+    const groundY = H - 52;
     const GRAV = 0.58;
     const JUMP_INIT = -9.0;
     const JUMP_DBL = -8.2;
@@ -67,6 +65,10 @@ export default function CorsaPage() {
     } catch {}
     setBest(bestLocal);
 
+    // Refs per il timestep — accessibili dal closure di press()
+    let lastTs = 0;
+    let accumulator = 0;
+
     const reset = () => {
       obstacles = [];
       balls = [];
@@ -76,7 +78,7 @@ export default function CorsaPage() {
       score = 0;
       sessionGapBase = 260 + Math.random() * 100;
       sessionGapMin  = 190 + Math.random() * 40;
-      // Generoso ritardo iniziale — il giocatore ha tempo di capire che il gioco è partito
+      // Ritardo generoso prima del primo birillo
       spawnT = sessionGapBase + 200;
       ballT  = 380 + Math.random() * 160;
       player.y = groundY - player.h;
@@ -89,12 +91,14 @@ export default function CorsaPage() {
 
     const press = () => {
       if (mode === "idle" || mode === "over") {
-        // Primo tap: avvia il gioco SENZA far saltare il personaggio
+        // Primo tap: avvia SENZA saltare — azzera il timestep per evitare scatti
         reset();
         mode = "playing";
+        lastTs = 0;
+        accumulator = 0;
         return;
       }
-      // Tap successivi durante il gioco: salta
+      // Durante il gioco: salta
       if (player.grounded) {
         player.vy = JUMP_INIT;
         player.grounded = false;
@@ -115,10 +119,7 @@ export default function CorsaPage() {
     };
 
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space" || e.code === "ArrowUp") {
-        e.preventDefault();
-        if (!e.repeat) press();
-      }
+      if (e.code === "Space" || e.code === "ArrowUp") { e.preventDefault(); if (!e.repeat) press(); }
     };
     const onKeyUp = (e: KeyboardEvent) => {
       if (e.code === "Space" || e.code === "ArrowUp") release();
@@ -149,18 +150,11 @@ export default function CorsaPage() {
 
     const drawBall = (bx: number, by: number, r: number) => {
       ctx.fillStyle = "#f0ece3";
-      ctx.beginPath();
-      ctx.arc(bx, by, r, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#1a1611";
-      ctx.lineWidth = 1.2;
-      ctx.stroke();
+      ctx.beginPath(); ctx.arc(bx, by, r, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#1a1611"; ctx.lineWidth = 1.2; ctx.stroke();
       ctx.fillStyle = "#1a1611";
-      ctx.beginPath();
-      ctx.arc(bx, by, 3.2, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#1a1611";
-      ctx.lineWidth = 0.9;
+      ctx.beginPath(); ctx.arc(bx, by, 3.2, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#1a1611"; ctx.lineWidth = 0.9;
       ctx.beginPath();
       for (let i = 0; i < 3; i++) {
         const angle = (i * Math.PI * 2) / 3 - Math.PI / 2;
@@ -185,11 +179,8 @@ export default function CorsaPage() {
       ctx.fillStyle = "#f3efe6";
       ctx.fillRect(px + pw / 2 - 1.5, py + 8, 3, ph - 16);
       ctx.fillStyle = "#e8c39a";
-      ctx.beginPath();
-      ctx.arc(px + pw / 2, py + 6, 7, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.strokeStyle = "#1f7a4d";
-      ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(px + pw / 2, py + 6, 7, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "#1f7a4d"; ctx.lineWidth = 2.5;
       ctx.beginPath();
       ctx.moveTo(px + pw / 2, py + 14);
       ctx.lineTo(px + pw / 2 + 8 - swing * 5, py + 22);
@@ -203,30 +194,47 @@ export default function CorsaPage() {
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, W, H);
 
-      const period = W + 440;
-      const px = (dist * 0.12) % period;
+      // Silhouette isola di Tavolara — profilo a tavola (plateau piatto + scogliere)
+      // Scorre lentamente come parallasse sfondo
+      const period = W + 520;
+      const px = (dist * 0.10) % period;
 
-      const drawHill = (baseX: number, w: number, h: number, color: string) => {
+      const drawTavolara = (baseX: number) => {
         for (let rep = 0; rep < 2; rep++) {
           const x = baseX - px + rep * period;
-          if (x + w < -10 || x > W + 10) continue;
-          ctx.fillStyle = color;
+          if (x + 320 < -10 || x > W + 10) continue;
+          ctx.fillStyle = "#1c1914";
           ctx.beginPath();
           ctx.moveTo(x, groundY);
-          ctx.bezierCurveTo(x + w * 0.2, groundY - h * 0.5, x + w * 0.4, groundY - h, x + w * 0.5, groundY - h);
-          ctx.bezierCurveTo(x + w * 0.6, groundY - h, x + w * 0.8, groundY - h * 0.5, x + w, groundY);
+          // Salita graduale sinistra
+          ctx.bezierCurveTo(x + 40, groundY, x + 60, groundY - 30, x + 80, groundY - 60);
+          // Scogliera sinistra che sale al plateau
+          ctx.bezierCurveTo(x + 90, groundY - 85, x + 100, groundY - 105, x + 110, groundY - 110);
+          // Plateau piatto — caratteristica di Tavolara
+          ctx.lineTo(x + 240, groundY - 108);
+          // Scogliera destra quasi verticale
+          ctx.bezierCurveTo(x + 260, groundY - 105, x + 275, groundY - 80, x + 290, groundY - 45);
+          ctx.bezierCurveTo(x + 300, groundY - 20, x + 310, groundY - 8, x + 320, groundY);
+          ctx.closePath();
+          ctx.fill();
+          // Seconda montagna in distanza (Molarotto)
+          ctx.fillStyle = "#181410";
+          ctx.beginPath();
+          ctx.moveTo(x + 330, groundY);
+          ctx.bezierCurveTo(x + 350, groundY - 10, x + 365, groundY - 38, x + 375, groundY - 42);
+          ctx.bezierCurveTo(x + 385, groundY - 38, x + 400, groundY - 15, x + 410, groundY);
           ctx.closePath();
           ctx.fill();
         }
       };
 
-      drawHill(W * 0.05, 440, 115, "#1c1914");
-      drawHill(W * 0.55, 320, 80, "#181510");
+      drawTavolara(W * 0.1);
 
-      ctx.strokeStyle = "#2c261e";
-      ctx.lineWidth = 2;
+      // Linea terreno
+      ctx.strokeStyle = "#2c261e"; ctx.lineWidth = 2;
       ctx.beginPath(); ctx.moveTo(0, groundY); ctx.lineTo(W, groundY); ctx.stroke();
 
+      // Linea campo tratteggiata
       ctx.strokeStyle = "rgba(31,122,77,0.45)";
       ctx.setLineDash([12, 20]);
       ctx.lineDashOffset = -((dist * 0.45) % 32);
@@ -333,29 +341,42 @@ export default function CorsaPage() {
         ctx.globalAlpha = 1;
       });
 
+      // Score HUD — visibile durante il gioco
+      if (mode === "playing") {
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#c9a86a";
+        ctx.font = "bold 22px ui-monospace,monospace";
+        ctx.fillText(String(score).padStart(5, "0"), W - 14, 34);
+      }
+
       // Overlay
       ctx.textAlign = "center";
       if (mode === "idle") {
-        ctx.fillStyle = "rgba(13,10,7,0.68)";
+        ctx.fillStyle = "rgba(13,10,7,0.65)";
         ctx.fillRect(0, 0, W, H);
         ctx.fillStyle = "#c9a86a";
-        ctx.font = "bold 18px ui-monospace,monospace";
-        ctx.fillText("CORSA", W / 2, H / 2 - 16);
+        ctx.font = "bold 17px ui-monospace,monospace";
+        ctx.fillText("CORSA", W / 2, H / 2 - 14);
         ctx.fillStyle = "#f3efe6";
         ctx.font = "600 12px ui-monospace,monospace";
         ctx.fillText("Tocca per iniziare", W / 2, H / 2 + 8);
         ctx.fillStyle = "rgba(179,172,156,0.55)";
         ctx.font = "500 10px ui-monospace,monospace";
-        ctx.fillText("Tieni premuto = più alto  ·  doppio salto in aria", W / 2, H / 2 + 28);
+        ctx.fillText("Tieni premuto = più alto  ·  doppio salto", W / 2, H / 2 + 28);
+        if (bestLocal > 0) {
+          ctx.fillStyle = "rgba(201,168,106,0.45)";
+          ctx.font = "500 10px ui-monospace,monospace";
+          ctx.fillText("RECORD  " + bestLocal, W / 2, H / 2 + 46);
+        }
       } else if (mode === "over") {
-        ctx.fillStyle = "rgba(13,10,7,0.82)";
+        ctx.fillStyle = "rgba(13,10,7,0.80)";
         ctx.fillRect(0, 0, W, H);
         ctx.fillStyle = "#c9a86a";
-        ctx.font = "bold 20px ui-monospace,monospace";
-        ctx.fillText("GAME OVER", W / 2, H / 2 - 32);
+        ctx.font = "bold 19px ui-monospace,monospace";
+        ctx.fillText("GAME OVER", W / 2, H / 2 - 28);
         ctx.fillStyle = "#f3efe6";
-        ctx.font = "bold 30px ui-monospace,monospace";
-        ctx.fillText(String(score).padStart(5, "0"), W / 2, H / 2 + 2);
+        ctx.font = "bold 28px ui-monospace,monospace";
+        ctx.fillText(String(score).padStart(5, "0"), W / 2, H / 2 + 4);
         ctx.fillStyle = "rgba(179,172,156,0.55)";
         ctx.font = "600 10px ui-monospace,monospace";
         ctx.fillText("PUNTI", W / 2, H / 2 + 18);
@@ -364,25 +385,23 @@ export default function CorsaPage() {
           ctx.font = "600 11px ui-monospace,monospace";
           ctx.fillText("★  NUOVO RECORD!", W / 2, H / 2 + 36);
         } else if (bestLocal > 0) {
-          ctx.fillStyle = "rgba(179,172,156,0.45)";
+          ctx.fillStyle = "rgba(179,172,156,0.4)";
           ctx.font = "500 10px ui-monospace,monospace";
           ctx.fillText("RECORD  " + bestLocal, W / 2, H / 2 + 36);
         }
         ctx.fillStyle = "rgba(179,172,156,0.6)";
         ctx.font = "500 10px ui-monospace,monospace";
-        ctx.fillText("Tocca per rigiocare", W / 2, H / 2 + 56);
+        ctx.fillText("Tocca per rigiocare", W / 2, H / 2 + 54);
       }
       ctx.textAlign = "left";
     };
 
-    let raf = 0;
-    let lastTs = 0;
-    let accumulator = 0;
     const STEP = 1000 / 60;
 
     const loop = (now: number) => {
       if (lastTs > 0) {
-        accumulator += Math.min(now - lastTs, 100);
+        // Cap a 48ms (max ~3 frame catch-up) per evitare scatti
+        accumulator += Math.min(now - lastTs, 48);
         while (accumulator >= STEP) {
           if (mode === "playing") update();
           accumulator -= STEP;
@@ -392,7 +411,7 @@ export default function CorsaPage() {
       draw(now);
       raf = requestAnimationFrame(loop);
     };
-    raf = requestAnimationFrame(loop);
+    let raf = requestAnimationFrame(loop);
 
     return () => {
       cancelAnimationFrame(raf);
@@ -424,49 +443,41 @@ export default function CorsaPage() {
           <p className="font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "var(--color-oro)" }}>TAV GAME</p>
           <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-none">Corsa</p>
         </div>
+        <div className="text-right">
+          <p className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.3)" }}>Record</p>
+          <p className="font-mono text-[0.85rem] font-bold" style={{ color: "var(--color-oro)" }}>{best > 0 ? best : "—"}</p>
+        </div>
       </div>
 
       {/* Canvas */}
       <canvas
         ref={canvasRef}
         className="block w-full touch-none select-none"
-        style={{ height: "460px", background: "#0d0a07" }}
+        style={{ height: "340px", background: "#0d0a07" }}
         aria-label="Corsa — TAV GAME"
       />
 
-      {/* Info sotto canvas */}
+      {/* Info */}
       <div
         className="flex items-center justify-between px-4 py-2.5"
-        style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
+        style={{ borderTop: "1px solid rgba(255,255,255,0.07)", borderBottom: "1px solid rgba(255,255,255,0.05)" }}
       >
         <span className="font-mono text-[9px] uppercase tracking-[0.14em]" style={{ color: "rgba(255,255,255,0.3)" }}>
           Tieni premuto = più alto  ·  doppio salto
         </span>
       </div>
 
-      {/* Risultato — visibile solo dopo game over */}
+      {/* Score card — solo dopo game over */}
       {lastScore !== null && (
-        <div className="px-4 pt-3 grid grid-cols-2 gap-3">
-          <div
-            className="rounded-2xl p-4 text-center"
-            style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.07)" }}
-          >
-            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>
-              Ultima partita
-            </p>
+        <div className="px-4 pt-4 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: "1px solid rgba(255,255,255,0.07)" }}>
+            <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.3)" }}>Ultima partita</p>
             <p className="font-body font-extrabold text-[1.8rem] text-white">{lastScore}</p>
-            {newRecord && (
-              <p className="font-mono text-[9px] uppercase tracking-wider mt-1" style={{ color: "var(--color-oro)" }}>★ Record!</p>
-            )}
+            {newRecord && <p className="font-mono text-[9px] uppercase tracking-wider mt-1" style={{ color: "var(--color-oro)" }}>★ Record!</p>}
           </div>
-          <div
-            className="rounded-2xl p-4 text-center"
-            style={{ background: "var(--color-carbon)", border: `1px solid rgba(201,168,106,${best > 0 ? "0.3" : "0.08"})` }}
-          >
+          <div className="rounded-2xl p-4 text-center" style={{ background: "var(--color-carbon)", border: `1px solid rgba(201,168,106,${best > 0 ? "0.3" : "0.08"})` }}>
             <p className="font-mono text-[9px] uppercase tracking-widest mb-1" style={{ color: "var(--color-oro)" }}>Record</p>
-            <p className="font-body font-extrabold text-[1.8rem]" style={{ color: "var(--color-oro)" }}>
-              {best > 0 ? best : "—"}
-            </p>
+            <p className="font-body font-extrabold text-[1.8rem]" style={{ color: "var(--color-oro)" }}>{best > 0 ? best : "—"}</p>
           </div>
         </div>
       )}

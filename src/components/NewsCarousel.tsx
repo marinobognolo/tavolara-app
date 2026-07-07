@@ -13,110 +13,90 @@ export default function NewsCarousel({ news }: { news: NewsItem[] }) {
   }
 
   const [active, setActive] = useState(0);
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const [animKey, setAnimKey] = useState(0);
+  const touchX = useRef(0);
+  const touchY = useRef(0);
 
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const idx = Math.round(el.scrollLeft / el.clientWidth);
-    setActive(Math.max(0, Math.min(idx, pages.length - 1)));
-  }, [pages.length]);
+  const goTo = useCallback((i: number) => {
+    if (i < 0 || i >= pages.length || i === active) return;
+    setActive(i);
+    setAnimKey((k) => k + 1);
+  }, [active, pages.length]);
 
-  const scrollTo = useCallback((i: number) => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.scrollTo({ left: i * el.clientWidth, behavior: "smooth" });
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    touchX.current = e.touches[0].clientX;
+    touchY.current = e.touches[0].clientY;
   }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchX.current;
+    const dy = e.changedTouches[0].clientY - touchY.current;
+    if (Math.abs(dx) > 45 && Math.abs(dy) < Math.abs(dx) * 0.75) {
+      if (dx < 0) goTo(active + 1);
+      if (dx > 0) goTo(active - 1);
+    }
+  }, [active, goTo]);
 
   return (
     <div>
+      {/* Contenuto — cambia con dissolvenza */}
       <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="tav-carousel"
-        style={{
-          display: "flex",
-          overflowX: "auto",
-          scrollSnapType: "x mandatory",
-          WebkitOverflowScrolling: "touch",
-        }}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        style={{ overflow: "hidden" }}
       >
-        {pages.map((page, pi) => (
-          <div
-            key={pi}
-            style={{
-              minWidth: "100%",
-              scrollSnapAlign: "start",
-              flexShrink: 0,
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              padding: "0 16px",
-            }}
-          >
-            {page.map((n) => (
-              <Link
-                key={n.slug}
-                href={`/news/${n.slug}`}
-                className="block bg-carbon rounded-2xl overflow-hidden"
-              >
-                <div className="flex gap-4 p-4 items-center">
-                  <div className="flex-1 min-w-0">
-                    {n.category && (
-                      <p
-                        className="font-mono text-[11px] uppercase tracking-[0.15em] mb-1"
-                        style={{ color: "var(--color-oro)" }}
-                      >
-                        {n.category}
-                      </p>
-                    )}
-                    <p className="font-body font-extrabold text-[1rem] uppercase text-white leading-snug line-clamp-2">
-                      {n.title}
+        <div
+          key={animKey}
+          className="flex flex-col gap-2 px-4"
+          style={{ animation: "tav-news-fade 0.42s ease both" }}
+        >
+          {pages[active]?.map((n) => (
+            <Link
+              key={n.slug}
+              href={`/news/${n.slug}`}
+              className="block bg-carbon rounded-2xl overflow-hidden"
+            >
+              <div className="flex gap-4 p-4 items-center">
+                <div className="flex-1 min-w-0">
+                  {n.category && (
+                    <p
+                      className="font-mono text-[11px] uppercase tracking-[0.15em] mb-1"
+                      style={{ color: "var(--color-oro)" }}
+                    >
+                      {n.category}
                     </p>
-                    <p className="font-mono text-[12px] uppercase text-white/40 mt-1.5">
-                      {fmtDate(n.date)}
-                    </p>
-                  </div>
-                  {n.image && (
-                    <div className="w-[72px] h-[72px] shrink-0 rounded-xl overflow-hidden bg-white/5">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={n.image}
-                        alt=""
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
                   )}
+                  <p className="font-body font-extrabold text-[1rem] uppercase text-white leading-snug line-clamp-2">
+                    {n.title}
+                  </p>
+                  <p className="font-mono text-[12px] uppercase text-white/40 mt-1.5">
+                    {fmtDate(n.date)}
+                  </p>
                 </div>
-              </Link>
-            ))}
-          </div>
-        ))}
+                {n.image && (
+                  <div className="w-[72px] h-[72px] shrink-0 rounded-xl overflow-hidden bg-white/5">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={n.image} alt="" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
+      {/* Dots */}
       {pages.length > 1 && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 8,
-            marginTop: 20,
-          }}
-        >
+        <div className="flex justify-center items-center gap-2 mt-5">
           {pages.map((_, i) => (
             <button
               key={i}
-              onClick={() => scrollTo(i)}
+              onClick={() => goTo(i)}
+              className="rounded-full transition-all duration-300"
               style={{
-                width: i === active ? 20 : 6,
-                height: 6,
-                borderRadius: 3,
-                background:
-                  i === active
-                    ? "var(--color-oro)"
-                    : "rgba(255,255,255,0.2)",
-                transition: "all 0.3s",
+                width: i === active ? "20px" : "6px",
+                height: "6px",
+                background: i === active ? "var(--color-oro)" : "rgba(255,255,255,0.2)",
               }}
             />
           ))}
