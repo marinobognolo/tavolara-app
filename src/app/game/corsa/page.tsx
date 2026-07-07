@@ -389,8 +389,19 @@ export default function CorsaPage() {
     };
 
     let raf = 0;
+    let lastTs = 0;
+    let accumulator = 0;
+    const STEP = 1000 / 60; // fisica sempre a 60 fps logici
+
     const loop = (now: number) => {
-      if (mode === "playing") update();
+      if (lastTs > 0) {
+        accumulator += Math.min(now - lastTs, 100); // clamp a 100ms per evitare spiral
+        while (accumulator >= STEP) {
+          if (mode === "playing") update();
+          accumulator -= STEP;
+        }
+      }
+      lastTs = now;
       draw(now);
       raf = requestAnimationFrame(loop);
     };
