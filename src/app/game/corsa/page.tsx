@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 
 type Popup = { x: number; y: number; val: number; life: number };
 
@@ -434,11 +433,6 @@ export default function CorsaPage() {
         className="flex items-center gap-3 px-4"
         style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "12px" }}
       >
-        <Link href="/game" className="p-1 text-white" aria-label="Tav Game">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </Link>
         <div className="flex-1">
           <p className="font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "var(--color-oro)" }}>TAV GAME</p>
           <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-none">Corsa</p>

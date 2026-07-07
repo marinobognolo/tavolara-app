@@ -2,12 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import MenuDrawer from "./MenuDrawer";
 import { haptic } from "@/lib/haptic";
 
 export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
+  const isGame = pathname.startsWith("/game");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -40,16 +43,19 @@ export default function TopNav() {
           <span className="block w-4 h-[1.5px] bg-white" />
         </button>
 
-        {/* Logo → home */}
-        <Link href="/" aria-label="Home" onClick={() => haptic()}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-tavolara-gold.png"
-            alt="Tavolara Calcio"
-            className="h-12 object-contain"
-            style={{ filter: "brightness(0) invert(1)" }}
-          />
-        </Link>
+        {/* Logo → home (nascosto nelle pagine game) */}
+        {!isGame && (
+          <Link href="/" aria-label="Home" onClick={() => haptic()}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-tavolara-gold.png"
+              alt="Tavolara Calcio"
+              className="h-12 object-contain"
+              style={{ filter: "brightness(0) invert(1)" }}
+            />
+          </Link>
+        )}
+        {isGame && <div />}
 
         {/* Login */}
         <Link href="/login" aria-label="Login" onClick={() => haptic()}>
