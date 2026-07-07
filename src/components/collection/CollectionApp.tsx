@@ -28,70 +28,75 @@ function fmtCountdown(ms: number): string {
   return [h, m, s].map((n) => String(n).padStart(2, "0")).join(":");
 }
 
-/* ── Physical Pack visual ─────────────────────────────── */
-const ZIGZAG_BODY = "polygon(0px 20px,5.5px 8px,11px 20px,16.5px 8px,22px 20px,27.5px 8px,33px 20px,38.5px 8px,44px 20px,49.5px 8px,55px 20px,60.5px 8px,66px 20px,71.5px 8px,77px 20px,82.5px 8px,88px 20px,88px 123px,0px 123px)";
-const ZIGZAG_FLAP = "polygon(0 0,88px 0,88px 20px,82.5px 8px,77px 20px,71.5px 8px,66px 20px,60.5px 8px,55px 20px,49.5px 8px,44px 20px,38.5px 8px,33px 20px,27.5px 8px,22px 20px,16.5px 8px,11px 20px,5.5px 8px,0px 20px)";
-const ZIGZAG_SVG  = "M 0,20 L5.5,8 L11,20 L16.5,8 L22,20 L27.5,8 L33,20 L38.5,8 L44,20 L49.5,8 L55,20 L60.5,8 L66,20 L71.5,8 L77,20 L82.5,8 L88,20 L88,115 Q88,123 80,123 L8,123 Q0,123 0,115 Z";
+/* ── Physical Pack sizes & paths ─────────────────────── */
+const PACK_W = 148;
+const PACK_H = 207;
+// percentage clip-paths — scale with any container size
+const ZIGZAG_BODY_PCT = "polygon(0% 16.26%,6.25% 6.5%,12.5% 16.26%,18.75% 6.5%,25% 16.26%,31.25% 6.5%,37.5% 16.26%,43.75% 6.5%,50% 16.26%,56.25% 6.5%,62.5% 16.26%,68.75% 6.5%,75% 16.26%,81.25% 6.5%,87.5% 16.26%,93.75% 6.5%,100% 16.26%,100% 100%,0% 100%)";
+const ZIGZAG_FLAP_PCT = "polygon(0% 0%,100% 0%,100% 16.26%,93.75% 6.5%,87.5% 16.26%,81.25% 6.5%,75% 16.26%,68.75% 6.5%,62.5% 16.26%,56.25% 6.5%,50% 16.26%,43.75% 6.5%,37.5% 16.26%,31.25% 6.5%,25% 16.26%,18.75% 6.5%,12.5% 16.26%,6.25% 6.5%,0% 16.26%)";
+const ZIGZAG_SVG = "M 0,20 L5.5,8 L11,20 L16.5,8 L22,20 L27.5,8 L33,20 L38.5,8 L44,20 L49.5,8 L55,20 L60.5,8 L66,20 L71.5,8 L77,20 L82.5,8 L88,20 L88,115 Q88,123 80,123 L8,123 Q0,123 0,115 Z";
+const PACK_PHOTOS = ["/BUSTINA%201.jpg", "/BUSTINA%202.jpg", "/BUSTINA%203.jpg"];
+const LOCKED_PHOTO = "/BUSTINA%204.jpg";
 
 function PhysicalPack({
   available,
   locked = false,
   isBonus = false,
   isOpening = false,
+  photo = PACK_PHOTOS[0],
 }: {
   available: boolean;
   locked?: boolean;
   isBonus?: boolean;
   isOpening?: boolean;
+  photo?: string;
 }) {
   const borderColor = locked
-    ? "rgba(255,255,255,0.18)"
-    : available ? "rgba(201,168,106,0.95)" : "rgba(201,168,106,0.28)";
-  const overlay = available ? "rgba(0,0,0,0.38)" : "rgba(0,0,0,0.68)";
+    ? "rgba(255,255,255,0.25)"
+    : available ? "rgba(201,168,106,0.95)" : "rgba(201,168,106,0.4)";
+  const overlay = locked
+    ? "rgba(0,0,0,0.72)"
+    : available
+    ? "rgba(0,0,0,0.08)"
+    : "rgba(0,0,0,0.52)";
   const burstAnim = isOpening ? "tav-pack-burst 0.42s ease 0.36s forwards" : "none";
 
   return (
-    <div style={{ width: 88, height: 123, position: "relative", flexShrink: 0, opacity: (!available && !locked) ? 0.3 : 1 }}>
+    <div style={{ width: PACK_W, height: PACK_H, position: "relative", flexShrink: 0 }}>
 
-      {/* Body — photo with zigzag clip */}
-      <div style={{ position: "absolute", inset: 0, clipPath: ZIGZAG_BODY, animation: burstAnim }}>
-        {locked ? (
-          <div style={{ position: "absolute", inset: 0, background: "rgba(255,255,255,0.025)" }} />
-        ) : (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/BUSTINA.jpg" alt="" aria-hidden
-              style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%" }}
-            />
-            <div style={{ position: "absolute", inset: 0, background: overlay }} />
-          </>
-        )}
+      {/* Body — photo with % zigzag clip */}
+      <div style={{ position: "absolute", inset: 0, clipPath: ZIGZAG_BODY_PCT, animation: burstAnim }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={photo} alt="" aria-hidden
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: overlay }} />
       </div>
 
-      {/* SVG border */}
+      {/* SVG border — viewBox scales automatically */}
       <svg viewBox="0 0 88 123" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 3, animation: burstAnim }}>
         <path d={ZIGZAG_SVG} fill="none" stroke={borderColor} strokeWidth="1.5"
           strokeDasharray={locked ? "3,2" : undefined} />
       </svg>
 
       {/* Content */}
-      <div style={{ position: "absolute", top: 20, left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 7, zIndex: 4, animation: burstAnim }}>
+      <div style={{ position: "absolute", top: "16.26%", left: 0, right: 0, bottom: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, zIndex: 4, animation: burstAnim }}>
         {locked ? (
           <>
-            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.28)" strokeWidth={1.5} style={{ width: 22, height: 22 }}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth={1.5} style={{ width: 34, height: 34 }}>
               <rect x="3" y="11" width="18" height="11" rx="2" />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" />
             </svg>
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: 6, color: "rgba(255,255,255,0.28)", margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>Login</p>
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "rgba(255,255,255,0.4)", margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>Login</p>
           </>
         ) : (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-tavolara-gold.png" alt="" aria-hidden
-              style={{ width: 26, height: 26, objectFit: "contain", opacity: available ? 0.92 : 0.35 }}
+              style={{ width: 42, height: 42, objectFit: "contain", opacity: available ? 0.92 : 0.4 }}
             />
-            <div style={{ width: "55%", height: 1, background: available ? "rgba(201,168,106,0.4)" : "rgba(255,255,255,0.08)" }} />
-            <p style={{ fontFamily: "var(--font-mono)", fontSize: 7, color: available ? "rgba(201,168,106,0.75)" : "rgba(255,255,255,0.18)", margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+            <div style={{ width: "52%", height: 1, background: available ? "rgba(201,168,106,0.45)" : "rgba(255,255,255,0.1)" }} />
+            <p style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: available ? "rgba(201,168,106,0.9)" : "rgba(255,255,255,0.22)", margin: 0, letterSpacing: "0.14em", textTransform: "uppercase" }}>
               {available ? "Tap" : "—"}
             </p>
           </>
@@ -100,22 +105,18 @@ function PhysicalPack({
 
       {/* Bonus badge */}
       {isBonus && available && (
-        <div style={{ position: "absolute", top: 22, right: 7, background: "var(--color-oro)", borderRadius: 3, padding: "1px 4px", zIndex: 5 }}>
-          <p style={{ fontFamily: "var(--font-mono)", fontSize: 6, color: "#111", fontWeight: 700, margin: 0 }}>+1</p>
+        <div style={{ position: "absolute", top: "18%", right: "6%", background: "var(--color-oro)", borderRadius: 4, padding: "2px 6px", zIndex: 5 }}>
+          <p style={{ fontFamily: "var(--font-mono)", fontSize: 8, color: "#111", fontWeight: 700, margin: 0 }}>+1</p>
         </div>
       )}
 
-      {/* Top flap — tears away on open */}
-      <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 20, clipPath: ZIGZAG_FLAP, zIndex: 4, pointerEvents: "none", animation: isOpening ? "tav-pack-flap 0.45s ease forwards" : "none" }}>
-        {!locked && (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/BUSTINA.jpg" alt="" aria-hidden
-              style={{ position: "absolute", top: 0, left: 0, width: 88, height: 123, objectFit: "cover", objectPosition: "center 25%", pointerEvents: "none" }}
-            />
-            <div style={{ position: "absolute", inset: 0, background: overlay }} />
-          </>
-        )}
+      {/* Top flap — covers full area, clip reveals only top strip */}
+      <div style={{ position: "absolute", inset: 0, clipPath: ZIGZAG_FLAP_PCT, zIndex: 4, pointerEvents: "none", animation: isOpening ? "tav-pack-flap 0.45s ease forwards" : "none" }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={photo} alt="" aria-hidden
+          style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%", pointerEvents: "none" }}
+        />
+        <div style={{ position: "absolute", inset: 0, background: overlay }} />
       </div>
     </div>
   );
@@ -246,17 +247,17 @@ function PackTab({
         {state.packsLeft < PACKS_PER_DAY && (
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 10,
-            color: "rgba(255,255,255,0.72)", marginTop: 10, letterSpacing: "0.1em",
+            color: "rgba(255,255,255,0.92)", marginTop: 10, letterSpacing: "0.1em",
           }}>
             Ricarica in <span style={{ color: "var(--color-oro)" }}>{countdown}</span>
           </p>
         )}
       </div>
 
-      {/* Pack grid: 3 normali + 1 bonus login */}
+      {/* Pack grid: 2×2 */}
       <div style={{
-        display: "flex", flexWrap: "wrap", gap: 12,
-        justifyContent: "center", marginBottom: 32,
+        display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16,
+        maxWidth: 316, margin: "0 auto 32px",
       }}>
         {Array.from({ length: PACKS_PER_DAY }).map((_, i) => (
           <button
@@ -267,6 +268,7 @@ function PackTab({
             <PhysicalPack
               available={i < state.packsLeft}
               isOpening={openingIdx === i}
+              photo={PACK_PHOTOS[i]}
             />
           </button>
         ))}
@@ -281,6 +283,7 @@ function PackTab({
             locked={!isLoggedIn}
             isBonus
             isOpening={openingIdx === PACKS_PER_DAY}
+            photo={LOCKED_PHOTO}
           />
         </button>
       </div>
@@ -347,7 +350,7 @@ function PackTab({
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 10,
             textTransform: "uppercase", letterSpacing: "0.15em",
-            color: "rgba(255,255,255,0.75)",
+            color: "white",
           }}>
             Bustine esaurite · Torni domani
           </p>
@@ -363,7 +366,7 @@ function PackTab({
         <p style={{
           fontFamily: "var(--font-mono)", fontSize: 8,
           textTransform: "uppercase", letterSpacing: "0.14em",
-          color: "rgba(255,255,255,0.65)", lineHeight: 1.8,
+          color: "rgba(255,255,255,0.88)", lineHeight: 1.8,
         }}>
           3 bustine gratis ogni giorno · 3 carte per bustina<br />
           +1 bustina bonus per gli utenti registrati<br />
@@ -482,7 +485,7 @@ function AlbumTab({
               border: "none",
               fontFamily: "var(--font-mono)", fontSize: 9,
               textTransform: "uppercase", letterSpacing: "0.14em",
-              color: view === v ? "var(--color-oro)" : "rgba(255,255,255,0.35)",
+              color: view === v ? "var(--color-oro)" : "rgba(255,255,255,0.7)",
               cursor: "pointer",
             }}
           >
@@ -497,7 +500,7 @@ function AlbumTab({
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 9,
             textTransform: "uppercase", letterSpacing: "0.14em",
-            color: "rgba(255,255,255,0.72)",
+            color: "white",
           }}>Completamento album</p>
           <p style={{
             fontFamily: "var(--font-mono)", fontSize: 9,
@@ -541,7 +544,7 @@ function AlbumTab({
                   </p>
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 9,
-                    color: "rgba(255,255,255,0.65)",
+                    color: "rgba(255,255,255,0.9)",
                   }}>
                     {ownedCount}/{PLAYERS.length}
                   </p>
@@ -608,7 +611,7 @@ function AlbumTab({
                 }}>
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700,
-                    color: "rgba(255,255,255,0.4)",
+                    color: "rgba(255,255,255,0.75)",
                   }}>
                     {p.number}
                   </p>
@@ -625,7 +628,7 @@ function AlbumTab({
                   </p>
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 8,
-                    color: "rgba(255,255,255,0.65)", textTransform: "uppercase",
+                    color: "rgba(255,255,255,0.88)", textTransform: "uppercase",
                     letterSpacing: "0.08em", marginTop: 1,
                   }}>
                     {p.role}
@@ -654,7 +657,7 @@ function AlbumTab({
                       >
                         <p style={{
                           fontFamily: "var(--font-mono)", fontSize: 6, fontWeight: 700,
-                          color: has ? "#000" : "rgba(255,255,255,0.15)",
+                          color: has ? "#000" : "rgba(255,255,255,0.4)",
                         }}>
                           {r.short}
                         </p>
@@ -748,7 +751,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
                   <path d="M20 6L9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               ) : (
-                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth={1.5} style={{ width: 18, height: 18 }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth={1.5} style={{ width: 18, height: 18 }}>
                   <rect x="3" y="11" width="18" height="11" rx="2" />
                   <path d="M7 11V7a5 5 0 0 1 10 0v4" strokeLinecap="round" />
                 </svg>
@@ -760,13 +763,13 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
               <p style={{
                 fontFamily: "var(--font-body)", fontSize: 13, fontWeight: 800,
                 textTransform: "uppercase",
-                color: a.done ? "var(--color-oro)" : "rgba(255,255,255,0.8)",
+                color: a.done ? "var(--color-oro)" : "white",
               }}>
                 {a.title}
               </p>
               <p style={{
                 fontFamily: "var(--font-mono)", fontSize: 9,
-                color: "rgba(255,255,255,0.72)", marginTop: 3,
+                color: "rgba(255,255,255,0.92)", marginTop: 3,
                 letterSpacing: "0.06em", lineHeight: 1.5,
               }}>
                 {a.desc}
@@ -775,7 +778,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
                 {/* Progress */}
                 <p style={{
                   fontFamily: "var(--font-mono)", fontSize: 8,
-                  color: a.done ? "var(--color-oro)" : "rgba(255,255,255,0.65)",
+                  color: a.done ? "var(--color-oro)" : "rgba(255,255,255,0.9)",
                   letterSpacing: "0.08em",
                 }}>
                   {a.progress}
@@ -789,7 +792,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
                   <p style={{
                     fontFamily: "var(--font-mono)", fontSize: 7,
                     textTransform: "uppercase", letterSpacing: "0.1em",
-                    color: "rgba(255,255,255,0.65)",
+                    color: "rgba(255,255,255,0.9)",
                   }}>
                     Premio: {a.reward}
                   </p>
@@ -809,7 +812,7 @@ function PremiTab({ owned }: { owned: Record<string, number> }) {
         <p style={{
           fontFamily: "var(--font-mono)", fontSize: 8,
           textTransform: "uppercase", letterSpacing: "0.14em",
-          color: "rgba(255,255,255,0.65)", lineHeight: 1.9,
+          color: "rgba(255,255,255,0.88)", lineHeight: 1.9,
         }}>
           I premi sono fisici e verranno consegnati durante la stagione.<br />
           La raccolta è gratuita e riservata ai tifosi del Tavolara Calcio.<br />
