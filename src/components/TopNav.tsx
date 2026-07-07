@@ -11,6 +11,7 @@ export default function TopNav() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
   const isGame = pathname.startsWith("/game");
+  const hideLoginIcon = isGame || pathname === "/login";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -58,14 +59,17 @@ export default function TopNav() {
         {isGame && <div />}
 
         {/* Login */}
-        <Link href="/login" aria-label="Login" onClick={() => haptic()}>
-          <div className="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} className="w-4 h-4">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </div>
-        </Link>
+        {!hideLoginIcon && (
+          <Link href="/login" aria-label="Login" onClick={() => haptic()}>
+            <div className="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} className="w-4 h-4">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+          </Link>
+        )}
+        {hideLoginIcon && <div />}
       </nav>
     </>
   );

@@ -36,14 +36,6 @@ export default function LoginPage() {
       <div className="absolute inset-0 opacity-[0.06]" style={{ backgroundImage: "linear-gradient(rgba(201,168,106,1) 1px, transparent 1px), linear-gradient(90deg, rgba(201,168,106,1) 1px, transparent 1px)", backgroundSize: "38px 38px" }} />
       <div className="absolute inset-0" style={{ background: "radial-gradient(ellipse 80% 50% at 50% 35%, rgba(90,20,200,0.2) 0%, transparent 65%)" }} />
 
-      {/* Back */}
-      <div className="relative px-5 flex items-center" style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "14px" }}>
-        <button onClick={() => router.back()} className="p-1 text-white" aria-label="Indietro">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
-            <path d="M15 18l-6-6 6-6" />
-          </svg>
-        </button>
-      </div>
 
       {/* Content */}
       <form onSubmit={handleSubmit} className="relative flex-1 flex flex-col items-center justify-center px-8 text-center">
