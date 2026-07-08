@@ -19,6 +19,14 @@ export const NEXT_MATCH = {
   venue: "Geovillage, Olbia",
 };
 
+export type PlayerStats = {
+  presenze: number;
+  gol: number;
+  assist: number;
+  ammonizioni: number;
+  espulsioni: number;
+};
+
 export type Player = {
   slug: string;
   first: string;
@@ -27,6 +35,7 @@ export type Player = {
   role: "Portiere" | "Difensore" | "Centrocampista" | "Attaccante";
   captain?: boolean;
   viceCaptain?: boolean;
+  stats?: PlayerStats;
 };
 
 export const PLAYERS: Player[] = [

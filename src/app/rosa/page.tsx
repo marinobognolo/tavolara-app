@@ -20,51 +20,52 @@ const GOLD_FILTER = "brightness(0) invert(1) sepia(1) saturate(3) hue-rotate(345
 
 function PlayerCard({ player }: { player: Player }) {
   return (
-    <div className="bg-carbon rounded-2xl overflow-hidden">
-      <div className="flex gap-3 p-4" style={{ minHeight: "116px" }}>
-        {/* Foto */}
-        <div className="w-[68px] shrink-0 rounded-xl overflow-hidden self-stretch" style={{ backgroundColor: "var(--color-granito-2)" }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`/giocatori/${player.slug}/01.jpg`}
-            alt={`${player.first} ${player.last}`}
-            className="w-full h-full object-cover object-top"
-            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-          />
-        </div>
-
-        {/* Info */}
-        <div className="flex-1 flex flex-col justify-between">
-          {/* Nome */}
-          <div>
-            <p className="font-mono text-[10px] uppercase tracking-widest text-white/50 leading-none mb-0.5">
-              {player.first}
-              {player.captain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(C)</span>}
-              {player.viceCaptain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(VC)</span>}
-            </p>
-            <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-tight">
-              {player.last}
-            </p>
+    <Link href={`/rosa/${player.slug}`} className="block">
+      <div className="bg-carbon rounded-2xl overflow-hidden">
+        <div className="flex gap-3 p-4" style={{ minHeight: "116px" }}>
+          {/* Foto */}
+          <div className="w-[68px] shrink-0 rounded-xl overflow-hidden self-stretch" style={{ backgroundColor: "var(--color-granito-2)" }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={`/giocatori/${player.slug}/01.jpg`}
+              alt={`${player.first} ${player.last}`}
+              className="w-full h-full object-cover object-top"
+              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+            />
           </div>
 
-          {/* Numero + Maglia */}
-          <div className="flex items-end justify-between">
-            <p className="font-body font-extrabold text-[2.5rem] text-white leading-none">
-              {player.number}
-            </p>
-            <button
-              className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-              style={{ backgroundColor: "var(--color-oro)" }}
-              aria-label="Maglia"
-            >
-              <svg viewBox="0 0 24 24" fill="var(--color-nero)" className="w-4 h-4">
-                <path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 001.23.77L6 9.5V19a2 2 0 002 2h8a2 2 0 002-2V9.5l1.91.53a1 1 0 001.23-.77l.58-3.57a2 2 0 00-1.34-2.23z" />
-              </svg>
-            </button>
+          {/* Info */}
+          <div className="flex-1 flex flex-col justify-between">
+            {/* Nome */}
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-widest text-white/50 leading-none mb-0.5">
+                {player.first}
+                {player.captain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(C)</span>}
+                {player.viceCaptain && <span className="ml-1.5" style={{ color: "var(--color-oro)" }}>(VC)</span>}
+              </p>
+              <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-tight">
+                {player.last}
+              </p>
+            </div>
+
+            {/* Numero + freccia */}
+            <div className="flex items-end justify-between">
+              <p className="font-body font-extrabold text-[2.5rem] text-white leading-none">
+                {player.number}
+              </p>
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "rgba(201,168,106,0.15)", border: "1px solid rgba(201,168,106,0.25)" }}
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-oro)" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
