@@ -76,12 +76,12 @@ export default function PartitePage() {
             </div>
             {/* VS */}
             <div className="shrink-0 px-2">
-              <p className="font-mono text-[22px] font-bold" style={{ color: "rgba(255,255,255,0.10)", letterSpacing: "0.12em" }}>VS</p>
+              <p className="font-mono text-[22px] font-bold" style={{ color: "rgba(255,255,255,0.45)", letterSpacing: "0.12em" }}>VS</p>
             </div>
             {/* Away */}
             <div className="flex-1 flex flex-col items-center gap-3">
               {NEXT_MATCH.away === "Tavolara" && <TavLogo size={64} />}
-              <p className="font-body font-extrabold text-[1.25rem] uppercase leading-none" style={{ color: "rgba(255,255,255,0.42)" }}>
+              <p className="font-body font-extrabold text-[1.25rem] uppercase leading-none" style={{ color: "rgba(255,255,255,0.65)" }}>
                 {NEXT_MATCH.away}
               </p>
             </div>
@@ -94,12 +94,12 @@ export default function PartitePage() {
           <div className="w-full flex items-center justify-between px-5 py-4 rounded-2xl"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}>
             <div className="text-left">
-              <p className="font-mono text-[8px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.28)" }}>Data</p>
+              <p className="font-mono text-[8px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.55)" }}>Data</p>
               <p className="font-body font-extrabold text-[0.85rem] uppercase text-white">{NEXT_MATCH.date}</p>
             </div>
             <div className="w-px h-8 mx-4" style={{ background: "rgba(255,255,255,0.08)" }} />
             <div className="text-right">
-              <p className="font-mono text-[8px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.28)" }}>Luogo</p>
+              <p className="font-mono text-[8px] uppercase tracking-widest mb-1" style={{ color: "rgba(255,255,255,0.55)" }}>Luogo</p>
               <p className="font-body font-extrabold text-[0.85rem] uppercase text-white">{NEXT_MATCH.venue}</p>
             </div>
           </div>
@@ -108,10 +108,10 @@ export default function PartitePage() {
 
         {/* Scroll hint */}
         <div className="relative flex flex-col items-center pb-5 gap-1">
-          <p className="font-mono text-[8px] uppercase tracking-[0.22em]" style={{ color: "rgba(255,255,255,0.2)" }}>
+          <p className="font-mono text-[8px] uppercase tracking-[0.22em]" style={{ color: "rgba(255,255,255,0.55)" }}>
             Scorri per i risultati
           </p>
-          <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{ opacity: 0.25 }}>
+          <svg width="12" height="7" viewBox="0 0 12 7" fill="none" style={{ opacity: 0.6 }}>
             <path d="M1 1l5 5 5-5" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
         </div>

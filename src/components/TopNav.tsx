@@ -2,16 +2,27 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import MenuDrawer from "./MenuDrawer";
 import { haptic } from "@/lib/haptic";
+
+// Tab principali → hamburger
+const MAIN_TABS = ["/", "/partite", "/rosa", "/news", "/game"];
+// Pagine auth → hamburger, niente logo né login icon, niente back
+const AUTH_ROUTES = ["/login", "/register", "/change-pin"];
 
 export default function TopNav() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const isGame = pathname.startsWith("/game") || pathname === "/login";
-  const hideLoginIcon = isGame || pathname === "/login";
+  const router = useRouter();
+
+  const isMain  = MAIN_TABS.includes(pathname);
+  const isAuth  = AUTH_ROUTES.includes(pathname);
+  const isGame  = pathname.startsWith("/game");
+  const showBack = !isMain && !isAuth;
+  const showLogo = !isGame && !isAuth;
+  const showLoginIcon = !isGame && !isAuth;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 30);
@@ -33,19 +44,32 @@ export default function TopNav() {
           borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
         }}
       >
-        {/* Hamburger */}
-        <button
-          onClick={() => { haptic(); setMenuOpen(true); }}
-          className="flex flex-col gap-[5px] p-1"
-          aria-label="Menu"
-        >
-          <span className="block w-6 h-[1.5px] bg-white" />
-          <span className="block w-6 h-[1.5px] bg-white" />
-          <span className="block w-4 h-[1.5px] bg-white" />
-        </button>
+        {/* Sinistra: back oppure hamburger */}
+        {showBack ? (
+          <button
+            onClick={() => { haptic(); router.back(); }}
+            className="p-1 -ml-1"
+            aria-label="Torna indietro"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.8}
+              strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+        ) : (
+          <button
+            onClick={() => { haptic(); setMenuOpen(true); }}
+            className="flex flex-col gap-[5px] p-1"
+            aria-label="Menu"
+          >
+            <span className="block w-6 h-[1.5px] bg-white" />
+            <span className="block w-6 h-[1.5px] bg-white" />
+            <span className="block w-4 h-[1.5px] bg-white" />
+          </button>
+        )}
 
-        {/* Logo → home (nascosto nelle pagine game) */}
-        {!isGame && (
+        {/* Centro: logo */}
+        {showLogo ? (
           <Link href="/" aria-label="Home" onClick={() => haptic()}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
@@ -55,11 +79,12 @@ export default function TopNav() {
               style={{ filter: "brightness(0) invert(1)" }}
             />
           </Link>
+        ) : (
+          <div />
         )}
-        {isGame && <div />}
 
-        {/* Login */}
-        {!hideLoginIcon && (
+        {/* Destra: login icon */}
+        {showLoginIcon ? (
           <Link href="/login" aria-label="Login" onClick={() => haptic()}>
             <div className="w-8 h-8 rounded-full bg-white/15 border border-white/25 flex items-center justify-center">
               <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={1.5} className="w-4 h-4">
@@ -68,8 +93,9 @@ export default function TopNav() {
               </svg>
             </div>
           </Link>
+        ) : (
+          <div />
         )}
-        {hideLoginIcon && <div />}
       </nav>
     </>
   );

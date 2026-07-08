@@ -48,7 +48,7 @@ export function CountdownWidget({ datetime }: { datetime: string | null }) {
           </span>
           <span
             className="font-mono text-[7px] uppercase tracking-widest"
-            style={{ color: "rgba(255,255,255,0.28)" }}
+            style={{ color: "rgba(255,255,255,0.55)" }}
           >
             {label}
           </span>

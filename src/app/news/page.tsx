@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { NEWS } from "@/lib/data";
 import NewsCarousel from "@/components/NewsCarousel";
 
@@ -19,9 +20,9 @@ export default function NewsPage() {
       {/* Header */}
       <div className="px-4 pt-24 pb-5 flex items-center justify-between">
         <h1 className="text-3xl text-white">Ultime News</h1>
-        <button className="px-4 py-1.5 rounded-full border border-white/20 font-mono text-[11px] uppercase tracking-wide text-white/60">
+        <Link href="/news/archivio" className="px-4 py-1.5 rounded-full border border-white/20 font-mono text-[11px] uppercase tracking-wide text-white/60">
           Di più
-        </button>
+        </Link>
       </div>
 
       {/* Lista news a blocchi di 3 con swipe */}

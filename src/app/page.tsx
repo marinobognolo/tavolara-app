@@ -432,7 +432,7 @@ function SlideMatch({ onHighlights }: { onHighlights: () => void }) {
       <div
         className="relative flex flex-col h-full px-5"
         style={{
-          paddingTop: "calc(env(safe-area-inset-top) + 80px)",
+          paddingTop: "calc(env(safe-area-inset-top) + 110px)",
           paddingBottom: "calc(env(safe-area-inset-bottom) + 4.5rem)",
         }}
       >

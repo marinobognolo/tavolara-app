@@ -4,6 +4,7 @@ import "./globals.css";
 import BottomNav from "@/components/BottomNav";
 import AppShell from "@/components/AppShell";
 import TopNav from "@/components/TopNav";
+import SwipeBack from "@/components/SwipeBack";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -39,9 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full bg-nero text-avorio">
         <AppShell>
           <TopNav />
-          <main style={{ paddingBottom: "calc(4rem + env(safe-area-inset-bottom))" }}>
-            {children}
-          </main>
+          <SwipeBack>
+            <main style={{ paddingBottom: "calc(4rem + env(safe-area-inset-bottom))" }}>
+              {children}
+            </main>
+          </SwipeBack>
           <BottomNav />
         </AppShell>
       </body>

@@ -363,19 +363,19 @@ export default function CorsaPage() {
 
     // ── Rendering con interpolazione sub-frame ────────────
     const draw = (now: number, alpha: number) => {
-      // Posizione interpolata del player (smooth su ogni Hz)
-      const iPlayerY = prevPlayerY + alpha * (player.y - prevPlayerY);
+      // Interpola solo durante il gioco — in idle/over le posizioni sono ferme
+      const a = mode === "playing" ? alpha : 0;
 
-      // Distanza interpolata (parallasse smooth)
-      const renderDist = dist + alpha * speed;
+      const iPlayerY = prevPlayerY + a * (player.y - prevPlayerY);
+      const renderDist = dist + a * speed;
 
       drawBg(renderDist);
 
       // Palle (interpolate)
-      balls.forEach((b) => drawBall(b.x - alpha * speed, b.y, b.r));
+      balls.forEach((b) => drawBall(b.x - a * speed, b.y, b.r));
 
       // Birilli (interpolati)
-      obstacles.forEach((o) => drawCone(o.x - alpha * speed, o.w, o.h));
+      obstacles.forEach((o) => drawCone(o.x - a * speed, o.w, o.h));
 
       // Player
       drawPlayer(now, iPlayerY);
@@ -408,9 +408,6 @@ export default function CorsaPage() {
       if (mode === "idle") {
         ctx.fillStyle = "rgba(13,10,7,0.65)";
         ctx.fillRect(0, 0, W, H);
-        ctx.fillStyle = "#c9a86a";
-        ctx.font = "bold 17px ui-monospace,monospace";
-        ctx.fillText("CORSA", W >> 1, (H >> 1) - 14);
         ctx.fillStyle = "#f3efe6";
         ctx.font = "600 12px ui-monospace,monospace";
         ctx.fillText("Tocca per iniziare", W >> 1, (H >> 1) + 8);
@@ -473,16 +470,6 @@ export default function CorsaPage() {
       className="min-h-[100svh] flex flex-col"
       style={{ backgroundColor: "var(--color-nero)", paddingBottom: "calc(env(safe-area-inset-bottom) + 5rem)" }}
     >
-      <div
-        className="flex items-center px-4"
-        style={{ paddingTop: "calc(env(safe-area-inset-top) + 14px)", paddingBottom: "10px" }}
-      >
-        <div>
-          <p className="font-mono text-[9px] uppercase tracking-[0.22em]" style={{ color: "var(--color-oro)" }}>TAV GAME</p>
-          <p className="font-body font-extrabold text-[1.05rem] uppercase text-white leading-none">Corsa</p>
-        </div>
-      </div>
-
       <canvas
         ref={canvasRef}
         className="block w-full touch-none select-none"

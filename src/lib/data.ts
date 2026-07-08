@@ -67,6 +67,22 @@ export type NewsItem = {
 
 export const NEWS: NewsItem[] = [
   {
+    slug: "staff-tecnico-2026-2027",
+    title: "Ecco lo staff tecnico del Tavolara per la stagione 2026/2027",
+    excerpt: "La società biancoverde comunica ufficialmente la composizione dello staff tecnico che guiderà la prima squadra nella stagione 2026/2027.",
+    category: "Ufficiale",
+    date: "2026-07-08",
+    image: "/STAFF.png",
+    body: [
+      "Il Tavolara Calcio è lieto di comunicare ufficialmente la composizione dello staff tecnico che accompagnerà la prima squadra nella stagione sportiva 2026/2027, la prima in Prima Categoria dopo la storica promozione conquistata lo scorso campionato.",
+      "A coordinare l'area sportiva è Pierpaolo Pisanu, Direttore Sportivo del club da tempo presenza fondamentale nella struttura biancoverde, punto di riferimento nella gestione della rosa e nel dialogo con lo staff tecnico.",
+      "Alla guida tecnica della squadra ci sarà ancora Michele Tamponi, confermato come allenatore dopo una stagione straordinaria chiusa senza sconfitte. Al suo fianco, nel ruolo di vice allenatore, Checco Fera, anche lui confermato per garantire continuità al lavoro impostato negli ultimi mesi.",
+      "La preparazione atletica sarà affidata a Guido Tamponi, nuovo innesto dello staff con un curriculum di tutto rispetto maturato tra Eccellenza e Serie D in realtà di spicco del calcio sardo come Budoni, Calangianus, Olbia Calcio e U.S. Tempio. La cura dei portieri resta invece nelle mani di Sergio Sergente, confermato nel suo ruolo con la fiducia totale della società.",
+      "Completano lo staff Giovanni Ciaddu nel ruolo di massaggiatore — un ritorno in biancoverde per l'ex giocatore — ed Enzo Coscia, riconfermato magazziere per il terzo anno consecutivo.",
+      "Un gruppo coeso, competente e profondamente legato ai colori biancoverdi. La società ringrazia ogni membro dello staff per la dedizione dimostrata e guarda con fiducia e ambizione alla nuova stagione.",
+    ],
+  },
+  {
     slug: "enzo-coscia-magazziere",
     title: "Enzo Coscia confermato magazziere per la stagione 2026/2027",
     excerpt: "La società conferma Enzo Coscia nel ruolo di magazziere per la stagione 2026/2027.",

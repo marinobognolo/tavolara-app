@@ -27,7 +27,7 @@ export default function ContattiPage() {
         <h1 className="font-body font-extrabold text-[2.4rem] uppercase text-white leading-none">
           Contatti
         </h1>
-        <p className="mt-4 text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.55)" }}>
+        <p className="mt-4 text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>
           Per informazioni, collaborazioni o per entrare a far parte del club.
         </p>
       </div>
@@ -51,7 +51,7 @@ export default function ContattiPage() {
           </span>
           <div className="flex-1 min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>Email</p>
-            <p className="font-body font-extrabold text-[0.95rem] uppercase text-white truncate">asdtavolaracalcio@gmail.com</p>
+            <p className="font-body font-extrabold text-[0.75rem] uppercase text-white truncate">asdtavolaracalcio@gmail.com</p>
           </div>
           <span className="font-mono text-[11px] uppercase tracking-wider shrink-0" style={{ color: "var(--color-oro)" }}>Scrivici →</span>
         </a>
@@ -76,14 +76,14 @@ export default function ContattiPage() {
           </span>
           <div className="flex-1 min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>Instagram</p>
-            <p className="font-body font-extrabold text-[0.95rem] uppercase text-white">@tavolaracalcio1954</p>
+            <p className="font-body font-extrabold text-[0.75rem] uppercase text-white">@tavolaracalcio1954</p>
           </div>
           <span className="font-mono text-[11px] uppercase tracking-wider shrink-0" style={{ color: "var(--color-oro)" }}>Seguici →</span>
         </a>
 
         {/* Facebook */}
         <a
-          href="https://www.facebook.com/asdtavolaracalcio/?locale=it_IT"
+          href="https://www.facebook.com/asdtavolaracalcio?locale=it_IT"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-4 rounded-2xl p-5"
@@ -99,7 +99,7 @@ export default function ContattiPage() {
           </span>
           <div className="flex-1 min-w-0">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] mb-0.5" style={{ color: "rgba(255,255,255,0.4)" }}>Facebook</p>
-            <p className="font-body font-extrabold text-[0.95rem] uppercase text-white">ASD Tavolara Calcio</p>
+            <p className="font-body font-extrabold text-[0.75rem] uppercase text-white">ASD Tavolara Calcio</p>
           </div>
           <span className="font-mono text-[11px] uppercase tracking-wider shrink-0" style={{ color: "var(--color-oro)" }}>Vai →</span>
         </a>
@@ -115,7 +115,7 @@ export default function ContattiPage() {
           <p className="font-body font-extrabold text-[1.1rem] uppercase text-white mb-1">
             Geovillage · Olbia
           </p>
-          <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.45)" }}>
+          <p className="text-[13px] leading-relaxed" style={{ color: "rgba(255,255,255,0.68)" }}>
             Il Tavolara Calcio disputa le gare interne al Geovillage di Olbia, Sardegna.
           </p>
           <a
