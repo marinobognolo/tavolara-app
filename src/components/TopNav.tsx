@@ -7,7 +7,7 @@ import MenuDrawer from "./MenuDrawer";
 import { haptic } from "@/lib/haptic";
 
 // Tab principali → hamburger
-const MAIN_TABS = ["/", "/partite", "/rosa", "/news", "/game"];
+const MAIN_TABS = ["/", "/partite", "/rosa", "/news", "/game", "/collection"];
 // Pagine auth → hamburger, niente logo né login icon, niente back
 const AUTH_ROUTES = ["/login", "/register", "/change-pin"];
 

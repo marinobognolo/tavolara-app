@@ -25,6 +25,12 @@ const TABS = [
       <rect x="4" y="3" width="16" height="18" rx="2" /><path d="M8 8h8M8 12h8M8 16h5" />
     </svg>
   )},
+  { href: "/collection", label: "Collection", exact: false, icon: (active: boolean) => (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={active ? 2 : 1.5} strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
+      <rect x="2" y="7" width="13" height="17" rx="2" />
+      <path d="M6 7V5a2 2 0 012-2h10a2 2 0 012 2v11a2 2 0 01-2 2h-2" />
+    </svg>
+  )},
 ];
 
 export default function BottomNav() {

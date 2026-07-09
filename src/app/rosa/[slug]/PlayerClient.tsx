@@ -70,12 +70,20 @@ function Lightbox({
   );
 }
 
-const STAT_LABELS = [
+const STAT_LABELS_FIELD = [
   { key: "presenze",     label: "Pres."  },
   { key: "gol",         label: "Gol"    },
   { key: "assist",      label: "Assist" },
   { key: "ammonizioni", label: "Amm."   },
   { key: "espulsioni",  label: "Esp."   },
+] as const;
+
+const STAT_LABELS_GK = [
+  { key: "presenze",     label: "Pres."     },
+  { key: "cleanSheet",   label: "Clean S."  },
+  { key: "rigoriParati", label: "Rig. Par." },
+  { key: "ammonizioni",  label: "Amm."      },
+  { key: "espulsioni",   label: "Esp."      },
 ] as const;
 
 export default function PlayerClient({
@@ -90,6 +98,8 @@ export default function PlayerClient({
   const photos = Array.from({ length: photoCount }, (_, i) =>
     `/giocatori/${player.slug}/${String(i + 1).padStart(2, "0")}.jpg`
   );
+
+  const statLabels = player.role === "Portiere" ? STAT_LABELS_GK : STAT_LABELS_FIELD;
 
   return (
     <>
@@ -187,8 +197,8 @@ export default function PlayerClient({
             border: "1px solid rgba(255,255,255,0.07)",
           }}
         >
-          {STAT_LABELS.map(({ key, label }, i) => {
-            const val = player.stats?.[key];
+          {statLabels.map(({ key, label }, i) => {
+            const val = player.stats?.[key as keyof typeof player.stats];
             return (
               <div
                 key={key}

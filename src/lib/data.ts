@@ -25,6 +25,8 @@ export type PlayerStats = {
   assist: number;
   ammonizioni: number;
   espulsioni: number;
+  cleanSheet?: number;   // portieri
+  rigoriParati?: number; // portieri
 };
 
 export type Player = {
@@ -39,27 +41,27 @@ export type Player = {
 };
 
 export const PLAYERS: Player[] = [
-  { slug: "van-der-want", first: "Maarten", last: "Van Der Want", number: 22, role: "Portiere", captain: true },
-  { slug: "casu", first: "Giovanni Maria", last: "Casu", number: 1, role: "Portiere" },
-  { slug: "masala", first: "Ivan", last: "Masala", number: 12, role: "Portiere" },
-  { slug: "meloni", first: "Marco", last: "Meloni", number: 24, role: "Difensore" },
-  { slug: "varrucciu", first: "Simone", last: "Varrucciu", number: 18, role: "Difensore", viceCaptain: true },
-  { slug: "raimo", first: "Nicola", last: "Raimo", number: 3, role: "Difensore" },
-  { slug: "cugini", first: "Vittorio", last: "Cugini", number: 5, role: "Difensore" },
-  { slug: "vannozzi", first: "Saverio", last: "Vannozzi", number: 6, role: "Difensore" },
-  { slug: "ballatore", first: "Francesco", last: "Ballatore", number: 17, role: "Difensore" },
-  { slug: "larribite", first: "Benjamin", last: "Larribite", number: 21, role: "Difensore" },
-  { slug: "marongiu", first: "Piero", last: "Marongiu", number: 23, role: "Difensore" },
-  { slug: "mannoni", first: "Francesco", last: "Mannoni", number: 4, role: "Centrocampista" },
-  { slug: "gallo", first: "Salvatore", last: "Gallo", number: 8, role: "Centrocampista" },
-  { slug: "mancini", first: "Roberto", last: "Mancini", number: 11, role: "Centrocampista" },
-  { slug: "chiappetta", first: "Fausto", last: "Chiappetta", number: 25, role: "Centrocampista" },
-  { slug: "spigno", first: "Pietro", last: "Spigno", number: 28, role: "Centrocampista" },
-  { slug: "valenti", first: "Sergio Damian", last: "Valenti", number: 9, role: "Attaccante" },
-  { slug: "bulla", first: "Giovanni", last: "Bulla", number: 7, role: "Attaccante" },
-  { slug: "villa", first: "Mauricio", last: "Villa", number: 10, role: "Attaccante" },
-  { slug: "zela", first: "Lorenzo", last: "Zela", number: 27, role: "Attaccante" },
-  { slug: "barbuio", first: "Mattias", last: "Barbuio", number: 32, role: "Attaccante" },
+  { slug: "van-der-want", first: "Maarten", last: "Van Der Want", number: 22, role: "Portiere", captain: true,    stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0, cleanSheet: 0, rigoriParati: 0 } },
+  { slug: "casu",         first: "Giovanni Maria", last: "Casu",  number: 1,  role: "Portiere",                   stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0, cleanSheet: 0, rigoriParati: 0 } },
+  { slug: "masala",       first: "Ivan",  last: "Masala",         number: 12, role: "Portiere",                   stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0, cleanSheet: 0, rigoriParati: 0 } },
+  { slug: "meloni",       first: "Marco", last: "Meloni",         number: 24, role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "varrucciu",    first: "Simone", last: "Varrucciu",     number: 18, role: "Difensore", viceCaptain: true, stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "raimo",        first: "Nicola", last: "Raimo",         number: 3,  role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "cugini",       first: "Vittorio", last: "Cugini",      number: 5,  role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "vannozzi",     first: "Saverio", last: "Vannozzi",     number: 6,  role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "ballatore",    first: "Francesco", last: "Ballatore",  number: 17, role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "larribite",    first: "Benjamin", last: "Larribite",   number: 21, role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "marongiu",     first: "Piero", last: "Marongiu",       number: 23, role: "Difensore",                  stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "mannoni",      first: "Francesco", last: "Mannoni",    number: 4,  role: "Centrocampista",             stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "gallo",        first: "Salvatore", last: "Gallo",      number: 8,  role: "Centrocampista",             stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "mancini",      first: "Roberto", last: "Mancini",      number: 11, role: "Centrocampista",             stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "chiappetta",   first: "Fausto", last: "Chiappetta",    number: 25, role: "Centrocampista",             stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "spigno",       first: "Pietro", last: "Spigno",        number: 28, role: "Centrocampista",             stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "valenti",      first: "Sergio Damian", last: "Valenti",number: 9,  role: "Attaccante",                 stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "bulla",        first: "Giovanni", last: "Bulla",       number: 7,  role: "Attaccante",                 stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "villa",        first: "Mauricio", last: "Villa",        number: 10, role: "Attaccante",                 stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "zela",         first: "Lorenzo", last: "Zela",          number: 27, role: "Attaccante",                 stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
+  { slug: "barbuio",      first: "Mattias", last: "Barbuio",       number: 32, role: "Attaccante",                 stats: { presenze: 0, gol: 0, assist: 0, ammonizioni: 0, espulsioni: 0 } },
 ];
 
 export const ROLE_ORDER = ["Portieri", "Difensori", "Centrocampisti", "Attaccanti"] as const;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 type View = "landing" | "hub";
@@ -85,8 +85,19 @@ function LandingView({ onPlay }: { onPlay: () => void }) {
   );
 }
 
+type LeaderEntry = { nickname: string; score: number };
+
 // ─── HUB ─────────────────────────────────────────────────────
 function HubView({ onBack }: { onBack: () => void }) {
+  const [leaders, setLeaders] = useState<LeaderEntry[]>([]);
+
+  useEffect(() => {
+    fetch("/api/game/corsa")
+      .then((r) => r.json())
+      .then(setLeaders)
+      .catch(() => {});
+  }, []);
+
   return (
     <div
       className="min-h-[100svh] overflow-y-auto"
@@ -172,6 +183,47 @@ function HubView({ onBack }: { onBack: () => void }) {
           <p className="font-mono text-[0.6rem] uppercase tracking-wide" style={{ color: "var(--color-oro)" }}>
             Snake · Tav-Man · Quiz Tavolara · Pronostico — torna presto!
           </p>
+        </div>
+
+        {/* Classifica */}
+        <div>
+          <p className="font-mono text-[0.58rem] uppercase tracking-widest px-1 mb-3 mt-2" style={{ color: "rgba(255,255,255,0.75)" }}>
+            Classifica · Corsa
+          </p>
+          <div className="rounded-3xl overflow-hidden" style={{ border: "1px solid rgba(201,168,106,0.15)", backgroundColor: "rgba(255,255,255,0.02)" }}>
+            {leaders.length === 0 ? (
+              <p className="font-mono text-[0.58rem] uppercase text-center py-8" style={{ color: "rgba(255,255,255,0.25)" }}>
+                Nessun punteggio ancora — gioca per primo!
+              </p>
+            ) : (
+              leaders.map((entry, i) => (
+                <div
+                  key={entry.nickname}
+                  className="flex items-center gap-4 px-5 py-3.5"
+                  style={{
+                    borderTop: i > 0 ? "1px solid rgba(255,255,255,0.05)" : undefined,
+                    backgroundColor: i === 0 ? "rgba(201,168,106,0.06)" : undefined,
+                  }}
+                >
+                  <span
+                    className="font-body font-extrabold text-[1.1rem] w-7 shrink-0 text-center leading-none"
+                    style={{ color: i === 0 ? "var(--color-oro)" : "rgba(255,255,255,0.25)" }}
+                  >
+                    {i + 1}
+                  </span>
+                  <span className="font-mono text-[0.68rem] uppercase tracking-wide flex-1 text-white">
+                    {entry.nickname}
+                  </span>
+                  <span
+                    className="font-body font-extrabold text-[1rem] tabular-nums"
+                    style={{ color: i === 0 ? "var(--color-oro)" : "rgba(255,255,255,0.7)" }}
+                  >
+                    {entry.score.toString().padStart(5, "0")}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>

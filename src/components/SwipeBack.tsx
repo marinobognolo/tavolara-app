@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
-const MAIN_TABS   = new Set(["/", "/partite", "/rosa", "/news", "/game"]);
+const MAIN_TABS   = new Set(["/", "/partite", "/rosa", "/news", "/game", "/collection"]);
 const AUTH_ROUTES = new Set(["/login", "/register", "/change-pin"]);
 const EDGE        = 22;   // px dal bordo sinistro per attivare
 const TRIGGER     = 0.36; // frazione larghezza schermo per completare il back
