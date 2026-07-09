@@ -178,7 +178,7 @@ export default function PlayerClient({
           className="font-mono text-[0.55rem] uppercase tracking-[0.26em] mb-4"
           style={{ color: "rgba(255,255,255,0.28)" }}
         >
-          Stagione 2025/26
+          Stagione 2026/27
         </p>
         <div
           className="flex rounded-2xl py-5"
